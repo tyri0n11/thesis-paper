@@ -5,10 +5,10 @@
 \babel@aux{english}{}
 \pgfsyspdfmark {pgfid1}{5816759}{49932859}
 \@writefile{toc}{\contentsline {chapter}{List of Tables}{viii}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{List of Figures}{ix}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{List of Algorithms}{x}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{List of Listings}{xi}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{Abstract}{xii}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{List of Figures}{x}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{List of Algorithms}{xi}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{List of Listings}{xii}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Abstract}{xiii}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}INTRODUCTION}{1}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -177,102 +177,135 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}PostgreSQL Online Store}{21}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4.4}Infrastructure Prototyping}{21}{}\protected@file@percent }
 \newlabel{sec:infra-proto}{{4.4}{21}{Infrastructure Prototyping}{section.4.4}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}IMPLEMENTATION}{22}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}IMPLEMENTATION}{23}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Ingestion Service}{22}{}\protected@file@percent }
-\newlabel{sec:impl-ingestion}{{5.1}{22}{Ingestion Service}{section.5.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}VietMap API Integration}{22}{}\protected@file@percent }
-\newlabel{lst:vietmap}{{5.1}{22}{VietMap API Integration}{lstlisting.5.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {5.1}VietMap congestion metric extraction.}{22}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}Concurrent Route Polling}{22}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Ingestion Service}{23}{}\protected@file@percent }
+\newlabel{sec:impl-ingestion}{{5.1}{23}{Ingestion Service}{section.5.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}VietMap API Integration}{23}{}\protected@file@percent }
+\newlabel{lst:vietmap}{{5.1}{23}{VietMap API Integration}{lstlisting.5.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5.1}VietMap congestion metric extraction.}{23}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}Concurrent Route Polling}{23}{}\protected@file@percent }
 \citation{welford1962}
 \citation{welford1962}
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}Streaming Service}{23}{}\protected@file@percent }
-\newlabel{sec:impl-streaming}{{5.2}{23}{Streaming Service}{section.5.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}Online Service}{23}{}\protected@file@percent }
-\newlabel{sec:impl-online}{{5.3}{23}{Online Service}{section.5.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Welford Accumulator}{23}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}Z-Score Anomaly Signal}{23}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}Crash Recovery}{24}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.4}Batch Pipeline}{24}{}\protected@file@percent }
-\newlabel{sec:impl-batch}{{5.4}{24}{Batch Pipeline}{section.5.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces Prefect flow schedules: microbatch and alerter run every 5 minutes; gold aggregation runs hourly; ML retrain runs every 6 hours.}}{24}{}\protected@file@percent }
-\newlabel{fig:batch-flows}{{5.1}{24}{Batch Pipeline}{figure.5.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}Bronze-to-Silver Promotion}{24}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}Silver-to-Gold Aggregation}{24}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.3}Baseline Learning}{24}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces Redpanda Console: \texttt  {traffic-route-bronze} topic with 67,428 messages (34.3~MiB) confirming continuous ingestion over the 40-day observation window.}}{24}{}\protected@file@percent }
+\newlabel{fig:redpanda-topic}{{5.1}{24}{VietMap API Integration}{figure.5.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Streaming Service}{24}{}\protected@file@percent }
+\newlabel{sec:impl-streaming}{{5.2}{24}{Streaming Service}{section.5.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Online Service}{24}{}\protected@file@percent }
+\newlabel{sec:impl-online}{{5.3}{24}{Online Service}{section.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Welford Accumulator}{24}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}Z-Score Anomaly Signal}{25}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}Crash Recovery}{25}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}Batch Pipeline}{25}{}\protected@file@percent }
+\newlabel{sec:impl-batch}{{5.4}{25}{Batch Pipeline}{section.5.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces Prefect flow schedules: microbatch and alerter run every 5 minutes; gold aggregation runs hourly; ML retrain runs every 6 hours.}}{25}{}\protected@file@percent }
+\newlabel{fig:batch-flows}{{5.2}{25}{Batch Pipeline}{figure.5.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}Bronze-to-Silver Promotion}{25}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces Prefect 3.x Deployments view: seven active flows covering ingestion, batch promotion, model retraining, RAG indexing, and Telegram alerting.}}{26}{}\protected@file@percent }
+\newlabel{fig:prefect-deployments}{{5.3}{26}{Batch Pipeline}{figure.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}Silver-to-Gold Aggregation}{26}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.3}Baseline Learning}{26}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.4}Anomaly Alerter}{26}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.5}ML Service}{26}{}\protected@file@percent }
+\newlabel{sec:impl-ml}{{5.5}{26}{ML Service}{section.5.5}{}}
 \citation{cyclical_encoding}
 \citation{liu2008isolation}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.4}Anomaly Alerter}{25}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.5}ML Service}{25}{}\protected@file@percent }
-\newlabel{sec:impl-ml}{{5.5}{25}{ML Service}{section.5.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}Feature Engineering}{25}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}IsolationForest Configuration}{25}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.6}Serving Layer}{25}{}\protected@file@percent }
-\newlabel{sec:impl-serving}{{5.6}{25}{Serving Layer}{section.5.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}Feature Engineering}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}IsolationForest Configuration}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.6}Serving Layer}{27}{}\protected@file@percent }
+\newlabel{sec:impl-serving}{{5.6}{27}{Serving Layer}{section.5.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.1}Endpoint Overview}{27}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Serving API endpoint summary.}}{27}{}\protected@file@percent }
+\newlabel{tab:endpoints}{{5.1}{27}{Endpoint Overview}{table.5.1}{}}
 \citation{nomic_embed}
 \citation{qwen25_report}
 \citation{lewis2020rag}
-\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Serving API endpoint summary.}}{26}{}\protected@file@percent }
-\newlabel{tab:endpoints}{{5.1}{26}{Endpoint Overview}{table.5.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.1}Endpoint Overview}{26}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.2}SSE Streaming Architecture}{26}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.3}RAG-Enriched Inference}{26}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.4}Dual-Signal Fusion in Serving}{26}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.2}SSE Streaming Architecture}{28}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.3}RAG-Enriched Inference}{28}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces Production AI Explanation modal for the Coastal $\to $ Western route anomaly (Vietnamese output): Qwen2.5:3b generates a contextualised explanation referencing weather conditions and route history via RAG.}}{28}{}\protected@file@percent }
+\newlabel{fig:ai-explanation}{{5.4}{28}{RAG-Enriched Inference}{figure.5.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.4}Dual-Signal Fusion in Serving}{29}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.5}Frontend Dashboard}{29}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5.5}{\ignorespaces Urban Pulse AI Chat interface (Vietnamese): conversational RAG endpoint reporting live congestion percentages per route, powered by Qwen2.5:3b and the ChromaDB \texttt  {traffic\_patterns} collection.}}{30}{}\protected@file@percent }
+\newlabel{fig:ai-chat}{{5.5}{30}{RAG-Enriched Inference}{figure.5.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.6}{\ignorespaces Urban Pulse AI Chat (English): Qwen2.5:3b integrates live weather data (26.8\textdegree C, partly cloudy) with congestion metrics in a single natural-language response, demonstrating bilingual RAG capability.}}{31}{}\protected@file@percent }
+\newlabel{fig:ai-chat-en}{{5.6}{31}{RAG-Enriched Inference}{figure.5.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.7}{\ignorespaces Traffic Metrics heatmap: tooltip showing a Z-score-only anomaly on the Coastal $\to $ Urban Core route at 08:00 ($Z = 4.22$), Apr 12--15, 2026.}}{32}{}\protected@file@percent }
+\newlabel{fig:heatmap-zscore}{{5.7}{32}{Frontend Dashboard}{figure.5.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.8}{\ignorespaces Traffic Metrics heatmap: tooltip showing a dual-signal anomaly (\texttt  {BOTH}) on the Coastal $\to $ Western route at 15:00 ($Z = 2.02$), Apr 12--15, 2026.}}{32}{}\protected@file@percent }
+\newlabel{fig:heatmap-both}{{5.8}{32}{Frontend Dashboard}{figure.5.8}{}}
 \citation{chandola2009anomaly}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}RESULT}{28}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}RESULT}{33}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}Experimental Setup}{28}{}\protected@file@percent }
-\newlabel{sec:exp-setup}{{6.1}{28}{Experimental Setup}{section.6.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Dataset}{28}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Dataset summary for the MLflow training run \texttt  {per-route-train-20260419}.}}{28}{}\protected@file@percent }
-\newlabel{tab:dataset}{{6.1}{28}{Dataset}{table.6.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}Evaluation Approach}{28}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}Dual-Signal Detection Results}{29}{}\protected@file@percent }
-\newlabel{sec:detection-results}{{6.2}{29}{Dual-Signal Detection Results}{section.6.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}Per-Route Metrics}{29}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6.2}{\ignorespaces Per-route anomaly detection metrics (IsolationForest vs.\ Z-Score), MLflow run \texttt  {per-route-train-20260419}.}}{29}{}\protected@file@percent }
-\newlabel{tab:anomaly-metrics}{{6.2}{29}{Per-Route Metrics}{table.6.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}Aggregate Findings}{29}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6.3}{\ignorespaces Aggregate dual-signal metrics across 20 routes.}}{29}{}\protected@file@percent }
-\newlabel{tab:agg-metrics}{{6.3}{29}{Aggregate Findings}{table.6.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.3}Interpretation}{29}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces Model agreement (blue) and Jaccard similarity (orange) for five representative routes. Agreement consistently exceeds 0.94; Jaccard variation reflects route-specific traffic pattern stability.}}{30}{}\protected@file@percent }
-\newlabel{fig:metric-bars}{{6.1}{30}{Aggregate Findings}{figure.6.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.3}System Performance}{30}{}\protected@file@percent }
-\newlabel{sec:sys-perf}{{6.3}{30}{System Performance}{section.6.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.1}End-to-End Ingestion Latency}{30}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.2}Batch Pipeline Throughput}{31}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.3}SSE Delivery Latency}{31}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.4}LLM Inference Latency}{31}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Experimental Setup}{33}{}\protected@file@percent }
+\newlabel{sec:exp-setup}{{6.1}{33}{Experimental Setup}{section.6.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Dataset}{33}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces Dremio EDA query on \texttt  {nessie.gold.traffic\_hourly}: 20 routes, 76 days covered, confirming the Iceberg Gold table is correctly populated by the batch pipeline.}}{33}{}\protected@file@percent }
+\newlabel{fig:dremio-eda}{{6.1}{33}{Dataset}{figure.6.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}Evaluation Approach}{33}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Dataset summary for the MLflow training run \texttt  {per-route-train-20260419}.}}{34}{}\protected@file@percent }
+\newlabel{tab:dataset}{{6.1}{34}{Dataset}{table.6.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Dual-Signal Detection Results}{34}{}\protected@file@percent }
+\newlabel{sec:detection-results}{{6.2}{34}{Dual-Signal Detection Results}{section.6.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}Per-Route Metrics}{34}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.2}{\ignorespaces Per-route anomaly detection metrics (IsolationForest vs.\ Z-Score), MLflow run \texttt  {per-route-train-20260419} (production server).}}{34}{}\protected@file@percent }
+\newlabel{tab:anomaly-metrics}{{6.2}{34}{Per-Route Metrics}{table.6.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.2}{\ignorespaces MLflow experiment \texttt  {traffic-anomaly-detection}: 20 per-route runs all completed with status \textsc  {finished} in $\sim $3.5~s each, confirming the ML Service retraining pipeline is stable.}}{35}{}\protected@file@percent }
+\newlabel{fig:mlflow-experiments}{{6.2}{35}{Per-Route Metrics}{figure.6.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}Aggregate Findings}{35}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.3}{\ignorespaces Aggregate dual-signal metrics across 20 routes.}}{35}{}\protected@file@percent }
+\newlabel{tab:agg-metrics}{{6.3}{35}{Aggregate Findings}{table.6.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.3}Production Anomaly Distribution}{35}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.3}{\ignorespaces MLflow per-route metric charts for \texttt  {zone6 $\to $ zone5}: agreement = 0.96, Jaccard = 0.36, IForest rate = 0.05, 43 joint anomaly hours from 1,615 samples.}}{36}{}\protected@file@percent }
+\newlabel{fig:mlflow-route-metrics}{{6.3}{36}{Per-Route Metrics}{figure.6.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.4}{\ignorespaces Model agreement (blue) and Jaccard similarity (orange) for five representative routes. Agreement consistently exceeds 0.90; Jaccard variation reflects route-specific traffic pattern stability.}}{36}{}\protected@file@percent }
+\newlabel{fig:metric-bars}{{6.4}{36}{Aggregate Findings}{figure.6.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.5}{\ignorespaces Production Anomalies Per Hour (Apr 12--15, 2026): yellow = Z-Score only, green = IForest only, red = both detectors agree. Morning peak (07:00--10:00) shows the highest anomaly concentration.}}{37}{}\protected@file@percent }
+\newlabel{fig:anomaly-bar}{{6.5}{37}{Production Anomaly Distribution}{figure.6.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.4}Interpretation}{37}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}System Performance}{38}{}\protected@file@percent }
+\newlabel{sec:sys-perf}{{6.3}{38}{System Performance}{section.6.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.1}Grafana Observability Dashboards}{38}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.6}{\ignorespaces Grafana Online Features dashboard (Apr 13--15, 2026): p50 = 153~ms, p95 = 318~ms, p99 = 336~ms ingestion-to-feature latency. Anomalous routes over time shown in the bottom-right panel.}}{38}{}\protected@file@percent }
+\newlabel{fig:grafana-online}{{6.6}{38}{Grafana Observability Dashboards}{figure.6.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.2}End-to-End Ingestion Latency}{38}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.3}Batch Pipeline Throughput}{38}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.7}{\ignorespaces Grafana Anomaly Detection dashboard (Apr 13--15, 2026): anomalous route count over time (top-left), maximum Z-Score intensity reaching 8.5 during afternoon peak (top-right), and per-route Z-Score time series for all 20 routes (bottom-right).}}{39}{}\protected@file@percent }
+\newlabel{fig:grafana-anomaly}{{6.7}{39}{Grafana Observability Dashboards}{figure.6.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.8}{\ignorespaces Grafana Ingestion Service dashboard: periodic 5-minute burst pattern at 0.08--0.12 req/s confirming correct API polling cadence. Zero errors and zero warnings over the observed window.}}{39}{}\protected@file@percent }
+\newlabel{fig:grafana-ingestion}{{6.8}{39}{Grafana Observability Dashboards}{figure.6.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.9}{\ignorespaces Grafana Urban Traffic Analytics dashboard: Bronze$\to $Silver 4,850 rows, Silver$\to $Gold 120 rows, Baseline 3,360 records. Batch job completion logs confirm error-free pipeline execution.}}{40}{}\protected@file@percent }
+\newlabel{fig:grafana-batch}{{6.9}{40}{Batch Pipeline Throughput}{figure.6.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.4}SSE Delivery Latency}{40}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.5}LLM Inference Latency}{40}{}\protected@file@percent }
 \citation{iceberg_paper}
 \citation{welford1962}
 \citation{batch_latency_survey}
-\@writefile{toc}{\contentsline {chapter}{\numberline {7}DISCUSSION}{32}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}DISCUSSION}{41}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {7.1}Analysis of Results}{32}{}\protected@file@percent }
-\newlabel{sec:discussion-analysis}{{7.1}{32}{Analysis of Results}{section.7.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.2}Strengths}{32}{}\protected@file@percent }
-\newlabel{sec:strengths}{{7.2}{32}{Strengths}{section.7.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.1}Analysis of Results}{41}{}\protected@file@percent }
+\newlabel{sec:discussion-analysis}{{7.1}{41}{Analysis of Results}{section.7.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.2}Strengths}{41}{}\protected@file@percent }
+\newlabel{sec:strengths}{{7.2}{41}{Strengths}{section.7.2}{}}
 \citation{hcmc_transport_report}
 \citation{chandola2009anomaly}
-\@writefile{toc}{\contentsline {section}{\numberline {7.3}Limitations}{33}{}\protected@file@percent }
-\newlabel{sec:limitations}{{7.3}{33}{Limitations}{section.7.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.4}Comparison with Related Approaches}{33}{}\protected@file@percent }
-\newlabel{sec:comparison}{{7.4}{33}{Comparison with Related Approaches}{section.7.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.3}Limitations}{42}{}\protected@file@percent }
+\newlabel{sec:limitations}{{7.3}{42}{Limitations}{section.7.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.4}Comparison with Related Approaches}{42}{}\protected@file@percent }
+\newlabel{sec:comparison}{{7.4}{42}{Comparison with Related Approaches}{section.7.4}{}}
 \citation{chandola2009anomaly}
-\@writefile{lot}{\contentsline {table}{\numberline {7.1}{\ignorespaces Comparison of UrbanPulse against reference architectures.}}{34}{}\protected@file@percent }
-\newlabel{tab:comparison}{{7.1}{34}{Comparison with Related Approaches}{table.7.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.5}Future Work}{34}{}\protected@file@percent }
-\newlabel{sec:future-work}{{7.5}{34}{Future Work}{section.7.5}{}}
-\bibstyle{ieeetr}
-\bibdata{bibliography.bib}
-\@writefile{toc}{\contentsline {chapter}{\numberline {8}CONCLUSION}{35}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7.1}{\ignorespaces Comparison of UrbanPulse against reference architectures.}}{43}{}\protected@file@percent }
+\newlabel{tab:comparison}{{7.1}{43}{Comparison with Related Approaches}{table.7.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.5}Future Work}{43}{}\protected@file@percent }
+\newlabel{sec:future-work}{{7.5}{43}{Future Work}{section.7.5}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}CONCLUSION}{44}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
+\bibstyle{ieeetr}
+\bibdata{bibliography.bib}
 \bibcite{urban-pulse-platform}{1}
 \bibcite{5steps-gaps}{2}
 \bibcite{hcmc_transport_report}{3}
@@ -307,9 +340,9 @@
 \bibcite{sse_spec}{32}
 \bibcite{ollama_docs}{33}
 \bibcite{rlhf_paper}{34}
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}LISTINGS}{40}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}LISTINGS}{49}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{lst:1}{{A.1}{40}{Future Work}{lstlisting.1.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {A.1}$\texttt  {Sample}$ procedure.}{40}{}\protected@file@percent }
-\gdef \@abspage@last{52}
+\newlabel{lst:1}{{A.1}{49}{Future Work}{lstlisting.1.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {A.1}$\texttt  {Sample}$ procedure.}{49}{}\protected@file@percent }
+\gdef \@abspage@last{62}

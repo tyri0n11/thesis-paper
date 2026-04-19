@@ -7,7 +7,7 @@ The experimental results validate the core hypothesis of this thesis: that a
 \textbf{dual-signal anomaly detection framework} combining a statistical
 Z-score detector with a machine learning IsolationForest model produces more
 reliable incident signals than either detector in isolation. The key evidence
-is the 94.9\% model agreement rate combined with a 21.1\% mean Jaccard
+is the 93.8\% model agreement rate combined with a 16.3\% mean Jaccard
 similarity. This pattern is consistent with the theoretical complementarity of
 the two signals: Z-score operates on a single dimension (\texttt{heavy\_ratio}
 deviation from a per-route, per-time-slot baseline), whereas IsolationForest
@@ -106,11 +106,12 @@ floor of \texttt{mean * 0.1} in these cases, but this is a heuristic that
 may generate spurious signals immediately after the baseline is first computed.
 
 \textbf{Hardware constraints.}
-The platform is deployed on a single-node homelab (Intel i5, 8~GB VRAM for
-GPU inference). Horizontal scaling of the Serving API and Batch Service to
-multiple nodes was not evaluated. The Redpanda broker operates as a
-single-partition configuration; a multi-partition, multi-replica setup
-would be required for fault-tolerant production deployments at city scale.
+The platform is deployed on a single-node homelab (Intel Core i5-8500,
+6~cores at 3.0~GHz; 24~GB DDR4 RAM; NVIDIA GeForce GTX~1060 6~GB VRAM).
+Horizontal scaling of the Serving API and Batch Service to multiple nodes
+was not evaluated. The Redpanda broker operates as a single-partition
+configuration; a multi-partition, multi-replica setup would be required
+for fault-tolerant production deployments at city scale.
 
 % ============================================================
 \section{Comparison with Related Approaches}

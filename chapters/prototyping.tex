@@ -65,12 +65,12 @@ atomic commits without locking MinIO objects directly.
 \subsection{LLM: Ollama with Qwen2.5:3b}
 
 The RAG pipeline requires a model that fits within the homelab GPU budget
-(8~GB VRAM). \textbf{Qwen2.5:3b}~\cite{qwen25_report}, served via
-\textbf{Ollama}, achieves an average time-to-first-token of under one second
-while producing coherent 2--3 sentence traffic explanations in both English
-and Vietnamese. The \textit{RAG-over-fine-tuning} approach is justified by the
-need for always-current context: retraining on new anomaly events would be
-prohibitively expensive on the available hardware.
+(NVIDIA GTX~1060, 6~GB VRAM). \textbf{Qwen2.5:3b}~\cite{qwen25_report},
+served via \textbf{Ollama}, achieves an average time-to-first-token of under
+one second while producing coherent 2--3 sentence traffic explanations in
+both English and Vietnamese. The \textit{RAG-over-fine-tuning} approach is
+justified by the need for always-current context: retraining on new anomaly
+events would be prohibitively expensive on the available hardware.
 
 % ============================================================
 \section{Service Topology Design}
@@ -168,7 +168,7 @@ to the \texttt{TrafficRouteObservation} Pydantic model. The canonical fields are
 
 \begin{itemize}
   \item \textbf{\texttt{route\_id}}: unique string identifier of the inter-zone
-        route (e.g., \texttt{zone1\_urban\_core\_to\_zone2\_eastern\_innovation}).
+        route (e.g., \texttt{zone1\_urban\_core\_\allowbreak to\_zone2\_eastern\_innovation}).
   \item \textbf{\texttt{duration\_ms}}: raw travel time from the VietMap Directions
         API, in milliseconds.
   \item \textbf{\texttt{duration\_minutes}}: derived field ($= \texttt{duration\_ms}
@@ -194,9 +194,9 @@ Three Iceberg tables are provisioned in MinIO via Nessie catalog:
         with one row per API observation. Partitioned by \texttt{day(timestamp\_utc)}.
         A \texttt{source} column records the VietMap API endpoint version.
   \item \textbf{Gold} (\texttt{gold.traffic\_hourly}): 11-column hourly
-        aggregation. Fields include \texttt{avg\_duration\_minutes},
-        \texttt{p95\_duration\_minutes}, \texttt{avg\_heavy\_ratio},
-        \texttt{avg\_moderate\_ratio}, and \texttt{max\_severe\_segments}.
+        aggregation keyed by \texttt{(route\_id, hour\_utc)}. Includes
+        \texttt{avg\_heavy\_ratio}, \texttt{avg\_moderate\_ratio},
+        \texttt{avg\_duration\_minutes}, and \texttt{p95\_duration\_minutes}.
         Partitioned by \texttt{day(hour\_utc)}.
   \item \textbf{Baseline} (\texttt{gold.traffic\_baseline}): per-route,
         per-hour-of-day, per-day-of-week statistical summary used by the
@@ -222,12 +222,12 @@ The entire platform is containerised using \textbf{Docker Compose} with a
 three-file layered override pattern:
 
 \begin{itemize}
-  \item \texttt{docker-compose.base.yaml} --- shared service definitions
+  \item \texttt{docker-compose\allowbreak.base.yaml} --- shared service definitions
         (Redpanda, MinIO, Nessie, PostgreSQL, ChromaDB, MLflow, Prefect, Ollama).
-  \item \texttt{docker-compose.dev.yaml} --- development overlay: exposes ports
+  \item \texttt{docker-compose\allowbreak.dev.yaml} --- development overlay: exposes ports
         locally, mounts source code volumes, uses \texttt{host.docker.internal}
         for the Ollama endpoint.
-  \item \texttt{docker-compose.prod.yaml} --- production overlay: adds
+  \item \texttt{docker-compose\allowbreak.prod.yaml} --- production overlay: adds
         Traefik reverse proxy with Let's Encrypt TLS, removes exposed ports,
         uses named volumes at \texttt{/opt/urban-pulse/} on the host.
 \end{itemize}

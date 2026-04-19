@@ -1,31 +1,40 @@
 \begin{thebibliography}{10}
 
 \bibitem{urban-pulse-platform}
-C.~Th{\d{i}}nh, ``{UrbanPulse: Real-Time Traffic Anomaly Detection Platform}.'' \url{https://github.com/tyri0n11/urban-pulse-platform}, 2026.
+C.~Th{\d{i}}nh, ``{UrbanPulse: Real-Time Traffic Anomaly Detection Platform}.''
+  \url{https://github.com/tyri0n11/urban-pulse-platform}, 2026.
 \newblock Accessed: 2026-04-09.
 
 \bibitem{5steps-gaps}
-T.~Adepitan, ``{5 Steps to Find Research Gaps \& Write SMART Objectives}.'' \url{https://glintplus.com/blog/find-research-gaps-write-smart-objectives/}, August 2025.
+T.~Adepitan, ``{5 Steps to Find Research Gaps \& Write SMART Objectives}.''
+  \url{https://glintplus.com/blog/find-research-gaps-write-smart-objectives/},
+  August 2025.
 \newblock Glintplus PhD Thesis Guide.
 
 \bibitem{hcmc_transport_report}
-{Ho Chi Minh City Department of Transport}, ``{Annual Transport Infrastructure Report: Ho Chi Minh City}.'' \url{https://www.sogtvt.hochiminhcity.gov.vn/}, 2024.
+{Ho Chi Minh City Department of Transport}, ``{Annual Transport Infrastructure
+  Report: Ho Chi Minh City}.'' \url{https://www.sogtvt.hochiminhcity.gov.vn/},
+  2024.
 \newblock Accessed: 2025-11-01.
 
 \bibitem{batch_latency_survey}
-A.~Katsifodimos and S.~Schelter, ``{Apache Flink: Stream and Batch Processing in a Single Engine}.'' \url{https://flink.apache.org/}, 2016.
+A.~Katsifodimos and S.~Schelter, ``{Apache Flink: Stream and Batch Processing
+  in a Single Engine}.'' \url{https://flink.apache.org/}, 2016.
 \newblock Survey on batch vs streaming latency trade-offs.
 
 \bibitem{redpanda_whitepaper}
-{Redpanda Data}, ``{Redpanda: The Streaming Data Platform Built for Developers}.'' \url{https://redpanda.com/resources/}, 2024.
+{Redpanda Data}, ``{Redpanda: The Streaming Data Platform Built for
+  Developers}.'' \url{https://redpanda.com/resources/}, 2024.
 \newblock Accessed: 2025-10-01.
 
 \bibitem{qwen25_report}
-{Alibaba Cloud}, ``{Qwen2.5 Technical Report}.'' \url{https://qwenlm.github.io/blog/qwen2.5/}, 2024.
+{Alibaba Cloud}, ``{Qwen2.5 Technical Report}.''
+  \url{https://qwenlm.github.io/blog/qwen2.5/}, 2024.
 \newblock Accessed: 2025-11-01.
 
 \bibitem{vietmap_api}
-{Vietmap Solutions}, ``{Vietmap Traffic API Documentation}.'' Internal technical documentation, 2025.
+{Vietmap Solutions}, ``{Vietmap Traffic API Documentation}.'' Internal
+  technical documentation, 2025.
 \newblock Real-time traffic data provider for UrbanPulse.
 
 \bibitem{kleppmann_ddia}
@@ -33,100 +42,142 @@ M.~Kleppmann, {\em {Designing Data-Intensive Applications}}.
 \newblock O'Reilly Media, 2017.
 
 \bibitem{pydantic_docs}
-{Pydantic}, ``{Pydantic: Data Validation Using Python Type Hints}.'' \url{https://docs.pydantic.dev/}, 2025.
+{Pydantic}, ``{Pydantic: Data Validation Using Python Type Hints}.''
+  \url{https://docs.pydantic.dev/}, 2025.
 \newblock Accessed: 2025-11-01.
 
 \bibitem{openmeteo_api}
-{Open-Meteo}, ``{Open-Meteo: Free Weather API}.'' \url{https://open-meteo.com/}, 2024.
+{Open-Meteo}, ``{Open-Meteo: Free Weather API}.''
+  \url{https://open-meteo.com/}, 2024.
 \newblock Accessed: 2025-12-01.
 
 \bibitem{databricks_lakehouse}
-M.~Armbrust, A.~Ghodsi, R.~Xin, and M.~Zaharia, ``{Lakehouse: A New Generation of Open Platforms that Unify Data Warehousing and Advanced Analytics}.'' \url{https://www.cidrdb.org/cidr2021/papers/cidr2021_paper17.pdf}, 2021.
+M.~Armbrust, A.~Ghodsi, R.~Xin, and M.~Zaharia, ``{Lakehouse: A New Generation
+  of Open Platforms that Unify Data Warehousing and Advanced Analytics}.''
+  \url{https://www.cidrdb.org/cidr2021/papers/cidr2021_paper17.pdf}, 2021.
 \newblock CIDR 2021.
 
 \bibitem{parquet_format}
-{Apache Software Foundation}, ``{Apache Parquet: Columnar Storage Format}.'' \url{https://parquet.apache.org/}, 2024.
+{Apache Software Foundation}, ``{Apache Parquet: Columnar Storage Format}.''
+  \url{https://parquet.apache.org/}, 2024.
 \newblock Accessed: 2025-10-01.
 
 \bibitem{small_file_problem}
-{Apache Software Foundation}, ``{HDFS Architecture: Small Files Problem}.'' \url{https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html}, 2023.
+{Apache Software Foundation}, ``{HDFS Architecture: Small Files Problem}.''
+  \url{https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html},
+  2023.
 \newblock Accessed: 2025-10-01.
 
 \bibitem{enterprise_integration_patterns}
-G.~Hohpe and B.~Woolf, {\em {Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions}}.
+G.~Hohpe and B.~Woolf, {\em {Enterprise Integration Patterns: Designing,
+  Building, and Deploying Messaging Solutions}}.
 \newblock Addison-Wesley, 2003.
 
 \bibitem{flink_event_time}
-{Apache Software Foundation}, ``{Apache Flink: Event Time and Watermarks}.'' \url{https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/time/}, 2024.
+{Apache Software Foundation}, ``{Apache Flink: Event Time and Watermarks}.''
+  \url{https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/time/},
+  2024.
 \newblock Accessed: 2025-10-15.
 
 \bibitem{prefect_docs}
-{Prefect Technologies}, ``{Prefect: The New Standard in Dataflow Automation}.'' \url{https://docs.prefect.io/}, 2025.
+{Prefect Technologies}, ``{Prefect: The New Standard in Dataflow Automation}.''
+  \url{https://docs.prefect.io/}, 2025.
 \newblock Accessed: 2025-11-01.
 
 \bibitem{duckdb_paper}
-M.~Raasveldt and H.~M{\"u}hleisen, ``{DuckDB: An Embeddable Analytical Database}.'' \url{https://duckdb.org/}, 2019.
+M.~Raasveldt and H.~M{\"u}hleisen, ``{DuckDB: An Embeddable Analytical
+  Database}.'' \url{https://duckdb.org/}, 2019.
 \newblock SIGMOD 2019 Demo.
 
 \bibitem{iceberg_paper}
-{Apache Software Foundation}, ``{Apache Iceberg: A Table Format for Huge Analytic Datasets}.'' \url{https://iceberg.apache.org/}, 2024.
+{Apache Software Foundation}, ``{Apache Iceberg: A Table Format for Huge
+  Analytic Datasets}.'' \url{https://iceberg.apache.org/}, 2024.
 \newblock Accessed: 2025-11-01.
 
 \bibitem{nessie_docs}
-{Project Nessie}, ``{Project Nessie: Transactional Catalog for Data Lakes}.'' \url{https://projectnessie.org/}, 2025.
+{Project Nessie}, ``{Project Nessie: Transactional Catalog for Data Lakes}.''
+  \url{https://projectnessie.org/}, 2025.
 \newblock Accessed: 2025-11-01.
 
 \bibitem{flink_paper}
-P.~Carbone, A.~Katsifodimos, S.~Ewen, V.~Markl, S.~Haridi, and K.~Tzoumas, ``{Apache Flink: Stream and Batch Processing in a Single Engine},'' {\em IEEE Data Engineering Bulletin}, vol.~38, no.~4, pp.~28--38, 2015.
+P.~Carbone, A.~Katsifodimos, S.~Ewen, V.~Markl, S.~Haridi, and K.~Tzoumas,
+  ``{Apache Flink: Stream and Batch Processing in a Single Engine},'' {\em IEEE
+  Data Engineering Bulletin}, vol.~38, no.~4, pp.~28--38, 2015.
 
 \bibitem{spark_streaming}
-M.~Zaharia, T.~Das, H.~Li, T.~Hunter, S.~Shenker, and I.~Stoica, ``{Discretized Streams: Fault-Tolerant Streaming Computation at Scale},'' in {\em Proceedings of the 24th ACM Symposium on Operating Systems Principles}, pp.~423--438, 2013.
+M.~Zaharia, T.~Das, H.~Li, T.~Hunter, S.~Shenker, and I.~Stoica, ``{Discretized
+  Streams: Fault-Tolerant Streaming Computation at Scale},'' in {\em
+  Proceedings of the 24th ACM Symposium on Operating Systems Principles},
+  pp.~423--438, 2013.
 
 \bibitem{pyiceberg_docs}
-{Apache Software Foundation}, ``{PyIceberg: Python Library for Apache Iceberg}.'' \url{https://py.iceberg.apache.org/}, 2024.
+{Apache Software Foundation}, ``{PyIceberg: Python Library for Apache
+  Iceberg}.'' \url{https://py.iceberg.apache.org/}, 2024.
 \newblock Accessed: 2025-11-15.
 
 \bibitem{welford1962}
-B.~P. Welford, ``{Note on a Method for Calculating Corrected Sums of Squares and Products},'' {\em Technometrics}, vol.~4, no.~3, pp.~419--420, 1962.
+B.~P. Welford, ``{Note on a Method for Calculating Corrected Sums of Squares
+  and Products},'' {\em Technometrics}, vol.~4, no.~3, pp.~419--420, 1962.
 
 \bibitem{chandola2009anomaly}
-V.~Chandola, A.~Banerjee, and V.~Kumar, ``{Anomaly Detection: A Survey},'' {\em ACM Computing Surveys}, vol.~41, no.~3, pp.~1--58, 2009.
+V.~Chandola, A.~Banerjee, and V.~Kumar, ``{Anomaly Detection: A Survey},'' {\em
+  ACM Computing Surveys}, vol.~41, no.~3, pp.~1--58, 2009.
 
 \bibitem{liu2008isolation}
-F.~T. Liu, K.~M. Ting, and Z.-H. Zhou, ``{Isolation Forest},'' in {\em 2008 Eighth IEEE International Conference on Data Mining}, pp.~413--422, 2008.
+F.~T. Liu, K.~M. Ting, and Z.-H. Zhou, ``{Isolation Forest},'' in {\em 2008
+  Eighth IEEE International Conference on Data Mining}, pp.~413--422, 2008.
 
 \bibitem{cyclical_encoding}
-D.~S. Phatak and I.~Koren, ``{Cyclic Encodings for Temporal Features in Machine Learning}.'' \url{https://towardsdatascience.com/cyclical-features-encoding-its-actually-norm-unit-circle-c6dc1b92b3d0}, 2021.
+D.~S. Phatak and I.~Koren, ``{Cyclic Encodings for Temporal Features in Machine
+  Learning}.''
+  \url{https://towardsdatascience.com/cyclical-features-encoding-its-actually-norm-unit-circle-c6dc1b92b3d0},
+  2021.
 \newblock Accessed: 2025-10-01.
 
 \bibitem{mlflow_paper}
-M.~Zaharia, A.~Chen, A.~Davidson, A.~Ghodsi, S.~A. Hong, A.~Konwinski, S.~Murching, T.~Nykodym, P.~Ogilvie, M.~Parkhe, F.~Xie, and C.~Zumar, ``{Accelerating the Machine Learning Lifecycle with MLflow}.'' \url{https://mlflow.org/}, 2018.
+M.~Zaharia, A.~Chen, A.~Davidson, A.~Ghodsi, S.~A. Hong, A.~Konwinski,
+  S.~Murching, T.~Nykodym, P.~Ogilvie, M.~Parkhe, F.~Xie, and C.~Zumar,
+  ``{Accelerating the Machine Learning Lifecycle with MLflow}.''
+  \url{https://mlflow.org/}, 2018.
 \newblock IEEE Data Engineering Bulletin, 41(4).
 
 \bibitem{mlflow_docs}
-{Databricks}, ``{MLflow Documentation}.'' \url{https://mlflow.org/docs/latest/index.html}, 2025.
+{Databricks}, ``{MLflow Documentation}.''
+  \url{https://mlflow.org/docs/latest/index.html}, 2025.
 \newblock Accessed: 2025-11-15.
 
 \bibitem{lewis2020rag}
-P.~Lewis, E.~Perez, A.~Piktus, F.~Petroni, V.~Karpukhin, N.~Goyal, H.~K{\"u}ttler, M.~Lewis, W.-t. Yih, T.~Rockt{\"a}schel, S.~Riedel, and D.~Kiela, ``{Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks},'' in {\em Advances in Neural Information Processing Systems}, vol.~33, pp.~9459--9474, 2020.
+P.~Lewis, E.~Perez, A.~Piktus, F.~Petroni, V.~Karpukhin, N.~Goyal,
+  H.~K{\"u}ttler, M.~Lewis, W.-t. Yih, T.~Rockt{\"a}schel, S.~Riedel, and
+  D.~Kiela, ``{Retrieval-Augmented Generation for Knowledge-Intensive NLP
+  Tasks},'' in {\em Advances in Neural Information Processing Systems},
+  vol.~33, pp.~9459--9474, 2020.
 
 \bibitem{chromadb_docs}
-{Chroma}, ``{ChromaDB: The AI-Native Open-Source Embedding Database}.'' \url{https://docs.trychroma.com/}, 2024.
+{Chroma}, ``{ChromaDB: The AI-Native Open-Source Embedding Database}.''
+  \url{https://docs.trychroma.com/}, 2024.
 \newblock Accessed: 2025-11-15.
 
 \bibitem{nomic_embed}
-{Nomic AI}, ``{Nomic Embed: Training a Reproducible Long Context Text Embedder}.'' \url{https://huggingface.co/nomic-ai/nomic-embed-text-v1}, 2024.
+{Nomic AI}, ``{Nomic Embed: Training a Reproducible Long Context Text
+  Embedder}.'' \url{https://huggingface.co/nomic-ai/nomic-embed-text-v1}, 2024.
 \newblock Accessed: 2025-11-15.
 
 \bibitem{sse_spec}
-{W3C}, ``{Server-Sent Events: W3C Recommendation}.'' \url{https://www.w3.org/TR/eventsource/}, 2015.
+{W3C}, ``{Server-Sent Events: W3C Recommendation}.''
+  \url{https://www.w3.org/TR/eventsource/}, 2015.
 \newblock Accessed: 2025-10-01.
 
 \bibitem{ollama_docs}
-{Ollama}, ``{Ollama: Run Large Language Models Locally}.'' \url{https://ollama.com/}, 2025.
+{Ollama}, ``{Ollama: Run Large Language Models Locally}.''
+  \url{https://ollama.com/}, 2025.
 \newblock Accessed: 2025-12-01.
 
 \bibitem{rlhf_paper}
-L.~Ouyang, J.~Wu, X.~Jiang, D.~Almeida, C.~Wainwright, P.~Mishkin, C.~Zhang, S.~Agarwal, K.~Slama, A.~Ray, J.~Schulman, J.~Hilton, F.~Kelton, L.~Miller, M.~Simens, A.~Askell, P.~Welinder, P.~Christiano, J.~Leike, and R.~Lowe, ``{Training Language Models to Follow Instructions with Human Feedback},'' in {\em Advances in Neural Information Processing Systems}, vol.~35, 2022.
+L.~Ouyang, J.~Wu, X.~Jiang, D.~Almeida, C.~Wainwright, P.~Mishkin, C.~Zhang,
+  S.~Agarwal, K.~Slama, A.~Ray, J.~Schulman, J.~Hilton, F.~Kelton, L.~Miller,
+  M.~Simens, A.~Askell, P.~Welinder, P.~Christiano, J.~Leike, and R.~Lowe,
+  ``{Training Language Models to Follow Instructions with Human Feedback},'' in
+  {\em Advances in Neural Information Processing Systems}, vol.~35, 2022.
 
 \end{thebibliography}

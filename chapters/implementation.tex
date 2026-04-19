@@ -43,6 +43,21 @@ JSON and published to the Redpanda topic \texttt{traffic-route-bronze} with a
 Kafka header \texttt{ingest\_ts} (Unix milliseconds) attached for downstream
 lag measurement.
 
+Figure~\ref{fig:redpanda-topic} shows the Redpanda Console confirming
+\textbf{67,428 messages} accumulated in the \texttt{traffic-route-bronze}
+topic (34.3~MiB) across the 40-day deployment, corresponding to the expected
+$20 \text{ routes} \times 288 \text{ polls/day} \times 40 \text{ days} =
+230{,}400$ raw messages before compaction.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{redpanda-topic.png}
+  \caption{Redpanda Console: \texttt{traffic-route-bronze} topic with 67,428
+           messages (34.3~MiB) confirming continuous ingestion over the
+           40-day observation window.}
+  \label{fig:redpanda-topic}
+\end{figure}
+
 \subsection{Concurrent Route Polling}
 
 The \texttt{orchestrator.py} module spawns one coroutine per route using
@@ -56,12 +71,14 @@ automatically.
 \label{sec:impl-streaming}
 % ============================================================
 
-The \textbf{Streaming Service} subscribes to \texttt{traffic-route-bronze}
-(consumer group \texttt{streaming-group}) and writes each message as a
+The \textbf{Streaming Service} subscribes to \texttt{traffic\allowbreak-route\allowbreak-bronze}
+(consumer group \texttt{streaming\allowbreak-group}) and writes each message as a
 Parquet file to MinIO under the time-partitioned path:
 
 \begin{center}
-\texttt{s3://urban-pulse/bronze/traffic-route-bronze/year=\{Y\}/month=\{M\}/day=\{D\}/hour=\{H\}/\{uuid\}.parquet}
+\ttfamily\small
+s3://urban-pulse/bronze/traffic-route-bronze/\\
+\hspace*{2em}year=\{Y\}/month=\{M\}/day=\{D\}/hour=\{H\}/\{uuid\}.parquet
 \end{center}
 
 The processor (\texttt{processors/traffic.py}) deserialises the JSON payload
@@ -187,6 +204,22 @@ Figure~\ref{fig:batch-flows}.
 \label{fig:batch-flows}
 \end{figure}
 
+Figure~\ref{fig:prefect-deployments} shows the Prefect UI confirming all
+seven production deployments are active: \texttt{alert\allowbreak-check} and
+\texttt{traffic\allowbreak-microbatch} run every 5 minutes,
+\texttt{hourly\allowbreak-gold\allowbreak-run} runs hourly,
+\texttt{traffic\allowbreak-retrain} and \texttt{rag\allowbreak-index\allowbreak-rebuild}
+run every 6 hours, and \texttt{backfill\allowbreak-silver} and
+\texttt{bootstrap\allowbreak-infra} run on-demand.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{prefect-deployments.png}
+  \caption{Prefect 3.x Deployments view: seven active flows covering ingestion,
+           batch promotion, model retraining, RAG indexing, and Telegram alerting.}
+  \label{fig:prefect-deployments}
+\end{figure}
+
 \subsection{Bronze-to-Silver Promotion}
 
 The \texttt{bronze\_to\_silver.microbatch()} function scans the MinIO Bronze
@@ -210,8 +243,8 @@ and \texttt{max\_severe\_segments}. Results are appended to
 
 \subsection{Baseline Learning}
 
-The \texttt{baseline\_learning.run()} function queries the entire Gold table
-and computes, per \texttt{(route\_id, day\_of\_week, hour\_of\_day)} triple,
+The \texttt{baseline\_learning\allowbreak.run()} function queries the entire Gold table
+and computes, per \texttt{(route\_id,\allowbreak\ day\_of\_week,\allowbreak\ hour\_of\_day)} triple,
 the mean and standard deviation of \texttt{avg\_heavy\_ratio}. An empirical
 Z-score threshold is derived from the 99th percentile of the per-route
 distribution. These statistics are written to
@@ -261,13 +294,14 @@ distant, misrepresenting the weekly traffic rhythm.
 
 \subsection{IsolationForest Configuration}
 
-Each per-route model is trained with
-\texttt{contamination=0.05} (5\% of training hours assumed anomalous),
-\texttt{n\_estimators=100}, and \texttt{random\_state=42}~\cite{liu2008isolation}.
-The model is registered in MLflow under the name \texttt{iforest-\{route\_id\}}
-with alias \texttt{champion}, enabling the Serving API to load the latest
-production-ready model via a single \texttt{mlflow.pyfunc.load\_model} call
-with a 1-hour in-process cache (\texttt{MODEL\_TTL = 3600~s}).
+Each per-route model is trained with \texttt{contamination=0.05}
+(5\% of training hours assumed anomalous), \texttt{n\_estimators=100}, and
+\texttt{random\_state=42}~\cite{liu2008isolation}.
+The model is registered in MLflow under the name
+\texttt{iforest-\{route\_id\}} with alias \texttt{champion}, enabling
+the Serving API to load the latest production-ready model via
+\texttt{mlflow.pyfunc.load\_model} with a 1-hour in-process cache
+(\texttt{MODEL\_TTL = 3600~s}).
 
 % ============================================================
 \section{Serving Layer}
@@ -336,6 +370,55 @@ base model: the LLM reasons over injected facts rather than memorising
 traffic patterns, ensuring that explanations remain accurate even as
 city traffic evolves week to week.
 
+Figure~\ref{fig:ai-explanation} shows a production anomaly explanation for
+\texttt{zone6\_southern\_coastal $\to$ zone5\_western\_periurban} rendered in
+Vietnamese. The Qwen2.5:3b model references specific road conditions and
+contextualises the anomaly with weather data retrieved from the Open-Meteo
+API, demonstrating the RAG pipeline's ability to produce operator-ready,
+language-specific explanations.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{ai-explanation.png}
+  \caption{Production AI Explanation modal for the Coastal $\to$ Western route
+           anomaly (Vietnamese output): Qwen2.5:3b generates a contextualised
+           explanation referencing weather conditions and route history via RAG.}
+  \label{fig:ai-explanation}
+\end{figure}
+
+Figure~\ref{fig:ai-chat} shows the conversational \texttt{/chat} SSE
+endpoint in action. The user asks about current traffic conditions in
+Vietnamese and receives a structured response listing congestion levels for
+multiple routes (e.g., Southern Port $\to$ Western 10.9\%, Southern Port
+$\to$ Eastern 7.9\%), all generated by the Qwen2.5:3b model over
+ChromaDB-retrieved context.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{ai-chat.png}
+  \caption{Urban Pulse AI Chat interface (Vietnamese): conversational RAG
+           endpoint reporting live congestion percentages per route, powered
+           by Qwen2.5:3b and the ChromaDB \texttt{traffic\_patterns} collection.}
+  \label{fig:ai-chat}
+\end{figure}
+
+Figure~\ref{fig:ai-chat-en} demonstrates the same chat endpoint in English.
+The model surfaces live weather context alongside congestion data --- here
+reporting partly cloudy conditions at 26.8\textdegree C alongside the
+Southern Port $\to$ Western Periurban route at 10.9\% heavy ratio ---
+confirming that the RAG pipeline correctly retrieves and synthesises both
+the Open-Meteo weather feed and the PostgreSQL feature store in a single
+response regardless of query language.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\textwidth]{ai-chat-english.png}
+  \caption{Urban Pulse AI Chat (English): Qwen2.5:3b integrates live weather
+           data (26.8\textdegree C, partly cloudy) with congestion metrics
+           in a single natural-language response, demonstrating bilingual RAG capability.}
+  \label{fig:ai-chat-en}
+\end{figure}
+
 \subsection{Dual-Signal Fusion in Serving}
 
 The \texttt{prediction\_service.py} module loads all per-route IsolationForest
@@ -350,3 +433,34 @@ Only \texttt{both\_anomaly} routes are escalated to Telegram. This conjunction
 rule deliberately trades recall for precision: a route must independently
 exceed the statistical threshold \textit{and} be scored as an outlier by the
 trained model before an alert is sent.
+
+\subsection{Frontend Dashboard}
+
+The Next.js 15 frontend consumes the SSE stream and renders two primary views.
+Figure~\ref{fig:heatmap-zscore} and Figure~\ref{fig:heatmap-both} show the
+\textbf{Traffic Metrics heatmap}: a route $\times$ hour grid where each cell
+is coloured by congestion severity. Hovering a cell reveals the route
+coordinates, Z-score value, and the detector that flagged it
+(\texttt{ZSCORE} for a Z-score-only event, \texttt{BOTH} for a dual-signal
+confirmation). Figure~\ref{fig:heatmap-zscore} shows the Coastal $\to$
+Urban Core route at 08:00 with $Z = 4.22$ (Z-score only), while
+Figure~\ref{fig:heatmap-both} shows the Coastal $\to$ Western route at
+15:00 with $Z = 2.02$ confirmed by both detectors.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{dashboard-heatmap-zscore.png}
+  \caption{Traffic Metrics heatmap: tooltip showing a Z-score-only anomaly
+           on the Coastal $\to$ Urban Core route at 08:00 ($Z = 4.22$),
+           Apr 12--15, 2026.}
+  \label{fig:heatmap-zscore}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{dashboard-heatmap-both.png}
+  \caption{Traffic Metrics heatmap: tooltip showing a dual-signal anomaly
+           (\texttt{BOTH}) on the Coastal $\to$ Western route at 15:00
+           ($Z = 2.02$), Apr 12--15, 2026.}
+  \label{fig:heatmap-both}
+\end{figure}

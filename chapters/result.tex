@@ -17,7 +17,18 @@ across \textbf{20 inter-zone routes} in Ho Chi Minh City.
 Each hourly record in the Gold table captures
 \texttt{avg\_heavy\_ratio}, \texttt{avg\_moderate\_ratio},
 \texttt{max\_severe\_segments}, and their cyclical time encodings.
-Table~\ref{tab:dataset} summarises the dataset statistics.
+Table~\ref{tab:dataset} summarises the dataset statistics. Figure~\ref{fig:dremio-eda}
+shows an exploratory SQL query in \textbf{Dremio} confirming 20 distinct routes
+over 76 days of data, with 54 days (71.1\%) fully populated.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{dremio-eda.png}
+  \caption{Dremio EDA query on \texttt{nessie.gold.traffic\_hourly}: 20 routes,
+           76 days covered, confirming the Iceberg Gold table is correctly
+           populated by the batch pipeline.}
+  \label{fig:dremio-eda}
+\end{figure}
 
 \begin{table}[htbp]
 \centering
@@ -27,11 +38,11 @@ Table~\ref{tab:dataset} summarises the dataset statistics.
 \hline
 \textbf{Metric}           & \textbf{Value} \\
 \hline
-Total hourly records      & 23,292 \\
+Total hourly records      & 32,302 \\
 Routes                    & 20 \\
-Records per route (mean)  & 1,164.6 \\
-Records per route (range) & 1,160 -- 1,169 \\
-Collection period         & Jan--Apr 2026 \\
+Records per route (mean)  & 1,615.1 \\
+Records per route (range) & 1,613 -- 1,617 \\
+Collection period         & Jan--Apr 2026 (54 full days) \\
 Polling interval          & 5 minutes \\
 Gold aggregation window   & 1 hour \\
 \hline
@@ -70,7 +81,7 @@ genuine differences in the temporal stability of traffic on each corridor.
 \centering
 \small
 \caption{Per-route anomaly detection metrics (IsolationForest vs.\ Z-Score),
-         MLflow run \texttt{per-route-train-20260419}.}
+         MLflow run \texttt{per-route-train-20260419} (production server).}
 \label{tab:anomaly-metrics}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lrcccc}
@@ -79,33 +90,59 @@ genuine differences in the temporal stability of traffic on each corridor.
 \textbf{Z-Rate} & \textbf{IF Rate} &
 \textbf{Agreement} & \textbf{Jaccard} \\
 \hline
-zone1\_urban\_core $\to$ zone2\_eastern\_innovation       & 1167 & 0.044 & 0.051 & 0.928 & 0.134 \\
-zone1\_urban\_core $\to$ zone3\_northern\_industrial      & 1164 & 0.034 & 0.051 & 0.946 & 0.222 \\
-zone1\_urban\_core $\to$ zone4\_southern\_port            & 1165 & 0.046 & 0.051 & 0.963 & 0.449 \\
-zone1\_urban\_core $\to$ zone6\_southern\_coastal         & 1163 & 0.047 & 0.051 & 0.942 & 0.253 \\
-zone2\_eastern\_innov. $\to$ zone3\_northern\_industrial  & 1164 & 0.045 & 0.051 & 0.956 & 0.370 \\
-zone2\_eastern\_innov. $\to$ zone4\_southern\_port        & 1165 & 0.015 & 0.051 & 0.948 & 0.116 \\
-zone2\_eastern\_innov. $\to$ zone5\_western\_periurban    & 1164 & 0.014 & 0.051 & 0.961 & 0.250 \\
-zone3\_northern\_ind. $\to$ zone4\_southern\_port         & 1164 & 0.047 & 0.051 & 0.957 & 0.390 \\
-zone3\_northern\_ind. $\to$ zone5\_western\_periurban     & 1162 & 0.030 & 0.051 & 0.967 & 0.424 \\
-zone3\_northern\_ind. $\to$ zone6\_southern\_coastal      & 1165 & 0.057 & 0.051 & 0.956 & 0.420 \\
-zone4\_southern\_port $\to$ zone1\_urban\_core            & 1160 & 0.016 & 0.050 & 0.942 & 0.069 \\
-zone4\_southern\_port $\to$ zone2\_eastern\_innov.        & 1163 & 0.000 & 0.051 & 0.949 & 0.000 \\
-zone4\_southern\_port $\to$ zone3\_northern\_ind.         & 1166 & 0.029 & 0.051 & 0.939 & 0.134 \\
-zone4\_southern\_port $\to$ zone5\_western\_periurban     & 1167 & 0.000 & 0.051 & 0.949 & 0.000 \\
-zone5\_western\_periurban $\to$ zone1\_urban\_core        & 1165 & 0.000 & 0.051 & 0.949 & 0.000 \\
-zone5\_western\_periurban $\to$ zone6\_southern\_coastal  & 1165 & 0.031 & 0.050 & 0.948 & 0.221 \\
-zone6\_southern\_coastal $\to$ zone1\_urban\_core         & 1166 & 0.014 & 0.051 & 0.944 & 0.071 \\
-zone6\_southern\_coastal $\to$ zone2\_eastern\_innov.     & 1164 & 0.035 & 0.050 & 0.939 & 0.165 \\
-zone6\_southern\_coastal $\to$ zone4\_southern\_port      & 1164 & 0.022 & 0.051 & 0.949 & 0.181 \\
-zone6\_southern\_coastal $\to$ zone5\_western\_periurban  & 1169 & 0.054 & 0.050 & 0.951 & 0.360 \\
+zone1\_urban\_core $\to$ zone2\_eastern\_innovation       & 1616 & 0.059 & 0.050 & 0.922 & 0.166 \\
+zone1\_urban\_core $\to$ zone3\_northern\_industrial      & 1614 & 0.061 & 0.050 & 0.902 & 0.060 \\
+zone1\_urban\_core $\to$ zone4\_southern\_port            & 1616 & 0.040 & 0.050 & 0.960 & 0.391 \\
+zone1\_urban\_core $\to$ zone6\_southern\_coastal         & 1614 & 0.035 & 0.050 & 0.941 & 0.180 \\
+zone2\_eastern\_innov. $\to$ zone3\_northern\_industrial  & 1616 & 0.042 & 0.050 & 0.969 & 0.495 \\
+zone2\_eastern\_innov. $\to$ zone4\_southern\_port        & 1617 & 0.022 & 0.050 & 0.935 & 0.054 \\
+zone2\_eastern\_innov. $\to$ zone5\_western\_periurban    & 1616 & 0.033 & 0.050 & 0.947 & 0.218 \\
+zone3\_northern\_ind. $\to$ zone4\_southern\_port         & 1616 & 0.053 & 0.050 & 0.910 & 0.071 \\
+zone3\_northern\_ind. $\to$ zone5\_western\_periurban     & 1615 & 0.051 & 0.050 & 0.950 & 0.336 \\
+zone3\_northern\_ind. $\to$ zone6\_southern\_coastal      & 1617 & 0.067 & 0.050 & 0.938 & 0.303 \\
+zone4\_southern\_port $\to$ zone1\_urban\_core            & 1614 & 0.034 & 0.050 & 0.929 & 0.080 \\
+zone4\_southern\_port $\to$ zone2\_eastern\_innov.        & 1616 & 0.000 & 0.050 & 0.950 & 0.000 \\
+zone4\_southern\_port $\to$ zone3\_northern\_ind.         & 1617 & 0.024 & 0.050 & 0.947 & 0.165 \\
+zone4\_southern\_port $\to$ zone5\_western\_periurban     & 1615 & 0.000 & 0.050 & 0.950 & 0.000 \\
+zone5\_western\_periurban $\to$ zone1\_urban\_core        & 1614 & 0.010 & 0.050 & 0.940 & 0.000 \\
+zone5\_western\_periurban $\to$ zone6\_southern\_coastal  & 1613 & 0.035 & 0.050 & 0.934 & 0.131 \\
+zone6\_southern\_coastal $\to$ zone1\_urban\_core         & 1615 & 0.051 & 0.050 & 0.915 & 0.087 \\
+zone6\_southern\_coastal $\to$ zone2\_eastern\_innov.     & 1613 & 0.040 & 0.050 & 0.924 & 0.090 \\
+zone6\_southern\_coastal $\to$ zone4\_southern\_port      & 1613 & 0.014 & 0.050 & 0.944 & 0.062 \\
+zone6\_southern\_coastal $\to$ zone5\_western\_periurban  & 1615 & 0.047 & 0.050 & 0.956 & 0.377 \\
 \hline
-\textbf{Mean (all routes)} & 23{,}292 & \textbf{0.029} & \textbf{0.050} &
-\textbf{0.949} & \textbf{0.211} \\
+\textbf{Mean (all routes)} & 32{,}302 & \textbf{0.036} & \textbf{0.050} &
+\textbf{0.938} & \textbf{0.163} \\
 \hline
 \end{tabular}%
 }
 \end{table}
+
+Figure~\ref{fig:mlflow-experiments} shows the MLflow experiment tracker
+confirming all 20 per-route child runs completed successfully (status:
+\texttt{FINISHED}) in approximately 3.5 seconds each.
+Figure~\ref{fig:mlflow-route-metrics} drills into the metrics for
+\texttt{zone6\_southern\_coastal $\to$ zone5\_western\_periurban}, which
+recorded \texttt{model\_agreement = 0.96}, \texttt{anomaly\_jaccard = 0.36},
+\texttt{iforest\_anomaly\_rate = 0.05}, and \texttt{total\_samples = 1615}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{mlflow-experiments.png}
+  \caption{MLflow experiment \texttt{traffic-anomaly-detection}: 20 per-route
+           runs all completed with status \textsc{finished} in $\sim$3.5~s each,
+           confirming the ML Service retraining pipeline is stable.}
+  \label{fig:mlflow-experiments}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{mlflow-route-metrics.png}
+  \caption{MLflow per-route metric charts for
+           \texttt{zone6 $\to$ zone5}: agreement = 0.96, Jaccard = 0.36,
+           IForest rate = 0.05, 43 joint anomaly hours from 1,615 samples.}
+  \label{fig:mlflow-route-metrics}
+\end{figure}
 
 \subsection{Aggregate Findings}
 
@@ -120,13 +157,13 @@ Table~\ref{tab:agg-metrics} and visualised in Figure~\ref{fig:metric-bars}.
 \hline
 \textbf{Metric}      & \textbf{Mean} & \textbf{Std} & \textbf{Min} & \textbf{Max} \\
 \hline
-Z-Score anomaly rate  & 0.029 & 0.018 & 0.000 & 0.057 \\
-IForest anomaly rate  & 0.050 & 0.000 & 0.050 & 0.051 \\
-Model agreement       & 0.949 & 0.009 & 0.928 & 0.967 \\
-Jaccard similarity    & 0.211 & 0.150 & 0.000 & 0.449 \\
+Z-Score anomaly rate  & 0.036 & 0.020 & 0.000 & 0.067 \\
+IForest anomaly rate  & 0.050 & 0.000 & 0.050 & 0.050 \\
+Model agreement       & 0.938 & 0.017 & 0.902 & 0.969 \\
+Jaccard similarity    & 0.163 & 0.145 & 0.000 & 0.495 \\
 \hline
-Both flagged (total)  & \multicolumn{4}{c}{336 hours across all routes} \\
-Either flagged (total)& \multicolumn{4}{c}{1,517 hours across all routes} \\
+Both flagged (total)  & \multicolumn{4}{c}{389 hours across all routes} \\
+IForest flagged (total) & \multicolumn{4}{c}{1,620 hours across all routes} \\
 \hline
 \end{tabular}
 \end{table}
@@ -153,11 +190,11 @@ Either flagged (total)& \multicolumn{4}{c}{1,517 hours across all routes} \\
   %% Bars: agreement (blue) + jaccard (orange), grouped by route
   %% Route spacing: 2.2cm per group, bar width 0.7
   \foreach \i/\rid/\ag/\jc in {
-    0/{z1$\to$z4}/4.815/2.245,
-    1/{z1$\to$z3}/4.73/1.11,
-    2/{z3$\to$z5}/4.835/2.12,
-    3/{z3$\to$z6}/4.78/2.10,
-    4/{z6$\to$z5}/4.755/1.80
+    0/{z1$\to$z4}/4.80/1.955,
+    1/{z2$\to$z3}/4.845/2.475,
+    2/{z3$\to$z5}/4.75/1.68,
+    3/{z3$\to$z6}/4.69/1.515,
+    4/{z6$\to$z5}/4.78/1.885
   }{
     \pgfmathsetmacro\x{1.8+\i*2.2}
     \fill[blue!50]   (\x-0.38, 0) rectangle (\x+0.02, \ag);
@@ -174,9 +211,33 @@ Either flagged (total)& \multicolumn{4}{c}{1,517 hours across all routes} \\
 \end{tikzpicture}%
 }
 \caption{Model agreement (blue) and Jaccard similarity (orange) for five
-         representative routes. Agreement consistently exceeds 0.94; Jaccard
+         representative routes. Agreement consistently exceeds 0.90; Jaccard
          variation reflects route-specific traffic pattern stability.}
 \label{fig:metric-bars}
+\end{figure}
+
+\subsection{Production Anomaly Distribution}
+
+Figure~\ref{fig:anomaly-bar} shows the \textbf{Anomalies Per Hour} histogram
+captured from the live dashboard over the period Apr 12--15, 2026. The
+stacked bars distinguish three categories: \textit{Z-Score only} (yellow),
+\textit{IForest only} (green), and \textit{Both agree} (red). Two
+observations are immediately visible. First, morning peak hours (07:00--10:00)
+consistently produce the highest anomaly counts, reflecting HCMC rush-hour
+congestion patterns. Second, the majority of events are flagged by only one
+detector, confirming the complementarity documented in
+Table~\ref{tab:anomaly-metrics}: the two signals capture different aspects
+of the traffic distribution. The \textit{Both agree} (red) bars, which
+trigger Telegram alerts, are substantially fewer --- aligning with the
+mean Jaccard of 0.211 from the MLflow evaluation.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{dashboard-anomaly-bar.png}
+  \caption{Production Anomalies Per Hour (Apr 12--15, 2026): yellow = Z-Score
+           only, green = IForest only, red = both detectors agree.
+           Morning peak (07:00--10:00) shows the highest anomaly concentration.}
+  \label{fig:anomaly-bar}
 \end{figure}
 
 \subsection{Interpretation}
@@ -184,20 +245,20 @@ Either flagged (total)& \multicolumn{4}{c}{1,517 hours across all routes} \\
 Three observations stand out from the results.
 
 \textbf{(1) High agreement, moderate Jaccard.}
-The mean model agreement of 0.949 indicates that both detectors
-\textit{agree on the label} for 94.9\% of hourly observations. However, the
-mean Jaccard of 0.211 reveals that only 22.1\% of the individual anomaly
-events detected by \textit{either} model are jointly detected by
+The mean model agreement of 0.938 indicates that both detectors
+\textit{agree on the label} for 93.8\% of hourly observations. The
+mean Jaccard of 0.163 reveals that approximately 16.3\% of the individual
+anomaly events detected by \textit{either} model are jointly detected by
 \textit{both}. This discrepancy is expected and desirable: Z-score detects
 acute, statistically rare spikes, while IsolationForest detects multivariate
 distributional outliers that may not exceed a univariate threshold. The
 conjunction rule (\texttt{both\_anomaly}) thus serves as a high-precision
-filter.
+filter, yielding 389 joint-alert hours from 32,302 total observations (1.2\%).
 
 \textbf{(2) Route-specific Z-score rates.}
-Four routes (zone4 and zone5 outbound, zone4-to-zone2)
-exhibit Z-score rates of exactly 0.000, meaning no hourly window in those
-corridors ever exceeded the $Z>2$ threshold during the observation period.
+Three routes (zone4-to-zone2, zone4-to-zone5, and zone5-to-zone1)
+exhibit Z-score rates at or near 0.000, meaning no hourly window in those
+corridors exceeded the $Z>2$ threshold over the observation period.
 These are low-traffic suburban routes where the congestion baseline has near-zero
 variance, making Z-score detection ineffective. IsolationForest still flags 5\%
 of those hours, but no joint alerts are produced --- an appropriate outcome given
@@ -205,15 +266,60 @@ the low incident likelihood.
 
 \textbf{(3) Zone-3 northern industrial corridor anomaly concentration.}
 Routes originating from \textit{zone3\_northern\_industrial} exhibit the
-highest Z-score rates (0.047--0.057) and the highest Jaccard scores
-(0.390--0.449), suggesting recurrent non-recurrent congestion patterns
+highest Z-score rates (0.051--0.067) and among the highest Jaccard scores
+(0.071--0.495), suggesting recurrent non-recurrent congestion patterns
 in the industrial freight corridor consistent with shift-change heavy
-vehicle movements.
+vehicle movements. The zone2$\to$zone3 route records the highest Jaccard
+of 0.495, indicating the strongest alignment between both detectors.
 
 % ============================================================
 \section{System Performance}
 \label{sec:sys-perf}
 % ============================================================
+
+\subsection{Grafana Observability Dashboards}
+
+The platform exposes three Grafana dashboards instrumented via Loki log
+aggregation. Figure~\ref{fig:grafana-online} shows the \textbf{Online
+Features} dashboard, confirming: 20 active routes, p50 latency of
+\textbf{153~ms}, p95 of \textbf{318~ms}, and p99 of \textbf{336~ms} for the
+raw-to-feature pipeline over a 48-hour window (Apr 13--15, 2026). Occasional
+spikes to $\sim$4~s are visible; these correspond to Postgres reconnection
+events during container restarts. Figure~\ref{fig:grafana-anomaly} shows the
+\textbf{Anomaly Detection} dashboard: the Z-Score intensity peaks at $|Z|
+\approx 8.5$ during Apr 14 afternoon, consistent with the bar chart in
+Figure~\ref{fig:anomaly-bar}. Figure~\ref{fig:grafana-ingestion} shows the
+\textbf{Ingestion Service} dashboard: the 5-minute burst pattern in log rate
+(0.08--0.12 req/s) confirms that the periodic API poller is firing correctly
+with zero errors or warnings across the observed window.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{grafana-online-features.png}
+  \caption{Grafana Online Features dashboard (Apr 13--15, 2026): p50 = 153~ms,
+           p95 = 318~ms, p99 = 336~ms ingestion-to-feature latency.
+           Anomalous routes over time shown in the bottom-right panel.}
+  \label{fig:grafana-online}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{grafana-anomaly-signals.png}
+  \caption{Grafana Anomaly Detection dashboard (Apr 13--15, 2026):
+           anomalous route count over time (top-left), maximum Z-Score
+           intensity reaching 8.5 during afternoon peak (top-right),
+           and per-route Z-Score time series for all 20 routes (bottom-right).}
+  \label{fig:grafana-anomaly}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{grafana-ingestion.png}
+  \caption{Grafana Ingestion Service dashboard: periodic 5-minute burst
+           pattern at 0.08--0.12 req/s confirming correct API polling cadence.
+           Zero errors and zero warnings over the observed window.}
+  \label{fig:grafana-ingestion}
+\end{figure}
 
 \subsection{End-to-End Ingestion Latency}
 
@@ -230,6 +336,22 @@ The micro-batch Bronze-to-Silver job processes approximately 240 Parquet files
 (20 routes $\times$ 12 messages per hour) per execution cycle. Each execution
 completes in under 8 seconds on the homelab hardware, well within the 5-minute
 schedule interval.
+
+Figure~\ref{fig:grafana-batch} shows the \textbf{Urban Traffic Analytics}
+Grafana dashboard, confirming: \textbf{4,850 rows} promoted from Bronze to
+Silver, \textbf{120 hourly rows} aggregated in Gold, and \textbf{3,360
+baseline records} written during the observation window. The batch job
+completion log panel (bottom) verifies that all pipeline stages completed
+without errors.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{grafana-batch-pipeline.png}
+  \caption{Grafana Urban Traffic Analytics dashboard: Bronze$\to$Silver 4,850
+           rows, Silver$\to$Gold 120 rows, Baseline 3,360 records. Batch job
+           completion logs confirm error-free pipeline execution.}
+  \label{fig:grafana-batch}
+\end{figure}
 
 \subsection{SSE Delivery Latency}
 

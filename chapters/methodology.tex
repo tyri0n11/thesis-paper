@@ -335,7 +335,7 @@
   \cite{kleppmann_ddia}.                                                                                                                                  
                                                                                                                                                           
   Each message is validated against a \textbf{Pydantic} \cite{pydantic_docs}                                                                              
-  domain model (\texttt{TrafficRouteObservation}) before publication.
+  domain model (\texttt{TrafficRoute\-Observation}) before publication.
   An \texttt{ingest\_ts} header — the Unix epoch millisecond timestamp                                                                                    
   recorded immediately before the API call — is attached to every Kafka                                                                                   
   message. This header serves as the reference point for end-to-end                                                                                       
@@ -360,7 +360,7 @@
       \item \textbf{Batch indexing mode:} The \texttt{hourly-gold}
       Prefect flow fetches the trailing 7 days of hourly records                                                                                          
       ($\approx 192$ documents) and indexes them into the                                                                                                 
-      \texttt{external\_context} ChromaDB collection for RAG retrieval                                                                                    
+      \texttt{external\_\allowbreak context} ChromaDB collection for RAG retrieval                                                                                    
       (Section~\ref{sec:rag}).                                                                                                                            
                                                                                                                                                           
       \item \textbf{Live fetch mode:} On each \texttt{/chat} API request,                                                                                 
@@ -411,7 +411,7 @@
   — and the maximum duration for which data remains unarchived in memory.                                                                                 
                                                                                                                                                           
   Kafka offsets are committed only after a confirmed successful MinIO                                                                                     
-  upload (\texttt{asynchronous=False}). If an upload fails, the consumer                                                                                  
+  upload (\texttt{asynchronous\allowbreak=False}). If an upload fails, the consumer                                                                                  
   does not advance its offset; messages are replayed on restart, providing                                                                                
   \textbf{at-least-once delivery} at the application level. Messages                                                                                      
   that cannot be processed after repeated attempts are routed to a                                                                                        
@@ -468,7 +468,7 @@
   % ------------------------------------------------------------
                                                                                                                                                           
   Every hour, the \texttt{hourly-gold} Prefect flow aggregates the Silver                                                                                 
-  table into \texttt{gold.traffic\_hourly} — a pre-computed, per-route,
+  table into \texttt{gold.traffic\_hourly}\allowbreak{} --- a pre-computed,
   per-hour summary. The Gold schema includes: \texttt{avg\_heavy\_ratio},                                                                                 
   \texttt{avg\_moderate\_ratio}, \texttt{avg\_duration\_minutes}, and                                                                                     
   \texttt{max\_severe\_segments}. DuckDB reads the Silver Iceberg table                                                                                   
@@ -613,7 +613,7 @@
   \end{algorithm}                                                                                                                                         
    
   The result is stored in the \texttt{online\_route\_features} table                                                                                      
-  under the column \texttt{duration\_zscore} — a historical naming
+  under the column \texttt{duration\_\allowbreak zscore} --- a historical naming
   artefact retained for schema continuity; the stored value is the                                                                                        
   heavy\_ratio Z-score as defined in Equation~\ref{eq:zscore}.                                                                                            
                                                                                                                                                           
@@ -647,7 +647,7 @@
   \bigr)                                                                                                                                                  
   \end{equation}  
                                                                                                                                                           
-  where $h_{\text{avg}}$ is \texttt{avg\_heavy\_ratio},                                                                                                   
+  where $h_{\text{avg}}$ is \texttt{avg\_heavy\_\allowbreak ratio},                                                                                                   
   $m_{\text{avg}}$ is \texttt{avg\_moderate\_ratio},
   $s_{\text{max}}$ is \texttt{max\_severe\_segments},                                                                                                     
   \texttt{hr} $\in \{0, \ldots, 23\}$ is the hour of day (UTC),
@@ -710,7 +710,7 @@
   restarting the serving container.                                                                                                                       
                                                                                                                                                           
   IsolationForest scores are persisted every 15 seconds to a                                                                                              
-  dedicated \texttt{route\_iforest\_scores} PostgreSQL table via
+  dedicated \texttt{route\_iforest\_\allowbreak scores} PostgreSQL table via
   the SSE \texttt{/events/traffic} endpoint. This explicit                                                                                                
   persistence is necessary because IsolationForest is not                                                                                                 
   computed per-message — without storage, IForest classifications                                                                                         
@@ -788,6 +788,7 @@
   \centering                                                                                                                                              
   \caption{ChromaDB collections and their update schedules}
   \label{tab:chroma_collections}                                                                                                                          
+  \resizebox{\textwidth}{!}{%
   \begin{tabular}{llll}
   \hline                                                                                                                                                  
   \textbf{Collection} & \textbf{Contents} & \textbf{Source} &
@@ -799,7 +800,8 @@
   \texttt{external\_context} & 7-day HCMC hourly weather                                                                                                  
                                 $\approx$192 docs  & Open-Meteo   & 1 hour \\                                                                             
   \hline                                                                                                                                                  
-  \end{tabular}                                                                                                                                           
+  \end{tabular}
+  }%
   \end{table}                                                                                                                                             
    
   The RAG indexer uses \textbf{upsert} semantics throughout, ensuring                                                                                     
@@ -962,7 +964,8 @@
   \centering      
   \caption{Key performance indicators and measurement boundaries}
   \label{tab:kpis}                                               
-  \begin{tabular}{llll}                                                                                                                                   
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{llll}
   \hline               
   \textbf{KPI} & \textbf{Definition} & \textbf{Target} &                                                                                                  
   \textbf{Measurement point} \\                         
@@ -989,7 +992,8 @@
                             & $> 80\%$                                                                                                                    
                             & Manual review of alert log \\
   \hline                                                                                                                                                  
-  \end{tabular}   
+  \end{tabular}
+  }%
   \end{table}                                                                                                                                             
                                                                                                                                                           
   By integrating periodic high-velocity API polling with an incrementally
