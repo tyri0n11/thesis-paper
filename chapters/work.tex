@@ -1,0 +1,56 @@
+%% TODO: Add a small paragraph to tell what this chapter is about
+This chapter delves into the existing literature and technological advancements that form the foundation of the UrbanPulse platform. It evaluates current methodologies in real-time urban monitoring, analyzes the architectural shift toward Data Lakehouses, and identifies the research gaps that necessitate a dual-signal anomaly detection framework.
+%% TODO: Make sure to use \textbf or \textit for highlighting keywords, and \cite{} to cite the corresponding quotations
+\section{Current Advancements}
+The landscape of Intelligent Transportation Systems (ITS) has evolved significantly with the integration of high-throughput messaging systems. Recent studies emphasize the use of \textbf{Apache Kafka} and \textbf{Redpanda} for low-latency ingestion of heterogeneous urban signals, such as traffic flow and weather telemetry~\cite{urban-pulse-platform}. In the domain of data storage, the industry is transitioning from traditional data warehouses to the \textbf{Medallion Lakehouse architecture}. Utilizing table formats like \textbf{Apache Iceberg} allows for transactional integrity and schema evolution, which are critical for maintaining long-term urban datasets. Furthermore, state-of-the-art anomaly detection now leverages a combination of \textbf{statistical baselines} and \textbf{unsupervised learning}, such as Isolation Forest, to handle the high dimensionality of city-scale data.
+\section{Research Gap}
+Despite these advancements, a significant \textit{semantic gap} persists between raw telemetry ingestion and actionable intelligence. Most existing systems process traffic data in isolated batches, leading to high latency in incident response. There is a lack of integrated frameworks that ensure \textbf{stream-to-batch consistency}, where real-time anomaly signals are validated against historical neighborhood rhythms stored in a Lakehouse~\cite{5steps-gaps}. Furthermore, many platforms struggle with the "cold-start" problem in low-variance traffic conditions, often resulting in high False Positive Rates (FPR). UrbanPulse addresses these gaps by implementing a unified \textbf{dual-signal detector} that reconciles instant Z-score deviations with historical machine learning inference.
+
+%% TODO: Make sure to use \subsection{} and \subsubsection{} for smaller sections inside a larger sections
+\section{Theoretical Background}
+\subsection{The Medallion Lakehouse Architecture}
+The core data strategy of this research follows the Medallion pattern, organized into three distinct layers: \textbf{Bronze} (raw ingestion), \textbf{Silver} (filtered and cleaned), and \textbf{Gold} (aggregated business-level features). This structure, supported by \textbf{Project Nessie} for catalog versioning, ensures that data remains reproducible and queryable at any point in time as illustrated in the system's data flow.
+
+\begin{figure}[ht]
+	\centering
+	% Đổi tên file thành hình kiến trúc thực tế của bạn nếu có
+	\includegraphics[width=1\linewidth]{images/system-arch.png} 
+	\caption{Conceptual overview of the Medallion Lakehouse architecture in UrbanPulse.}
+	\label{fig:lakehouse}
+\end{figure}
+
+\subsubsection{Streaming-First Processing}
+Unlike traditional ETL, a \textbf{streaming-first approach} minimizes the temporal gap between event occurrence and dashboard visualization. By using micro-batching in Python and pushing updates via \textbf{Server-Sent Events (SSE)}, the system achieves near-real-time updates for end-users. A comparison of the architectural components used in UrbanPulse versus traditional systems is provided in Table~\ref{tab:1}.
+
+%% TODO: Adjust the size of the figure by using [widht=.x\linewidth] (x is a fraction) to fit within the page width. Then rename to your picture file name, add the caption and a label
+\begin{table}[ht]
+	\centering
+	\caption{Comparison of different architectural methods (\protect\cmark: YES, \protect\xmark: NO).}
+	\label{tab:1}
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lcccc}
+			\hline
+			\textbf{Feature}          & \textbf{UrbanPulse} & Traditional Batch & Lambda Architecture & Lambda-Plus \\ \hline
+			Real-time Processing      & \cmark              & \xmark            & \cmark              & \cmark      \\ 
+			Schema Evolution (Iceberg)& \cmark              & \xmark            & \xmark              & \cmark      \\ 
+			Dual-Signal Detection     & \cmark              & \xmark            & \xmark              & \xmark      \\ 
+			Time-Travel Queries       & \cmark              & \cmark            & \xmark              & \cmark      \\ \hline
+		\end{tabular}%
+	}
+\end{table}
+
+\subsection{Anomaly Detection Logic}
+UrbanPulse utilizes a dual-signal framework to identify traffic incidents. The statistical signal is calculated using the Z-score formula to detect immediate spikes in congestion ratio $r$ relative to the moving average $\mu$ and standard deviation $\sigma$:
+
+\begin{equation}
+    Z = \frac{r - \mu}{\sigma}
+\end{equation}
+
+Simultaneously, an \textbf{Isolation Forest} model operates on cyclical temporal features (e.g., hour of day, day of week) to identify non-recurrent patterns that simple statistics might miss. The relationship between the input features and the anomaly score is modeled through a multi-dimensional mapping:
+
+\begin{align}
+	f : \mathbb{R}^n \times \mathcal{T} & \rightarrow [-1, 1] \\
+	(\mathbf{x}, t)                     & \mapsto s          
+\end{align}
+
+where $\mathbf{x}$ represents traffic metrics, $t$ is the cyclical time component, and $s$ is the resulting anomaly score.
