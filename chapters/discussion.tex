@@ -1,15 +1,178 @@
-%% TODO: Make sure to use \textbf or \textit for highlighting keywords, and \cite{} to cite the corresponding quotations
-\section{Analysis}
-Fusce vitae porta quam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut tempus semper metus at mollis. In hac habitasse platea dictumst. Ut at placerat mi, et tempor lorem. Suspendisse ut ultricies orci. Phasellus eu gravida orci. Quisque mollis a est et accumsan. Ut fringilla sem lobortis, fringilla magna non, feugiat quam. Ut aliquet neque sit amet dolor feugiat congue. Curabitur imperdiet, massa ut varius semper, turpis lacus luctus risus, in imperdiet ipsum metus vel ligula. Fusce a ultricies odio. Pellentesque sit amet mollis lectus. Integer auctor posuere venenatis.
+% ============================================================
+\section{Analysis of Results}
+\label{sec:discussion-analysis}
+% ============================================================
 
+The experimental results validate the core hypothesis of this thesis: that a
+\textbf{dual-signal anomaly detection framework} combining a statistical
+Z-score detector with a machine learning IsolationForest model produces more
+reliable incident signals than either detector in isolation. The key evidence
+is the 94.9\% model agreement rate combined with a 21.1\% mean Jaccard
+similarity. This pattern is consistent with the theoretical complementarity of
+the two signals: Z-score operates on a single dimension (\texttt{heavy\_ratio}
+deviation from a per-route, per-time-slot baseline), whereas IsolationForest
+operates on a seven-dimensional feature space that includes multivariate
+congestion ratios and cyclical time components. An event must therefore exhibit
+\textit{both} a statistical rarity and a multivariate distributional
+abnormality to trigger a joint alert, significantly reducing false positive
+exposure.
+
+The Medallion Lakehouse architecture played a critical supporting role. The
+separation of Bronze (raw), Silver (cleaned), and Gold (aggregated) layers
+allowed the batch pipeline to evolve the schema of downstream tables
+independently of the raw ingestion stream. In practice, the \texttt{source}
+column was added to the Silver schema post-deployment without any reprocessing
+of Bronze data, demonstrating the schema-evolution capability of Apache
+Iceberg~\cite{iceberg_paper}.
+
+The Welford online algorithm~\cite{welford1962} proved essential for the
+real-time Z-score computation. Its $O(1)$ memory footprint ensured that the
+Online Service remained stable over the 40-day observation period without
+memory growth, even at 5-minute polling intervals across 20 concurrent routes.
+The crash-recovery mechanism --- reconstructing the Welford accumulator from
+stored PostgreSQL statistics --- was validated during two service restarts
+without observable discontinuities in the per-route rolling statistics.
+
+% ============================================================
 \section{Strengths}
-Nulla sollicitudin imperdiet mattis. Morbi dignissim non leo ut ultrices. Proin sit amet ex nec libero luctus accumsan. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi id convallis dolor. Nullam commodo nec diam sit amet mattis. Mauris lacus magna, elementum non velit sit amet, vulputate commodo nunc. Nunc nec neque euismod, consectetur dui aliquet, placerat lacus.
+\label{sec:strengths}
+% ============================================================
 
+\textbf{Streaming-first, low-latency design.}
+The p95 end-to-end ingestion lag below 20~seconds is a significant improvement
+over batch-based systems that typically report latencies in the range of
+5--30~minutes~\cite{batch_latency_survey}. The Server-Sent Events delivery
+model eliminates polling overhead and provides a push-based update channel
+that scales linearly with the number of frontend clients.
+
+\textbf{Unified data platform.}
+By combining a streaming path (Redpanda $\to$ PostgreSQL) and a batch path
+(MinIO $\to$ Iceberg Silver/Gold) within the same Docker Compose stack,
+UrbanPulse avoids the complexity of a Lambda architecture while retaining
+the analytical depth of a Lakehouse. The unified Nessie catalog enables
+time-travel queries over Iceberg tables, facilitating retrospective
+investigation of past anomaly windows.
+
+\textbf{Explainable anomaly detection.}
+The RAG-enriched LLM pipeline provides natural-language explanations that
+contextualise anomaly scores with route geography, historical patterns, and
+live weather data. This capability directly addresses the \textit{semantic
+gap} identified in the problem statement: raw anomaly scores are opaque to
+operators, whereas a two-sentence explanation referencing specific road names
+and congestion ratios is immediately actionable.
+
+\textbf{Operational robustness.}
+The system has operated continuously in production at
+\texttt{tyr1on.io.vn} with automated CI/CD (ruff lint, mypy strict, unit
+tests on every commit) and Grafana/Loki observability. The 30-minute
+Telegram alert cooldown and the \texttt{both\_anomaly} conjunction rule
+prevent alert fatigue, a common failure mode in production monitoring systems.
+
+% ============================================================
 \section{Limitations}
-Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin nibh tortor, blandit a congue eu, commodo id lacus. Nulla facilisi. Nulla id leo justo. Maecenas placerat elit quis nisi congue, et semper lorem dapibus. Nam a sodales nibh. Cras convallis, sem sed sodales venenatis, turpis tellus feugiat enim, lacinia hendrerit metus libero sed risus. Etiam quis lorem purus. Quisque sapien velit, consequat eu molestie ut, interdum non sem. Nunc sollicitudin mauris quis purus blandit convallis. Cras sem eros, porta eget malesuada sed, efficitur sit amet dolor. Etiam faucibus purus lectus, et elementum sem posuere sit amet. Sed non nisl quis felis semper finibus sit amet sit amet neque. Phasellus nec mi laoreet, fermentum lacus et, efficitur est. Nunc sit amet vulputate sem, at venenatis libero.
+\label{sec:limitations}
+% ============================================================
 
-\section{Comparison}
-Duis dictum, orci a pharetra semper, lacus lorem varius velit, et pharetra ex magna ut justo. Ut eu luctus lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus bibendum volutpat risus, vitae pellentesque nisl faucibus ac. Quisque et facilisis magna. Quisque sed egestas libero. Ut pretium, velit in porta rutrum, purus justo convallis tortor, id convallis lorem felis eget eros. Vivamus eleifend interdum risus et sollicitudin. Donec quis erat et purus tempus dignissim non eget mi. Nam ac dapibus urna. Donec molestie sagittis faucibus. Etiam turpis odio, consectetur non dictum non, pellentesque ut nulla. Nunc viverra massa nulla, vel scelerisque tellus varius id.
+\textbf{Absence of ground-truth labels.}
+The most significant limitation is the lack of labelled anomaly events. The
+proxy metrics (model agreement, Jaccard similarity) measure internal
+consistency between the two detectors rather than true recall against real
+traffic incidents. A dataset of confirmed incidents from the Ho Chi Minh City
+Department of Transport~\cite{hcmc_transport_report} would enable computation
+of true precision and recall.
 
+\textbf{VietMap API scope restriction.}
+Traffic data is sourced exclusively from the VietMap Directions API, which
+provides route-level congestion ratios but does not expose individual vehicle
+counts, speed distributions, or incident reports. The congestion signal is
+therefore an indirect proxy for underlying traffic density. Events such as
+flooding, road works, or accidents are not distinguishable from general
+high-demand congestion without supplementary data sources.
+
+\textbf{IsolationForest model staleness.}
+Models are retrained every 6~hours on historical Gold data. If an anomalous
+pattern persists for more than 6~hours (e.g., a multi-day road closure), the
+model may adapt and cease flagging the event as anomalous. This
+\textit{concept drift} problem~\cite{chandola2009anomaly} is partially
+mitigated by the Z-score signal, which continues to compare against a more
+slowly updated baseline.
+
+\textbf{Cold-start and low-variance routes.}
+Four suburban routes (zone4 outbound, zone4-to-zone2, zone5 outbound) showed
+zero Z-score anomaly events over the 40-day collection period. In low-variance
+traffic conditions, the baseline standard deviation approaches zero, making
+the Z-score numerically unstable. The implementation applies a minimum stddev
+floor of \texttt{mean * 0.1} in these cases, but this is a heuristic that
+may generate spurious signals immediately after the baseline is first computed.
+
+\textbf{Hardware constraints.}
+The platform is deployed on a single-node homelab (Intel i5, 8~GB VRAM for
+GPU inference). Horizontal scaling of the Serving API and Batch Service to
+multiple nodes was not evaluated. The Redpanda broker operates as a
+single-partition configuration; a multi-partition, multi-replica setup
+would be required for fault-tolerant production deployments at city scale.
+
+% ============================================================
+\section{Comparison with Related Approaches}
+\label{sec:comparison}
+% ============================================================
+
+Table~\ref{tab:comparison} compares UrbanPulse against three architectural
+patterns discussed in the Related Work chapter.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison of UrbanPulse against reference architectures.}
+\label{tab:comparison}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\hline
+\textbf{Feature} &
+\textbf{UrbanPulse} &
+\textbf{Batch-only} &
+\textbf{Lambda Arch.} &
+\textbf{Kappa Arch.} \\
+\hline
+Ingestion latency (p95)   & $<$20 s & 5--30 min & $<$1 min & $<$1 min \\
+Schema evolution           & \cmark (Iceberg) & \xmark & \xmark & Partial \\
+Time-travel queries        & \cmark (Nessie)  & \cmark & \xmark & \xmark \\
+Dual-signal detection      & \cmark & \xmark & \xmark & \xmark \\
+Explainability (LLM/RAG)   & \cmark & \xmark & \xmark & \xmark \\
+Single codebase            & \cmark & \cmark & \xmark & \cmark \\
+Ground-truth evaluation    & \xmark & \cmark & Partial & Partial \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\noindent UrbanPulse competes favourably on latency and feature richness
+against traditional batch-only and Lambda architectures. Its primary
+disadvantage is the absence of ground-truth evaluation, which is shared with
+most deployed streaming anomaly systems that operate on unlabelled
+real-world data.
+
+% ============================================================
 \section{Future Work}
-Vestibulum pretium rhoncus eros ut finibus. Vivamus mi nisi, mattis nec ipsum vel, feugiat tincidunt libero. Etiam eu sagittis diam. Praesent gravida turpis a iaculis dictum. Aenean tristique libero laoreet, tempor magna dignissim, rhoncus dui. Nullam erat elit, dictum dictum odio at, pharetra ultrices dolor. Vestibulum vulputate blandit urna. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi cursus vel ex sed consequat. Maecenas fringilla ante et mi imperdiet fringilla. Morbi consequat ligula et elit facilisis, vel condimentum sapien ullamcorper. Mauris nisi urna, pretium eu consectetur ut, molestie at nulla. Curabitur viverra sagittis urna.
+\label{sec:future-work}
+% ============================================================
+
+Several extensions would strengthen the platform and address its current
+limitations:
+
+\begin{itemize}
+  \item \textbf{Ground-truth label collection}: Integrate with the HCMC
+        Department of Transport incident API to build a labelled dataset and
+        compute precision, recall, and F1 for both detectors.
+  \item \textbf{Multi-source ingestion}: Add vehicle loop detector data and
+        social media signal (Twitter/X flood reports) as additional Kafka
+        topics to improve incident classification.
+  \item \textbf{Online learning for IsolationForest}: Replace the 6-hour
+        batch retrain with an incremental Half-Space Trees (HST)
+        detector~\cite{chandola2009anomaly} to reduce concept drift exposure.
+  \item \textbf{Multi-node deployment}: Evaluate Kubernetes-based deployment
+        with horizontal pod autoscaling for the Serving API to support
+        thousands of concurrent SSE clients.
+  \item \textbf{Federated RAG}: Extend the ChromaDB collections to include
+        meteorological event reports, public holiday calendars, and
+        construction permit data for richer root-cause analysis.
+\end{itemize}

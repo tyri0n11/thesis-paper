@@ -2,6 +2,7 @@
 \documentclass[12pt, twoside]{report}
 
 %% TODO: Add your useful packages here
+\usepackage[T5]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[main=english,vietnamese]{babel}
 
@@ -212,15 +213,16 @@ This collaboration has significantly enriched my understanding of Intelligent Tr
 %% TODO: Abstract page (iv, printed)
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
-The rapid acceleration of urbanization has necessitated the development of sophisticated municipal monitoring systems capable of processing high-velocity data for real-time decision-making. Conventional urban management frameworks often rely on periodic batch processing, leading to significant temporal gaps and fragmented situational awareness. This thesis presents \textbf{UrbanPulse}, a streaming-first urban intelligence platform designed to ingest, process, and analyze heterogeneous city-scale data streams, such as traffic congestion and meteorological conditions, to provide near-real-time insights into neighborhood dynamics.
 
-The proposed architecture leverages a distributed event-driven approach using \textbf{Apache Kafka} for robust message queuing. A centralized \textbf{Data Lakehouse}—implemented via \textbf{MinIO}, \textbf{Apache Iceberg}, and \textbf{Project Nessie}—is utilized to ensure transactional integrity, schema evolution, and time-travel capabilities for historical analysis. The platform incorporates a specialized processing pipeline that transforms raw telemetry into meaningful neighborhood activity indicators through micro-batching and streaming services. Furthermore, a baseline machine learning module utilizing \textbf{XGBoost} is integrated to learn typical urban rhythms and detect anomalies, such as non-recurrent traffic incidents or weather-driven behavioral shifts.
+The rapid acceleration of urbanization has necessitated the development of sophisticated municipal monitoring systems capable of processing high-velocity data for real-time decision-making. Conventional urban management frameworks often rely on periodic batch processing, leading to significant temporal gaps and fragmented situational awareness. This thesis presents \textbf{UrbanPulse}, a streaming-first urban intelligence platform designed to ingest, process, and analyze heterogeneous city-scale data streams to provide near-real-time insights into metropolitan dynamics, with a case study deployment scoped to \textbf{Ho Chi Minh City, Vietnam}.
 
-Experimental results demonstrate that the streaming-first design significantly reduces the latency between event occurrence and actionable intelligence compared to traditional batch-based architectures. By providing an integrated view of city dynamics and automated anomaly detection, UrbanPulse offers municipal authorities a scalable, evidence-based foundation for optimizing resource allocation and enhancing urban operational resilience.
+The proposed architecture leverages a distributed event-driven approach using \textbf{Redpanda}, a Kafka-compatible message broker, for low-latency event queuing. A centralized \textbf{Data Lakehouse}---implemented via \textbf{MinIO}, \textbf{Apache Iceberg}, and \textbf{Project Nessie}---is utilized to ensure transactional integrity, schema evolution, and time-travel capabilities for historical analysis. The platform incorporates a specialized ELT (Extract, Load, Transform) pipeline that transforms raw telemetry from VietMap and Open-Meteo APIs into refined inter-zone mobility metrics across Bronze, Silver, and Gold layers.
 
-\vspace{0.5cm}
-\noindent \textbf{Keywords:} Urban Intelligence, Streaming Systems, Data Engineering, Apache Iceberg, Kafka, Anomaly Detection, Smart City.
+To bridge the gap between raw data and actionable intelligence, UrbanPulse integrates a dual-signal anomaly detection module---leveraging \textbf{Isolation Forest} and \textbf{Z-score} algorithms---to identify non-recurrent traffic incidents in real time. Concurrently, a \textbf{Retrieval-Augmented Generation (RAG)} framework enriches Large Language Model (LLM) outputs with historical anomaly patterns and current meteorological context retrieved from a vector store (\textbf{ChromaDB}). This approach enables automated root-cause analysis without the computational overhead of frequent model retraining. System performance is validated through ingestion lag, inference latency, and high-velocity load testing. Results indicate that the streaming-first design significantly reduces the latency of situational awareness compared to traditional batch-based architectures, providing a scalable, evidence-based foundation for urban operational resilience.
 
+
+\vspace{2cm}
+\noindent \textbf{Keywords:} Data Engineering, Streaming Systems, Redpanda, Urban~Intelligence, Anomaly Detection, Retrieval-Augmented Generation, Ho~Chi~Minh~City.
 %% TODO: Add \chapter{Chapter name} followed by \input{chapters/filename} if you need more chapter or modify them
 \chapter{INTRODUCTION}
 \pagenumbering{arabic}

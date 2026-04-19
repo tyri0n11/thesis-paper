@@ -1,0 +1,17 @@
+\babel@toc {english}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Conceptual overview of the Medallion Lakehouse architecture in UrbanPulse.}}{5}{}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Use case diagram for the UrbanPulse platform.}}{9}{}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces High-level system architecture of UrbanPulse.}}{10}{}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Dual-consumer data flow from Redpanda to Lakehouse and Online Feature Store.}}{11}{}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces UrbanPulse service topology: six microservices communicating via Redpanda (blue) and PostgreSQL (green). Dashed orange indicates the HTTP trigger from Batch to ML service.}}{20}{}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Prefect flow schedules: microbatch and alerter run every 5 minutes; gold aggregation runs hourly; ML retrain runs every 6 hours.}}{24}{}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Model agreement (blue) and Jaccard similarity (orange) for five representative routes. Agreement consistently exceeds 0.94; Jaccard variation reflects route-specific traffic pattern stability.}}{30}{}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

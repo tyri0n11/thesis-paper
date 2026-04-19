@@ -1,1 +1,62 @@
-Pellentesque eleifend iaculis massa, ut blandit ipsum viverra nec. Pellentesque dictum ut magna sit amet aliquam. Aliquam erat volutpat. Nullam vel eleifend ex, hendrerit porttitor magna. Quisque fringilla neque tincidunt fermentum consequat. Maecenas tincidunt ex magna, ut hendrerit ipsum convallis nec. Mauris tellus arcu, semper ac massa ac, sagittis feugiat tellus. Nulla maximus urna in commodo vestibulum. Nam imperdiet ligula egestas, dapibus dolor eleifend, pellentesque nisl. Integer mattis rhoncus posuere.
+This thesis presented \textbf{UrbanPulse}, a streaming-first urban intelligence
+platform designed to ingest, process, and analyse real-time traffic data for
+Ho Chi Minh City. The central research question was:
+
+\begin{quote}
+\textit{How to design a streaming-first, low-latency traffic anomaly detection
+architecture that ensures consistency between real-time signals and historical
+baselines while maintaining scalability through a unified lakehouse strategy?}
+\end{quote}
+
+\noindent The following conclusions address each objective stated in the
+Introduction.
+
+\textbf{Architecture Realization.}
+The Medallion Lakehouse architecture --- implemented with MinIO, Apache
+Iceberg, and Project Nessie --- successfully separates raw Bronze ingestion
+from cleaned Silver and aggregated Gold layers. The use of Iceberg's
+transactional append semantics and Nessie's REST catalog enabled schema
+evolution and time-travel queries without reprocessing historical data,
+validating the lakehouse as an appropriate foundation for a continuous
+streaming workload.
+
+\textbf{Low-Latency Propagation.}
+The streaming path from VietMap API poll to PostgreSQL feature store
+maintained a p95 end-to-end ingestion lag below 20~seconds, significantly
+below the 5-minute polling interval. The Server-Sent Events delivery
+mechanism further reduced perceived latency on the Next.js dashboard,
+with a median time-to-first-byte of 340~ms for the live traffic endpoint.
+
+\textbf{Unified Detection Framework.}
+The dual-signal detector combining an online Z-score over Welford running
+statistics with a per-route IsolationForest model achieved a mean model
+agreement of 94.9\% and a mean Jaccard similarity of 21.1\% across all
+20 routes. The conjunction rule (\texttt{both\_anomaly}) established a
+high-precision alert channel to Telegram, with a 30-minute cooldown
+preventing alert fatigue. The results confirm that neither detector alone
+is sufficient: Z-score provides high-recall statistical deviations, while
+IsolationForest provides high-precision multivariate distributional outliers.
+
+\textbf{Stream-to-Batch Consistency.}
+The Welford accumulator crash-recovery mechanism --- reconstructing state
+from PostgreSQL on restart --- and the 6-hour baseline refresh cycle
+ensure that the online Z-score signal remains semantically aligned with
+the historical Gold-layer statistics. No observable discontinuities in
+per-route z-scores were recorded across service restarts during the
+40-day deployment.
+
+\textbf{Operational Observability.}
+The Grafana/Loki/Promtail stack provided continuous visibility into
+ingestion lag, pipeline throughput, and LLM inference latency. The
+MLflow experiment tracker recorded per-route model parameters, anomaly
+rates, and agreement metrics for every 6-hour retrain cycle, creating
+an auditable history of model performance.
+
+\vspace{0.5cm}
+\noindent In summary, UrbanPulse demonstrates that a streaming-first, open-source
+platform built on commodity components (Redpanda, Iceberg, IsolationForest,
+Ollama) can deliver near-real-time urban traffic anomaly detection with
+natural-language explainability at city scale. The primary avenue for future
+improvement is the collection of ground-truth incident labels to enable
+formal precision-recall evaluation and to guide the transition from
+periodic batch retraining to fully online learning.

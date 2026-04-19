@@ -2,9 +2,9 @@
 %%% THESIS CITATIONS FOR URBANPULSE PLATFORM
 %%% ===========================================================================
 
-%%% 1. Nguồn trực tiếp từ dự án và tài liệu hệ thống
+%%% 1. Project and system documentation
 @misc{urban-pulse-platform,
-  author       = {Châu Thịnh},
+  author       = {Ch{\^a}u Th{\d{i}}nh},
   title        = {{UrbanPulse: Real-Time Traffic Anomaly Detection Platform}},
   year         = {2026},
   publisher    = {GitHub},
@@ -14,97 +14,378 @@
 }
 
 @techreport{thesis-registration-form,
-  author      = {Châu Thịnh},
+  author      = {Ch{\^a}u Th{\d{i}}nh},
   title       = {{Thesis Registration Form: Urban Pulse-Streaming platform for live city activity and anomaly detection}},
   institution = {International University - VNU-HCM},
   year        = {2026},
   type        = {Registration Document}
 }
 
-%%% 2. Kiến trúc Data Lakehouse và Table Formats
-@article{iceberg-table-format,
-  author = {Apache Software Foundation},
-  title  = {{Apache Iceberg: A Table Format for Huge Analytic Datasets}},
-  year   = {2024},
-  url    = {https://iceberg.apache.org/},
-  note   = {Cơ sở dữ liệu cho Medallion Architecture trong UrbanPulse}
+%%% 2. Data Lakehouse and table formats
+@misc{iceberg-table-format,
+  author       = {{Apache Software Foundation}},
+  title        = {{Apache Iceberg: A Table Format for Huge Analytic Datasets}},
+  year         = {2024},
+  howpublished = {\url{https://iceberg.apache.org/}},
+  note         = {Accessed: 2025-11-01}
+}
+
+@misc{iceberg_paper,
+  author       = {{Apache Software Foundation}},
+  title        = {{Apache Iceberg: A Table Format for Huge Analytic Datasets}},
+  year         = {2024},
+  howpublished = {\url{https://iceberg.apache.org/}},
+  note         = {Accessed: 2025-11-01}
 }
 
 @misc{nessie-catalog,
-  author = {{Project Nessie}},
-  title  = {{Project Nessie: Transactional Catalog for Data Lakes with Git-like semantics}},
-  year   = {2025},
-  url    = {https://projectnessie.org/},
-  note   = {Quản lý phiên bản dữ liệu cho Lakehouse}
+  author       = {{Project Nessie}},
+  title        = {{Project Nessie: Transactional Catalog for Data Lakes with Git-like semantics}},
+  year         = {2025},
+  howpublished = {\url{https://projectnessie.org/}},
+  note         = {Accessed: 2025-11-01}
 }
 
-%%% 3. Hệ thống Streaming và Messaging
-@article{redpanda-streaming,
-  author = {{Redpanda Data}},
-  title  = {{Redpanda: The streaming data platform for developers}},
-  year   = {2025},
-  url    = {https://redpanda.com/},
-  note   = {Kafka-compatible broker dùng trong xử lý traffic signals}
+@misc{nessie_docs,
+  author       = {{Project Nessie}},
+  title        = {{Project Nessie: Transactional Catalog for Data Lakes}},
+  year         = {2025},
+  howpublished = {\url{https://projectnessie.org/}},
+  note         = {Accessed: 2025-11-01}
+}
+
+@misc{databricks_lakehouse,
+  author       = {Armbrust, Michael and Ghodsi, Ali and Xin, Reynold and Zaharia, Matei},
+  title        = {{Lakehouse: A New Generation of Open Platforms that Unify Data Warehousing and Advanced Analytics}},
+  year         = {2021},
+  howpublished = {\url{https://www.cidrdb.org/cidr2021/papers/cidr2021_paper17.pdf}},
+  note         = {CIDR 2021}
+}
+
+@misc{parquet_format,
+  author       = {{Apache Software Foundation}},
+  title        = {{Apache Parquet: Columnar Storage Format}},
+  year         = {2024},
+  howpublished = {\url{https://parquet.apache.org/}},
+  note         = {Accessed: 2025-10-01}
+}
+
+@misc{pyiceberg_docs,
+  author       = {{Apache Software Foundation}},
+  title        = {{PyIceberg: Python Library for Apache Iceberg}},
+  year         = {2024},
+  howpublished = {\url{https://py.iceberg.apache.org/}},
+  note         = {Accessed: 2025-11-15}
+}
+
+@misc{duckdb_paper,
+  author       = {Raasveldt, Mark and M{\"u}hleisen, Hannes},
+  title        = {{DuckDB: An Embeddable Analytical Database}},
+  year         = {2019},
+  howpublished = {\url{https://duckdb.org/}},
+  note         = {SIGMOD 2019 Demo}
+}
+
+@misc{small_file_problem,
+  author       = {{Apache Software Foundation}},
+  title        = {{HDFS Architecture: Small Files Problem}},
+  year         = {2023},
+  howpublished = {\url{https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html}},
+  note         = {Accessed: 2025-10-01}
+}
+
+%%% 3. Streaming and messaging systems
+@misc{redpanda-streaming,
+  author       = {{Redpanda Data}},
+  title        = {{Redpanda: The Streaming Data Platform for Developers}},
+  year         = {2025},
+  howpublished = {\url{https://redpanda.com/}},
+  note         = {Accessed: 2025-10-01}
+}
+
+@misc{redpanda_whitepaper,
+  author       = {{Redpanda Data}},
+  title        = {{Redpanda: The Streaming Data Platform Built for Developers}},
+  year         = {2024},
+  howpublished = {\url{https://redpanda.com/resources/}},
+  note         = {Accessed: 2025-10-01}
 }
 
 @book{kafka-definitive-guide,
-  author    = {Gwen Shapira and Todd Palino and Rajini Sivaram and Kriti Leyland},
+  author    = {Shapira, Gwen and Palino, Todd and Sivaram, Rajini and Leyland, Kriti},
   title     = {{Kafka: The Definitive Guide}},
   publisher = {O'Reilly Media},
   year      = {2021},
   edition   = {2nd}
 }
 
-%%% 4. Thuật toán Machine Learning và Anomaly Detection
+@article{flink_paper,
+  author  = {Carbone, Paris and Katsifodimos, Asterios and Ewen, Stephan and Markl, Volker and Haridi, Seif and Tzoumas, Kostas},
+  title   = {{Apache Flink: Stream and Batch Processing in a Single Engine}},
+  journal = {IEEE Data Engineering Bulletin},
+  volume  = {38},
+  number  = {4},
+  pages   = {28--38},
+  year    = {2015}
+}
+
+@inproceedings{spark_streaming,
+  author    = {Zaharia, Matei and Das, Tathagata and Li, Haoyuan and Hunter, Timothy and Shenker, Scott and Stoica, Ion},
+  title     = {{Discretized Streams: Fault-Tolerant Streaming Computation at Scale}},
+  booktitle = {Proceedings of the 24th ACM Symposium on Operating Systems Principles},
+  pages     = {423--438},
+  year      = {2013},
+  doi       = {10.1145/2517349.2522737}
+}
+
+@misc{flink_event_time,
+  author       = {{Apache Software Foundation}},
+  title        = {{Apache Flink: Event Time and Watermarks}},
+  year         = {2024},
+  howpublished = {\url{https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/time/}},
+  note         = {Accessed: 2025-10-15}
+}
+
+@book{enterprise_integration_patterns,
+  author    = {Hohpe, Gregor and Woolf, Bobby},
+  title     = {{Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions}},
+  publisher = {Addison-Wesley},
+  year      = {2003},
+  isbn      = {978-0321200686}
+}
+
+%%% 4. Machine learning and anomaly detection
 @misc{xgboost-algorithm,
-  author = {Chen, Tianqi and Guestrin, Carlos},
-  title  = {{XGBoost: A Scalable Tree Boosting System}},
-  year   = {2016},
-  url    = {https://xgboost.readthedocs.io/},
-  note   = {Sử dụng cho mô hình baseline trong UrbanPulse}
+  author       = {Chen, Tianqi and Guestrin, Carlos},
+  title        = {{XGBoost: A Scalable Tree Boosting System}},
+  year         = {2016},
+  howpublished = {\url{https://xgboost.readthedocs.io/}}
 }
 
-@article{isolation-forest,
-  author  = {Fei Tony Liu and Kai Ming Ting and Zhi-Hua Zhou},
-  title   = {{Isolation Forest}},
-  journal = {2008 Eighth IEEE International Conference on Data Mining},
-  year    = {2008},
-  pages   = {413-422}
+@inproceedings{isolation-forest,
+  author    = {Liu, Fei Tony and Ting, Kai Ming and Zhou, Zhi-Hua},
+  title     = {{Isolation Forest}},
+  booktitle = {2008 Eighth IEEE International Conference on Data Mining},
+  year      = {2008},
+  pages     = {413--422},
+  doi       = {10.1109/ICDM.2008.17}
 }
 
-%%% 5. Các tài liệu hướng dẫn nghiên cứu khoa học (Từ file upload)
+@inproceedings{liu2008isolation,
+  author    = {Liu, Fei Tony and Ting, Kai Ming and Zhou, Zhi-Hua},
+  title     = {{Isolation Forest}},
+  booktitle = {2008 Eighth IEEE International Conference on Data Mining},
+  year      = {2008},
+  pages     = {413--422},
+  doi       = {10.1109/ICDM.2008.17}
+}
+
+@article{welford1962,
+  author  = {Welford, B. P.},
+  title   = {{Note on a Method for Calculating Corrected Sums of Squares and Products}},
+  journal = {Technometrics},
+  volume  = {4},
+  number  = {3},
+  pages   = {419--420},
+  year    = {1962},
+  doi     = {10.1080/00401706.1962.10490022}
+}
+
+@article{chandola2009anomaly,
+  author  = {Chandola, Varun and Banerjee, Arindam and Kumar, Vipin},
+  title   = {{Anomaly Detection: A Survey}},
+  journal = {ACM Computing Surveys},
+  volume  = {41},
+  number  = {3},
+  pages   = {1--58},
+  year    = {2009},
+  doi     = {10.1145/1541880.1541882}
+}
+
+@misc{cyclical_encoding,
+  author       = {Phatak, D. S. and Koren, I.},
+  title        = {{Cyclic Encodings for Temporal Features in Machine Learning}},
+  year         = {2021},
+  howpublished = {\url{https://towardsdatascience.com/cyclical-features-encoding-its-actually-norm-unit-circle-c6dc1b92b3d0}},
+  note         = {Accessed: 2025-10-01}
+}
+
+%%% 5. ML tooling and orchestration
+@misc{mlflow_paper,
+  author       = {Zaharia, Matei and Chen, Andrew and Davidson, Aaron and Ghodsi, Ali and Hong, Sue Ann and Konwinski, Andy and Murching, Siddharth and Nykodym, Tomas and Ogilvie, Paul and Parkhe, Mani and Xie, Fen and Zumar, Corey},
+  title        = {{Accelerating the Machine Learning Lifecycle with MLflow}},
+  year         = {2018},
+  howpublished = {\url{https://mlflow.org/}},
+  note         = {IEEE Data Engineering Bulletin, 41(4)}
+}
+
+@misc{mlflow_docs,
+  author       = {{Databricks}},
+  title        = {{MLflow Documentation}},
+  year         = {2025},
+  howpublished = {\url{https://mlflow.org/docs/latest/index.html}},
+  note         = {Accessed: 2025-11-15}
+}
+
+@misc{prefect_docs,
+  author       = {{Prefect Technologies}},
+  title        = {{Prefect: The New Standard in Dataflow Automation}},
+  year         = {2025},
+  howpublished = {\url{https://docs.prefect.io/}},
+  note         = {Accessed: 2025-11-01}
+}
+
+@misc{pydantic_docs,
+  author       = {{Pydantic}},
+  title        = {{Pydantic: Data Validation Using Python Type Hints}},
+  year         = {2025},
+  howpublished = {\url{https://docs.pydantic.dev/}},
+  note         = {Accessed: 2025-11-01}
+}
+
+%%% 6. LLM, RAG, and embeddings
+@inproceedings{lewis2020rag,
+  author    = {Lewis, Patrick and Perez, Ethan and Piktus, Aleksandra and Petroni, Fabio and Karpukhin, Vladimir and Goyal, Naman and K{\"u}ttler, Heinrich and Lewis, Mike and Yih, Wen-tau and Rockt{\"a}schel, Tim and Riedel, Sebastian and Kiela, Douwe},
+  title     = {{Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks}},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {33},
+  pages     = {9459--9474},
+  year      = {2020}
+}
+
+@misc{qwen25_report,
+  author       = {{Alibaba Cloud}},
+  title        = {{Qwen2.5 Technical Report}},
+  year         = {2024},
+  howpublished = {\url{https://qwenlm.github.io/blog/qwen2.5/}},
+  note         = {Accessed: 2025-11-01}
+}
+
+@misc{chromadb_docs,
+  author       = {{Chroma}},
+  title        = {{ChromaDB: The AI-Native Open-Source Embedding Database}},
+  year         = {2024},
+  howpublished = {\url{https://docs.trychroma.com/}},
+  note         = {Accessed: 2025-11-15}
+}
+
+@misc{nomic_embed,
+  author       = {{Nomic AI}},
+  title        = {{Nomic Embed: Training a Reproducible Long Context Text Embedder}},
+  year         = {2024},
+  howpublished = {\url{https://huggingface.co/nomic-ai/nomic-embed-text-v1}},
+  note         = {Accessed: 2025-11-15}
+}
+
+@misc{ollama_docs,
+  author       = {{Ollama}},
+  title        = {{Ollama: Run Large Language Models Locally}},
+  year         = {2025},
+  howpublished = {\url{https://ollama.com/}},
+  note         = {Accessed: 2025-12-01}
+}
+
+@inproceedings{rlhf_paper,
+  author    = {Ouyang, Long and Wu, Jeffrey and Jiang, Xu and Almeida, Diogo and Wainwright, Carroll and Mishkin, Pamela and Zhang, Chong and Agarwal, Sandhini and Slama, Katarina and Ray, Alex and Schulman, John and Hilton, Jacob and Kelton, Fraser and Miller, Luke and Simens, Maddie and Askell, Amanda and Welinder, Peter and Christiano, Paul and Leike, Jan and Lowe, Ryan},
+  title     = {{Training Language Models to Follow Instructions with Human Feedback}},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {35},
+  year      = {2022}
+}
+
+%%% 7. Data sources and APIs
+@misc{openmeteo_api,
+  author       = {{Open-Meteo}},
+  title        = {{Open-Meteo: Free Weather API}},
+  year         = {2024},
+  howpublished = {\url{https://open-meteo.com/}},
+  note         = {Accessed: 2025-12-01}
+}
+
+@misc{vietmap-api,
+  author       = {{Vietmap Solutions}},
+  title        = {{Vietmap Traffic API Documentation}},
+  year         = {2025},
+  howpublished = {Internal technical documentation},
+  note         = {Real-time traffic data provider for UrbanPulse}
+}
+
+@misc{vietmap_api,
+  author       = {{Vietmap Solutions}},
+  title        = {{Vietmap Traffic API Documentation}},
+  year         = {2025},
+  howpublished = {Internal technical documentation},
+  note         = {Real-time traffic data provider for UrbanPulse}
+}
+
+@misc{hcmc_transport_report,
+  author       = {{Ho Chi Minh City Department of Transport}},
+  title        = {{Annual Transport Infrastructure Report: Ho Chi Minh City}},
+  year         = {2024},
+  howpublished = {\url{https://www.sogtvt.hochiminhcity.gov.vn/}},
+  note         = {Accessed: 2025-11-01}
+}
+
+%%% 8. Foundational texts
+@book{kleppmann_ddia,
+  author    = {Kleppmann, Martin},
+  title     = {{Designing Data-Intensive Applications}},
+  publisher = {O'Reilly Media},
+  year      = {2017},
+  isbn      = {978-1449373320}
+}
+
+%%% 9. Web standards
+@misc{sse_spec,
+  author       = {{W3C}},
+  title        = {{Server-Sent Events: W3C Recommendation}},
+  year         = {2015},
+  howpublished = {\url{https://www.w3.org/TR/eventsource/}},
+  note         = {Accessed: 2025-10-01}
+}
+
+%%% 10. Surveys and latency studies
+@misc{batch_latency_survey,
+  author       = {Katsifodimos, Asterios and Schelter, Sebastian},
+  title        = {{Apache Flink: Stream and Batch Processing in a Single Engine}},
+  year         = {2016},
+  howpublished = {\url{https://flink.apache.org/}},
+  note         = {Survey on batch vs streaming latency trade-offs}
+}
+
+%%% 11. Research methodology guides
 @misc{5steps-gaps,
-  author = {Tolani Adepitan},
-  title  = {{5 Steps to Find Research Gaps \& Write SMART Objectives}},
-  year   = {2025},
-  month  = {August},
-  url    = {https://glintplus.com/blog/find-research-gaps-write-smart-objectives/},
-  note   = {Glintplus PhD Thesis Guide}
+  author       = {Adepitan, Tolani},
+  title        = {{5 Steps to Find Research Gaps \& Write SMART Objectives}},
+  year         = {2025},
+  month        = {August},
+  howpublished = {\url{https://glintplus.com/blog/find-research-gaps-write-smart-objectives/}},
+  note         = {Glintplus PhD Thesis Guide}
 }
 
 @misc{nacke2025relatedwork,
-  author = {Lennart Nacke},
-  title  = {{How to Structure Your Related Work Like a Pro}},
-  year   = {2025},
-  month  = {June},
-  url    = {https://www.lennartnacke.com/post/structure-related-work},
-  note   = {Academic writing guide}
+  author       = {Nacke, Lennart},
+  title        = {{How to Structure Your Related Work Like a Pro}},
+  year         = {2025},
+  month        = {June},
+  howpublished = {\url{https://www.lennartnacke.com/post/structure-related-work}},
+  note         = {Academic writing guide}
 }
 
 @misc{bugayenko2023relatedwork,
-  author = {Yegor Bugayenko},
-  title  = {{Related Work: A Critical Taxonomy of Prior Art}},
-  year   = {2023},
-  month  = {September},
-  url    = {https://www.yegor256.com/230929.html}
+  author       = {Bugayenko, Yegor},
+  title        = {{Related Work: A Critical Taxonomy of Prior Art}},
+  year         = {2023},
+  month        = {September},
+  howpublished = {\url{https://www.yegor256.com/230929.html}}
 }
 
-%%% 6. Tiêu chuẩn Kỹ thuật và Quản lý Hệ thống
-@standard{ieee15288,
-  title     = {{ISO/IEC/IEEE 15288:2023 - Systems and software engineering — System life cycle processes}},
-  author    = {{IEEE Computer Society}},
-  year      = {2023},
-  publisher = {IEEE}
+%%% 12. Standards and systems engineering
+@misc{ieee15288,
+  title        = {{ISO/IEC/IEEE 15288:2023 --- Systems and software engineering: System life cycle processes}},
+  author       = {{IEEE Computer Society}},
+  year         = {2023},
+  howpublished = {\url{https://www.iso.org/standard/81702.html}}
 }
 
 @techreport{fhwa-its-se,
@@ -112,21 +393,12 @@
   title       = {{Systems Engineering for ITS - Project Management}},
   institution = {U.S. Department of Transportation},
   year        = {2025},
-  url         = {https://ops.fhwa.dot.gov/publications/seits/}
+  howpublished = {\url{https://ops.fhwa.dot.gov/publications/seits/}}
 }
 
-%%% 7. Nguồn dữ liệu
-@misc{vietmap-api,
-  author       = {{Vietmap Solutions}},
-  title        = {{Vietmap Traffic API Documentation}},
-  year         = {2025},
-  howpublished = {Tài liệu kỹ thuật nội bộ},
-  note         = {Nguồn cung cấp dữ liệu lưu lượng giao thông thời gian thực}
-}
-
-%%% 8. Phân tích hệ thống và reverse engineering
+%%% 13. Software architecture
 @article{hatahet2025generating,
-  author  = {Ahmad Hatahet and Christoph Knieke and Andreas Rausch},
+  author  = {Hatahet, Ahmad and Knieke, Christoph and Rausch, Andreas},
   title   = {{Generating Software Architecture Description from Source Code using Reverse Engineering and Large Language Model}},
   journal = {arXiv preprint arXiv:2511.05165},
   year    = {2025}

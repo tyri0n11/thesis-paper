@@ -1,41 +1,1002 @@
-%% TODO: Add a small paragraph to tell what this chapter is about
-This chapter delves into ...
+  % ============================================================
+  %  CHAPTER 3 — METHODOLOGY
+  % ============================================================
 
-%% TODO: Make sure to use \textbf or \textit for highlighting keywords, and \cite{} to cite the corresponding quotations
-\section{Requirement Analysis}
-Integer non cursus odio. Cras in condimentum risus. Sed egestas ipsum quis quam scelerisque condimentum. Duis sollicitudin malesuada leo, id luctus nibh maximus at. Cras blandit, justo ut fermentum laoreet, diam tortor vehicula nisl, eget sollicitudin metus elit vitae eros. Fusce vel convallis felis, vitae commodo lorem. Mauris semper ipsum nec neque tincidunt condimentum. Sed sit amet faucibus elit.
+  This chapter presents the methodological framework underlying the design and                                                                            
+  implementation of \textbf{UrbanPulse}, a streaming-first urban intelligence
+  platform for Ho Chi Minh City. The chapter is organized as follows.                                                                                     
+  Section~\ref{sec:requirements} establishes the functional and non-functional
+  requirements through use case analysis. Section~\ref{sec:ingestion} describes                                                                           
+  the data acquisition and ingestion strategy. Section~\ref{sec:medallion}
+  details the multi-stage \textit{Medallion Architecture} for stream processing                                                                           
+  and data transformation. Section~\ref{sec:anomaly} formalizes the                                                                                       
+  \textbf{dual-signal anomaly detection framework}. Section~\ref{sec:rag}                                                                                 
+  presents the \textit{Retrieval-Augmented Generation} (RAG) pipeline for                                                                                 
+  knowledge-enriched inference. Finally, Section~\ref{sec:evaluation} defines                                                                             
+  the evaluation framework and key performance indicators used in Chapter~4.                                                                              
+                                                                                                                                                          
+  % ============================================================
+  \section{Requirement Analysis}                                                                                                                          
+  \label{sec:requirements}
+  % ============================================================                                                                                          
+   
+  The requirements of UrbanPulse are derived from the operational needs of                                                                                
+  municipal traffic management in a large Southeast Asian metropolitan area.
+  Ho Chi Minh City presents a particularly demanding environment: a road                                                                                  
+  network of over 4,000 kilometres, a registered vehicle population exceeding                                                                             
+  8 million units, and peak-hour congestion patterns that shift substantially                                                                             
+  across zones, time of day, and meteorological conditions \cite{hcmc_transport_report}.                                                                  
+  Existing monitoring approaches rely on periodic batch reporting, introducing                                                                            
+  temporal gaps of up to several hours between event occurrence and situational                                                                           
+  awareness \cite{batch_latency_survey}. UrbanPulse is designed to close this                                                                             
+  gap through continuous ingestion, real-time feature computation, and                                                                                    
+  LLM-assisted root cause analysis.                                                                                                                       
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Functional Requirements}
+  \label{subsec:functional_req}                                                                                                                           
+  % ------------------------------------------------------------
+                                                                                                                                                          
+  The following functional requirements were identified through analysis of                                                                               
+  urban traffic management workflows:
+                                                                                                                                                          
+  \begin{enumerate}
+      \item \textbf{FR-1 Continuous Data Ingestion:} The system shall
+      continuously acquire route-level traffic observations from a commercial                                                                             
+      mapping API and publish them to a durable, replayable message log with                                                                              
+      sub-minute freshness.                                                                                                                               
+                                                                                                                                                          
+      \item \textbf{FR-2 Real-Time Feature Computation:} For each ingested                                                                                
+      observation, the system shall compute and persist route-level statistical
+      features (mean duration, heavy vehicle ratio, standard deviation) within                                                                            
+      20 seconds of message arrival.                                                                                                                      
+                                                                                                                                                          
+      \item \textbf{FR-3 Anomaly Detection:} The system shall classify each                                                                               
+      route observation as anomalous or normal using at least two independent                                                                             
+      detection methods, and expose the results through a queryable REST API.                                                                             
+                                                                                                                                                          
+      \item \textbf{FR-4 Historical Analytics:} The system shall maintain a                                                                               
+      versioned, queryable history of all traffic observations at Bronze,                                                                                 
+      Silver, and Gold granularity, supporting point-in-time queries for                                                                                  
+      reproducible analysis.
+                                                                                                                                                          
+      \item \textbf{FR-5 Explainability:} The system shall provide
+      human-readable natural-language explanations of detected anomalies,                                                                                 
+      grounded in historical context and current meteorological conditions.                                                                               
+                                                                                                                                                          
+      \item \textbf{FR-6 Automated Alerting:} The system shall deliver                                                                                    
+      push notifications for high-confidence anomaly events with configurable                                                                             
+      per-route cooldown periods to suppress duplicate alerts.                                                                                            
+  \end{enumerate}                                                                                                                                         
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Non-Functional Requirements}
+  \label{subsec:nonfunctional_req}
+  % ------------------------------------------------------------                                                                                          
+   
+  \begin{enumerate}                                                                                                                                       
+      \item \textbf{NFR-1 Latency:} End-to-end ingestion lag (API response
+      to persisted feature) shall not exceed 20 seconds at the 95th percentile                                                                            
+      under normal operating load.                                                                                                                        
+                                                                                                                                                          
+      \item \textbf{NFR-2 Reproducibility:} Any anomaly classification                                                                                    
+      produced by the system shall be reproducible by querying the exact                                                                                  
+      Lakehouse snapshot and MLflow model version active at the time of                                                                                   
+      inference.                                                                                                                                          
+                                                                                                                                                          
+      \item \textbf{NFR-3 Fault Tolerance:} The ingestion and feature                                                                                     
+      computation pipelines shall tolerate transient service failures without
+      data loss, through Kafka offset management and Postgres-based                                                                                       
+      accumulator recovery.                                                                                                                               
+                                                                                                                                                          
+      \item \textbf{NFR-4 Scalability:} The architecture shall be horizontally                                                                            
+      scalable at the ingestion and serving layers without modification to                                                                                
+      the core processing logic.                                                                                                                          
+   
+      \item \textbf{NFR-5 Observability:} All system components shall emit                                                                                
+      structured logs, metrics, and traces consumable by a centralised
+      monitoring stack.                                                                                                                                   
+  \end{enumerate} 
+                                                                                                                                                          
+  % ------------------------------------------------------------
+  \subsection{Use Case Description}
+  \label{subsec:use_case_desc}
+  % ------------------------------------------------------------
 
-\subsection{Use Case Description}
-Nam tristique cursus purus. Suspendisse scelerisque faucibus nisi vel efficitur. Nunc ac suscipit sem. Duis id vehicula urna. Pellentesque condimentum felis eu ipsum ultrices, sed lacinia mauris pharetra. Nam eget tortor nibh. Quisque sagittis consectetur lacus et auctor. Pellentesque eget tortor et dui luctus viverra at sed ex. Sed aliquam ligula nec arcu commodo cursus. Integer ut malesuada dui.
+  Table~\ref{tab:use_cases} summarises the primary actors and their                                                                                       
+  interactions with the UrbanPulse platform.
+                                                                                                                                                          
+  \begin{table}[h]
+  \centering                                                                                                                                              
+  \caption{Primary use cases and actors in UrbanPulse}
+  \label{tab:use_cases}
+  \begin{tabular}{lll}                                                                                                                                    
+  \hline
+  \textbf{Use Case} & \textbf{Actor} & \textbf{Trigger} \\                                                                                                
+  \hline          
+  Monitor live traffic map      & Traffic operator  & Continuous / 15-second refresh \\                                                                   
+  Investigate anomaly           & Traffic analyst   & Alert notification received \\
+  Request root cause analysis   & Traffic analyst   & Manual query via dashboard \\                                                                       
+  Review historical trend       & Urban planner     & Ad-hoc query \\                                                                                     
+  Receive anomaly alert         & Duty manager      & Automated Telegram notification \\                                                                  
+  Retrain detection model       & ML engineer       & Scheduled (every 6 hours) \\                                                                        
+  \hline                                                                                                                                                  
+  \end{tabular}                                                                                                                                           
+  \end{table}                                                                                                                                             
+                                                                                                                                                          
+  % ------------------------------------------------------------
+  \subsection{Use Case Diagram}                                                                                                                           
+  \label{subsec:use_case_diagram}
+  % ------------------------------------------------------------
 
-\subsection{Use Case Diagram}
-Nulla hendrerit suscipit nisl, ac luctus lectus auctor sit amet. Fusce vulputate a ipsum sed consequat. Nulla eget imperdiet tellus. Duis varius magna libero, in sollicitudin ligula tristique id. Vivamus pulvinar congue metus vel egestas. Sed vestibulum nisi leo, sed gravida ante placerat sed. Nunc ac ipsum sodales risus iaculis laoreet. Nullam blandit sem at risus iaculis finibus vitae id nulla. Aenean felis dui, egestas dapibus nunc eu, venenatis pharetra tortor. Vestibulum ligula mauris, venenatis in elementum a, pharetra consectetur odio. Nulla ut sollicitudin metus, non dignissim ante. Fusce mattis felis et malesuada molestie.
+  Figure~\ref{fig:use_case} illustrates the relationships between system                                                                                  
+  actors and use cases. The \textit{Traffic Operator} and \textit{Traffic
+  Analyst} interact primarily with the Serving API layer, whilst the                                                                                      
+  \textit{ML Engineer} interacts with the batch orchestration layer.                                                                                      
+  The \textit{External APIs} actor represents the automated data sources                                                                                  
+  (VietMap and Open-Meteo) that trigger the ingestion pipeline.                                                                                           
+                                                                                                                                                          
+  \begin{figure}[h]                                                                                                                                       
+      \centering                                                                                                                                          
+      % TODO: Insert use case diagram here
+      % \includegraphics[width=0.85\textwidth]{figures/use_case_diagram.png}                                                                              
+      \caption{Use case diagram for the UrbanPulse platform.}
+      \label{fig:use_case}                                                                                                                                
+  \end{figure}    
+                                                                                                                                                          
+  % ------------------------------------------------------------
+  \subsection{System Overview}
+  \label{subsec:system_overview}                                                                                                                          
+  % ------------------------------------------------------------
+                                                                                                                                                          
+  Figure~\ref{fig:architecture} presents the high-level architecture of
+  UrbanPulse. The platform is structured into four horizontal layers:
+  the \textit{Ingestion Layer}, the \textit{Processing Layer}, the                                                                                        
+  \textit{Serving Layer}, and the \textit{Inference Layer}. Data flows                                                                                    
+  vertically from external APIs through the \textbf{Redpanda} message broker                                                                              
+  — a \textit{Kafka}-compatible distributed streaming platform                                                                                            
+  \cite{redpanda_whitepaper} — into two parallel consumer paths: a                                                                                        
+  \textit{durable archival path} that materialises data into a versioned                                                                                  
+  \textbf{Data Lakehouse}, and a \textit{real-time feature path} that writes                                                                              
+  statistical summaries to \textbf{PostgreSQL} for low-latency serving.                                                                                   
+  The Serving Layer exposes a REST and Server-Sent Events (SSE) API surface.                                                                              
+  The Inference Layer augments API responses with LLM-generated explanations                                                                              
+  produced by a locally hosted \textbf{Qwen2.5:3b} model via                                                                                              
+  \textbf{Ollama} \cite{qwen25_report}.                                                                                                                   
+                  
+  \begin{figure}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[
+    >=stealth, font=\small,
+    cbox/.style={draw, rounded corners=3pt, fill=white,
+                 minimum width=3.2cm, minimum height=0.8cm,
+                 align=center, font=\footnotesize, inner sep=4pt},
+    arr/.style={->, thick, shorten >=2pt, shorten <=2pt},
+    llabel/.style={font=\bfseries\footnotesize}
+  ]
 
-\subsection{System Overview}
-Fusce cursus urna a luctus ultrices. Sed ac diam ex. Morbi ultrices eros efficitur maximus accumsan. Pellentesque aliquet dignissim nisl non rhoncus. Curabitur efficitur ex quam, id eleifend sem efficitur id. Pellentesque rhoncus lacinia ullamcorper. Maecenas eu tincidunt libero. Donec a erat eget lacus venenatis consectetur. Vivamus sed tempus odio. Nullam pretium, est eget sodales elementum, arcu dui laoreet mauris, non viverra diam nisi pretium justo.
+  %% ── Layer 1: Data Sources ──
+  \fill[blue!12, rounded corners=6pt] (-6.5,-1.0) rectangle (6.5,1.0);
+  \draw[blue!40,  rounded corners=6pt] (-6.5,-1.0) rectangle (6.5,1.0);
+  \node[llabel] at (0, 0.72) {DATA SOURCES};
+  \node[cbox] at (-2.8,-0.05) {VietMap\\[-2pt]Traffic API};
+  \node[cbox] at ( 2.8,-0.05) {Open-Meteo\\[-2pt]Weather API};
 
-\section{Algorithms}
+  \draw[arr] (0,-1.0) -- (0,-1.6);
 
-\subsection{Formalizing}
-Quisque a vehicula odio, vitae interdum purus. Ut vestibulum venenatis semper. Duis tempus a sem et viverra. In sed gravida erat, ac luctus tortor. Cras blandit nunc quis tortor consequat semper. Curabitur eu feugiat elit. Cras in magna et arcu rutrum dapibus luctus id purus. Nullam volutpat mauris tortor, non accumsan velit ullamcorper et. Nunc pharetra, magna vitae dignissim molestie, mauris orci pharetra ligula, laoreet ornare ante risus et est. Aenean vehicula pellentesque nibh non ultrices. Ut blandit ac dolor ut pulvinar. Nullam lorem mauris, varius sit amet bibendum ac, placerat in mauris. Sed aliquam, velit et viverra euismod, nibh eros pellentesque nisi, eget faucibus quam odio in libero. Sed efficitur consequat lorem id volutpat. Phasellus faucibus pharetra nisi ac finibus in Algorithm~\ref{alg:1}.
+  %% ── Layer 2: Ingestion ──
+  \fill[orange!12, rounded corners=6pt] (-6.5,-3.2) rectangle (6.5,-1.6);
+  \draw[orange!50, rounded corners=6pt] (-6.5,-3.2) rectangle (6.5,-1.6);
+  \node[llabel] at (0,-1.82) {INGESTION};
+  \node[draw, rounded corners=3pt, fill=white, minimum width=7.5cm,
+        minimum height=0.8cm, align=center, font=\footnotesize, inner sep=4pt]
+    at (0,-2.5) {Redpanda \quad (Kafka-compatible Message Broker)};
 
-\begin{algorithm}[H]
-	\small
-	\caption{$(\text{Result}) \gets \texttt{Sample}(\text{Input1})$}
-	\label{alg:1}
-	\begin{algorithmic}[1]
-		\Require $\text{Input1}$ is a predefined parameter.
-		\State $\text{Set} \gets \emptyset$
-		\For{$\text{element} \in \text{Input1}$}
-		\If{$\text{Condition}(\text{element})$ is true}
-		\State $\text{Set} \gets \text{Set} \cup \{\text{Process}(\text{element})\}$
-		\Else
-		\State \textbf{continue}
-		\EndIf
-		\EndFor
-		\State $\text{Intermediate} \gets \texttt{Transform}(\text{Set})$
-		\State \Return $\text{Result}$
-	\end{algorithmic}
-\end{algorithm}
+  \draw[arr] (-2.8,-3.2) -- (-2.8,-3.8);
+  \draw[arr] ( 2.8,-3.2) -- ( 2.8,-3.8);
 
-Aenean arcu nulla, ornare sed arcu nec, mollis pharetra dolor. Maecenas rutrum efficitur dui nec rutrum. Sed suscipit, felis non malesuada ultrices, urna lorem porttitor mi, quis dignissim lectus mi a justo. Mauris erat ante, placerat eu sapien id, finibus maximus nisl. Nam cursus velit eu convallis molestie. Fusce eleifend fermentum elementum. Mauris congue non mauris a blandit. In vel ante mi. Etiam et consectetur quam, accumsan aliquam dolor. Aenean sed tristique massa.
+  %% ── Layer 3: Processing ──
+  \fill[teal!10, rounded corners=6pt] (-6.5,-6.4) rectangle (6.5,-3.8);
+  \draw[teal!40,  rounded corners=6pt] (-6.5,-6.4) rectangle (6.5,-3.8);
+  \node[llabel] at (0,-4.02) {PROCESSING};
+
+  \draw[gray!50, rounded corners=4pt] (-6.2,-6.1) rectangle (-0.3,-4.3);
+  \node[font=\footnotesize\bfseries] at (-3.25,-4.52) {Streaming Service};
+  \node[font=\scriptsize, align=center] at (-3.25,-5.2)
+      {Real-time Z-score computation\\Online feature store (PostgreSQL)};
+
+  \draw[gray!50, rounded corners=4pt] (0.3,-6.1) rectangle (6.2,-4.3);
+  \node[font=\footnotesize\bfseries] at (3.25,-4.52) {Batch Service};
+  \node[font=\scriptsize, align=center] at (3.25,-5.2)
+      {Prefect orchestration\\Micro-batch \& Gold aggregation (DuckDB)};
+
+  \draw[arr] (0,-6.4) -- (0,-7.0);
+
+  %% ── Layer 4: Data Lakehouse ──
+  \fill[purple!8,  rounded corners=6pt] (-6.5,-10.2) rectangle (6.5,-7.0);
+  \draw[purple!40, rounded corners=6pt] (-6.5,-10.2) rectangle (6.5,-7.0);
+  \node[llabel] at (0,-7.24) {DATA LAKEHOUSE \quad (MinIO + Apache Iceberg + Nessie)};
+
+  \fill[orange!18, rounded corners=4pt] (-6.2,-9.9) rectangle (-2.5,-7.6);
+  \draw[orange!50, rounded corners=4pt] (-6.2,-9.9) rectangle (-2.5,-7.6);
+  \node[font=\scriptsize\bfseries] at (-4.35,-7.87) {Bronze Layer};
+  \node[font=\scriptsize, align=center] at (-4.35,-8.75)
+      {Raw telemetry\\Durable archival};
+
+  \fill[gray!14, rounded corners=4pt] (-2.3,-9.9) rectangle (1.4,-7.6);
+  \draw[gray!40,  rounded corners=4pt] (-2.3,-9.9) rectangle (1.4,-7.6);
+  \node[font=\scriptsize\bfseries] at (-0.45,-7.87) {Silver Layer};
+  \node[font=\scriptsize, align=center] at (-0.45,-8.75)
+      {Cleaned \& standardised\\Inter-zone metrics};
+
+  \fill[yellow!25, rounded corners=4pt] (1.6,-9.9) rectangle (6.2,-7.6);
+  \draw[yellow!60, rounded corners=4pt] (1.6,-9.9) rectangle (6.2,-7.6);
+  \node[font=\scriptsize\bfseries] at (3.9,-7.87) {Gold Layer};
+  \node[font=\scriptsize, align=center] at (3.9,-8.75)
+      {Hourly aggregations\\Baseline statistics};
+
+  \draw[arr] (0,-10.2) -- (0,-10.8);
+
+  %% ── Layer 5: Intelligence ──
+  \fill[red!7,  rounded corners=6pt] (-6.5,-14.2) rectangle (6.5,-10.8);
+  \draw[red!35, rounded corners=6pt] (-6.5,-14.2) rectangle (6.5,-10.8);
+  \node[llabel] at (0,-11.04) {INTELLIGENCE LAYER};
+
+  \draw[gray!50, rounded corners=4pt] (-6.2,-14.0) rectangle (-2.4,-11.3);
+  \node[font=\footnotesize\bfseries] at (-4.3,-11.57) {ML Service};
+  \node[font=\scriptsize, align=center] at (-4.3,-12.65)
+      {Isolation Forest\\MLflow Model Registry\\Scheduled retraining};
+
+  \draw[gray!50, rounded corners=4pt] (-2.2,-14.0) rectangle (2.2,-11.3);
+  \node[font=\footnotesize\bfseries] at (0,-11.57) {RAG Pipeline};
+  \node[font=\scriptsize, align=center] at (0,-12.65)
+      {ChromaDB vector store\\Nomic Embed text\\Anomaly indexing};
+
+  \draw[gray!50, rounded corners=4pt] (2.4,-14.0) rectangle (6.2,-11.3);
+  \node[font=\footnotesize\bfseries] at (4.3,-11.57) {LLM Inference};
+  \node[font=\scriptsize, align=center] at (4.3,-12.65)
+      {Ollama runtime\\Qwen2.5:3b model\\Root-cause analysis};
+
+  \draw[arr] (0,-14.2) -- (0,-14.8);
+
+  %% ── Layer 6: Serving ──
+  \fill[green!10, rounded corners=6pt] (-6.5,-16.8) rectangle (6.5,-14.8);
+  \draw[green!40, rounded corners=6pt] (-6.5,-16.8) rectangle (6.5,-14.8);
+  \node[llabel] at (0,-15.04) {SERVING LAYER};
+  \node[cbox] at (-3.5,-15.85) {Prediction API\\SSE Streaming};
+  \node[cbox] at (0,  -15.85) {Traefik\\Reverse Proxy};
+  \node[cbox] at ( 3.5,-15.85) {Frontend\\Next.js + TypeScript};
+
+  %% ── Observability banner ──
+  \draw[arr, dashed] (0,-16.8) -- (0,-17.1);
+  \fill[gray!8,  rounded corners=4pt] (-6.5,-18.0) rectangle (6.5,-17.1);
+  \draw[gray!35, rounded corners=4pt] (-6.5,-18.0) rectangle (6.5,-17.1);
+  \node[font=\footnotesize, align=center] at (0,-17.55)
+      {\textbf{Observability (cross-cutting):} \quad
+       Grafana \textbullet{} Loki \textbullet{} Promtail};
+
+  \end{tikzpicture}%
+  }
+  \caption{High-level system architecture of UrbanPulse.}
+  \label{fig:architecture}
+  \end{figure}
+                                                                                                                                                          
+  % ============================================================
+  \section{Data Acquisition and Ingestion Strategy}
+  \label{sec:ingestion}                                                                                                                                   
+  % ============================================================
+                                                                                                                                                          
+  Reliable, low-latency data acquisition is the foundation upon which all                                                                                 
+  downstream processing depends. This section describes the two data sources
+  integrated by UrbanPulse and the mechanism by which raw API responses are                                                                               
+  converted into a replayable event stream.                                                                                                               
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Traffic Telemetry — VietMap Directions API}
+  \label{subsec:vietmap}                                                                                                                                  
+  % ------------------------------------------------------------
+                                                                                                                                                          
+  Route-level traffic observations are acquired by periodically polling the
+  \textbf{VietMap Directions API} \cite{vietmap_api}, a commercial Vietnamese                                                                             
+  mapping provider with national road network coverage. The ingestion service                                                                             
+  iterates over 30 predefined inter-zone routes defined in a canonical                                                                                    
+  \texttt{routes.json} configuration file. Routes are generated from a                                                                                    
+  \texttt{zones.json} specification that partitions Ho Chi Minh City into six                                                                             
+  functional zones: \textit{Urban Core}, \textit{Eastern Innovation},                                                                                     
+  \textit{Northern Industrial}, \textit{Southern Port},                                                                                                   
+  \textit{Western Peri-urban}, and \textit{Southern Coastal}. Each route is                                                                               
+  expressed as a directed pair of origin and destination zone anchors,                                                                                    
+  yielding a total of 30 directed inter-zone origin–destination pairs.                                                                                    
+                                                                                                                                                          
+  For each route, a single API call returns the following fields: travel                                                                                  
+  duration $d_r$ (minutes), distance $\delta_r$ (metres), and a congestion                                                                                
+  breakdown comprising four segment-level ratios. Let $S_r$ denote the set                                                                                
+  of road segments on route $r$. The congestion features are:                                                                                             
+                                                                                                                                                          
+  \begin{equation}                                                                                                                                        
+  \label{eq:heavy_ratio}                                                                                                                                  
+  \text{heavy\_ratio}_r = \frac{|\{s \in S_r : \text{level}(s) = \text{heavy}\}|}{|S_r|}
+  \end{equation}                                                                                                                                          
+   
+  with analogous definitions for $\text{moderate\_ratio}_r$,                                                                                              
+  $\text{low\_ratio}_r$, and $\text{severe\_segments}_r$ (absolute count).
+  A 10-second inter-request delay between consecutive API calls is enforced                                                                               
+  to comply with rate-limit constraints. A complete crawl cycle across all                                                                                
+  30 routes completes within the 5-minute polling interval.                                                                                               
+                                                                                                                                                          
+  It is important to clarify that VietMap operates as a \textbf{polling-based                                                                             
+  source} rather than a push-based event stream. The ingestion service
+  bridges this gap by publishing each validated observation immediately to                                                                                
+  Redpanda via the Kafka producer protocol, effectively converting a                                                                                      
+  batch API into a synthetic event stream. This pattern decouples the                                                                                     
+  polling schedule from all downstream consumers: the pipeline behaves                                                                                    
+  as a true streaming system regardless of source polling frequency                                                                                       
+  \cite{kleppmann_ddia}.                                                                                                                                  
+                                                                                                                                                          
+  Each message is validated against a \textbf{Pydantic} \cite{pydantic_docs}                                                                              
+  domain model (\texttt{TrafficRouteObservation}) before publication.
+  An \texttt{ingest\_ts} header — the Unix epoch millisecond timestamp                                                                                    
+  recorded immediately before the API call — is attached to every Kafka                                                                                   
+  message. This header serves as the reference point for end-to-end                                                                                       
+  latency measurement in all downstream consumers.                                                                                                        
+                                                                                                                                                          
+  % ------------------------------------------------------------
+  \subsection{Meteorological Context — Open-Meteo API}                                                                                                    
+  \label{subsec:openmeteo}
+  % ------------------------------------------------------------                                                                                          
+   
+  Hourly weather data for Ho Chi Minh City (latitude $10.7757^\circ$N,
+  longitude $106.7009^\circ$E, centred on Bến Thành district) is retrieved
+  from the \textbf{Open-Meteo API} \cite{openmeteo_api}, a free,
+  open-source meteorological service requiring no authentication.
+  Retrieved variables include: temperature ($^\circ$C), precipitation
+  ($\text{mm}$), rainfall ($\text{mm}$), wind speed ($\text{km/h}$),
+  wind direction ($^\circ$), cloud cover ($\%$), and WMO weather code.                                                                                         
+                                                                                                                                                          
+  Weather data is consumed in two operationally distinct modes:                                                                                           
+                                                                                                                                                          
+  \begin{enumerate}                                                                                                                                       
+      \item \textbf{Batch indexing mode:} The \texttt{hourly-gold}
+      Prefect flow fetches the trailing 7 days of hourly records                                                                                          
+      ($\approx 192$ documents) and indexes them into the                                                                                                 
+      \texttt{external\_context} ChromaDB collection for RAG retrieval                                                                                    
+      (Section~\ref{sec:rag}).                                                                                                                            
+                                                                                                                                                          
+      \item \textbf{Live fetch mode:} On each \texttt{/chat} API request,                                                                                 
+      the serving layer performs a direct asynchronous HTTP fetch of current                                                                              
+      conditions, cached in-process for 15 minutes, and injects the result                                                                                
+      into the LLM system prompt.                                                                                                                         
+  \end{enumerate}                                                                                                                                         
+                                                                                                                                                          
+  Weather data is \textbf{not} used as an input to either anomaly detection                                                                               
+  model. Its role is exclusively contextual enrichment for the LLM
+  inference layer described in Section~\ref{sec:rag}.                                                                                                     
+                                                                                                                                                          
+  % ============================================================                                                                                          
+  \section{Stream Processing and Medallion Architecture}                                                                                                  
+  \label{sec:medallion}
+  % ============================================================
+
+  Once published to Redpanda, traffic observations are consumed by two                                                                                    
+  independent consumer groups operating in parallel — one for durable
+  archival, one for real-time feature computation. This fan-out architecture,                                                                             
+  illustrated in Figure~\ref{fig:data_flow}, ensures that neither path                                                                                    
+  can block or slow the other. The following subsections describe each                                                                                    
+  processing stage in the \textbf{Medallion Architecture}                                                                                                 
+  \cite{databricks_lakehouse}, a layered data quality pattern in which raw                                                                                
+  data is progressively refined through Bronze, Silver, and Gold tiers.                                                                                   
+                  
+  \begin{figure}[h]                                                                                                                                       
+      \centering  
+      % TODO: Insert data flow diagram here
+      % \includegraphics[width=\textwidth]{figures/data_flow.png}                                                                                         
+      \caption{Dual-consumer data flow from Redpanda to Lakehouse and
+      Online Feature Store.}                                                                                                                              
+      \label{fig:data_flow}
+  \end{figure}                                                                                                                                            
+                  
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Bronze Layer — Durable Event Archival}
+  \label{subsec:bronze}
+  % ------------------------------------------------------------                                                                                          
+   
+  The \texttt{apps/streaming} consumer buffers incoming Kafka messages in                                                                                 
+  memory and flushes to \textbf{MinIO} object storage as \textbf{Apache
+  Parquet} \cite{parquet_format} files using a \textit{dual-trigger flush                                                                                 
+  policy}: a flush is issued when the buffer reaches 500 messages                                                                                         
+  \textbf{or} when 30 seconds have elapsed since the last flush, whichever                                                                                
+  occurs first. This policy bounds the maximum number of small files                                                                                      
+  written — which degrades downstream query performance \cite{small_file_problem}                                                                         
+  — and the maximum duration for which data remains unarchived in memory.                                                                                 
+                                                                                                                                                          
+  Kafka offsets are committed only after a confirmed successful MinIO                                                                                     
+  upload (\texttt{asynchronous=False}). If an upload fails, the consumer                                                                                  
+  does not advance its offset; messages are replayed on restart, providing                                                                                
+  \textbf{at-least-once delivery} at the application level. Messages                                                                                      
+  that cannot be processed after repeated attempts are routed to a                                                                                        
+  \textit{dead-letter queue} (DLQ) topic (\texttt{\{topic\}-dlq}) for                                                                                     
+  independent inspection and recovery \cite{enterprise_integration_patterns}.                                                                             
+                                                                                                                                                          
+  Parquet files are written with \textit{Snappy} compression and use                                                                                      
+  a \textbf{Hive-style event-time partition scheme}:                                                                                                      
+  \begin{center}                                                                                                                                          
+  \texttt{bronze/traffic-route-bronze/year=Y/month=M/day=D/hour=H/\{uuid\}.parquet}
+  \end{center}                                                                                                                                            
+                  
+  The partition key is derived from \texttt{timestamp\_utc} embedded in                                                                                   
+  the observation itself — \textbf{not} the time of writing. This
+  \textit{event-time partitioning} \cite{flink_event_time} ensures that                                                                                   
+  late-arriving records are placed in the historically correct partition,                                                                                 
+  preserving temporal integrity for all downstream aggregations.                                                                                          
+                                                                                                                                                          
+  % ------------------------------------------------------------
+  \subsection{Silver Layer — Incremental Micro-Batch Processing}                                                                                          
+  \label{subsec:silver}                                                                                                                                   
+  % ------------------------------------------------------------
+                                                                                                                                                          
+  Every 5 minutes, the \texttt{microbatch} \textbf{Prefect}                                                                                               
+  \cite{prefect_docs} flow executes a \textbf{DuckDB} \cite{duckdb_paper}
+  scan over newly arrived Bronze Parquet files and promotes them to the                                                                                   
+  Silver \textbf{Apache Iceberg} \cite{iceberg_paper} table                                                                                               
+  (\texttt{silver.traffic\_route}), catalogued via \textbf{Project Nessie}                                                                                
+  \cite{nessie_docs}.                                                                                                                                     
+                                                                                                                                                          
+  It is necessary to distinguish this stage from \textit{stateful stream                                                                                  
+  processing} as implemented by systems such as Apache Flink                                                                                              
+  \cite{flink_paper} or Spark Structured Streaming \cite{spark_streaming}.                                                                                
+  The Silver layer uses an \textbf{incremental micro-batch} pattern: each
+  Prefect run is a bounded, stateless DuckDB job that reads only files                                                                                    
+  written since the last high-watermark and appends to Iceberg atomically.                                                                                
+  This design was chosen deliberately: it eliminates the operational                                                                                      
+  complexity of a long-running JVM streaming cluster while achieving Silver                                                                               
+  freshness within 5 minutes of event arrival, which is sufficient given                                                                                  
+  that the sub-second real-time path is served by the Online Feature Store                                                                                
+  (Section~\ref{subsec:online}).                                                                                                                          
+                                                                                                                                                          
+  \textbf{Apache Iceberg} provides \textit{ACID-compliant snapshot isolation}:                                                                            
+  concurrent readers observe a consistent table snapshot whilst a new                                                                                     
+  micro-batch commit is in progress. It additionally supports                                                                                             
+  \textit{schema evolution} (adding columns without invalidating existing                                                                                 
+  readers) and \textit{time-travel} (querying the table at any previous                                                                                   
+  snapshot by ID or timestamp) \cite{iceberg_paper}. These capabilities                                                                                   
+  are foundational to the reproducibility requirement (NFR-2).                                                                                            
+                                                                                                                                                          
+  % ------------------------------------------------------------
+  \subsection{Gold Layer — Hourly Aggregation}                                                                                                            
+  \label{subsec:gold}                                                                                                                                     
+  % ------------------------------------------------------------
+                                                                                                                                                          
+  Every hour, the \texttt{hourly-gold} Prefect flow aggregates the Silver                                                                                 
+  table into \texttt{gold.traffic\_hourly} — a pre-computed, per-route,
+  per-hour summary. The Gold schema includes: \texttt{avg\_heavy\_ratio},                                                                                 
+  \texttt{avg\_moderate\_ratio}, \texttt{avg\_duration\_minutes}, and                                                                                     
+  \texttt{max\_severe\_segments}. DuckDB reads the Silver Iceberg table                                                                                   
+  via the \textbf{PyIceberg} \cite{pyiceberg_docs} Arrow interface and                                                                                    
+  writes results back to an Iceberg Gold table. The Gold layer serves                                                                                     
+  two consumers: the \textit{IsolationForest training pipeline}                                                                                           
+  (Section~\ref{subsec:iforest}) and the \textit{RAG traffic pattern                                                                                      
+  indexer} (Section~\ref{subsec:rag_indexing}).                                                                                                           
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Online Feature Store — Real-Time Postgres Path}                                                                                             
+  \label{subsec:online}
+  % ------------------------------------------------------------                                                                                          
+   
+  In parallel with the archival path, the \texttt{apps/online} consumer                                                                                   
+  maintains a live \textbf{Online Feature Store} in PostgreSQL
+  (\texttt{online\_route\_features} table). For each Kafka message,                                                                                       
+  the \texttt{OnlineFeatureProcessor} updates an in-memory hourly window                                                                                  
+  for the corresponding route using \textbf{Welford's online algorithm}                                                                                   
+  \cite{welford1962} — a numerically stable, single-pass method for                                                                                       
+  computing a running mean and standard deviation without retaining the                                                                                   
+  full observation history.                                                                                                                               
+                                                                                                                                                          
+  The Welford accumulator state is persisted to PostgreSQL on every                                                                                       
+  message via an \texttt{UPSERT} keyed on \texttt{(route\_id, window\_start)}.
+  On service restart, the processor reconstructs the accumulators from                                                                                    
+  stored \texttt{mean}, \texttt{stddev}, and \texttt{count} via the
+  inverse identity $M_2 = \sigma^2 \times (n-1)$, allowing accumulation                                                                                   
+  to resume from the exact point of interruption rather than resetting                                                                                    
+  the hourly window. Algorithm~\ref{alg:welford} formalises this procedure.                                                                               
+                                                                                                                                                          
+  \begin{algorithm}[H]                                                                                                                                    
+      \small                                                                                                                                              
+      \caption{$(\hat{\mu}, \hat{\sigma}, n) \gets                                                                                                        
+      \texttt{WelfordUpdate}(x, \hat{\mu}_{\text{prev}}, M_{2,\text{prev}}, n_{\text{prev}})$}                                                            
+      \label{alg:welford}                                                                                                                                 
+      \begin{algorithmic}[1]                                                                                                                              
+          \Require $x$ is the new heavy\_ratio observation for route $r$.                                                                                 
+          \Require $\hat{\mu}_{\text{prev}}, M_{2,\text{prev}}, n_{\text{prev}}$                                                                          
+          are the prior mean, sum of squared deviations, and count.                                                                                       
+          \State $n \gets n_{\text{prev}} + 1$                                                                                                            
+          \State $\delta \gets x - \hat{\mu}_{\text{prev}}$                                                                                               
+          \State $\hat{\mu} \gets \hat{\mu}_{\text{prev}} + \delta \,/\, n$                                                                               
+          \State $\delta_2 \gets x - \hat{\mu}$                                                                                                           
+          \State $M_2 \gets M_{2,\text{prev}} + \delta \times \delta_2$                                                                                   
+          \If{$n > 1$}                                                                                                                                    
+              \State $\hat{\sigma} \gets \sqrt{M_2 \,/\, (n - 1)}$                                                                                        
+          \Else                                                                                                                                           
+              \State $\hat{\sigma} \gets 0$                                                                                                               
+          \EndIf                                                                                                                                          
+          \State \Return $(\hat{\mu},\; \hat{\sigma},\; n)$
+      \end{algorithmic}                                                                                                                                   
+  \end{algorithm}
+                                                                                                                                                          
+  \textbf{Crash recovery.} At startup, the processor queries PostgreSQL                                                                                   
+  for the current hour's stored \texttt{mean}, \texttt{stddev},
+  and \texttt{observation\_count} for each route and reconstructs                                                                                         
+  the Welford state as:
+                                                                                                                                                          
+  \begin{equation}
+  \label{eq:welford_recovery}                                                                                                                             
+  M_2^{\text{recovered}} = \hat{\sigma}^2 \times \max(n - 1,\; 0)
+  \end{equation}                                                                                                                                          
+   
+  This ensures that a mid-hour service restart does not discard partially                                                                                 
+  accumulated statistics, satisfying fault-tolerance requirement NFR-3.
+                                                                                                                                                          
+  % ============================================================
+  \section{Dual-Signal Anomaly Detection Framework}                                                                                                       
+  \label{sec:anomaly}                                                                                                                                     
+  % ============================================================
+                                                                                                                                                          
+  UrbanPulse employs two anomaly detection algorithms that are                                                                                            
+  \textbf{mathematically orthogonal by design}: a \textit{univariate
+  threshold-based} detector operating on the real-time feature stream,                                                                                    
+  and a \textit{multivariate ensemble} detector trained on the historical                                                                                 
+  Gold layer. Neither algorithm is a fallback for the other; they are                                                                                     
+  fused at the serving layer to produce a three-tier confidence hierarchy.                                                                                
+  The rationale for combining both approaches follows from the observation                                                                                
+  that univariate methods miss complex joint anomalies, whilst ensemble                                                                                   
+  methods lack the immediacy of per-message classification                                                                                                
+  \cite{chandola2009anomaly}.                                                                                                                             
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Signal 1 — Z-Score Online Detector}
+  \label{subsec:zscore}                                                                                                                                   
+  % ------------------------------------------------------------                                                                                          
+                                                                                                                                                          
+  \subsubsection{Formalizing}                                                                                                                             
+                  
+  Let $r \in \mathcal{R}$ denote a route identifier. Let                                                                                                  
+  $\bar{h}_r^{(t)}$ denote the running mean \texttt{heavy\_ratio}
+  for route $r$ at time $t$, computed by the Welford accumulator                                                                                          
+  (Algorithm~\ref{alg:welford}). Let $\mu_r^{\text{base}}$ and                                                                                            
+  $\sigma_r^{\text{base}}$ denote the \textit{batch baseline}                                                                                             
+  mean and standard deviation of \texttt{heavy\_ratio} for route $r$,                                                                                     
+  computed by the \texttt{baseline\_learning} Prefect task from the                                                                                       
+  Gold layer. The Z-score for route $r$ is defined as:                                                                                                    
+                                                                                                                                                          
+  \begin{equation}                                                                                                                                        
+  \label{eq:zscore}                                                                                                                                       
+  z_r^{(t)} = \frac{\bar{h}_r^{(t)} - \mu_r^{\text{base}}}{\sigma_r^{\text{base}}}
+  \end{equation}                                                                                                                                          
+   
+  A route is classified as anomalous if and only if:                                                                                                      
+                  
+  \begin{equation}                                                                                                                                        
+  \label{eq:zscore_threshold}
+  z_r^{(t)} > \theta_r                                                                                                                                    
+  \end{equation}  
+
+  where $\theta_r$ is a \textbf{dynamic, per-route threshold} derived                                                                                     
+  from the 99th percentile of the baseline distribution (default
+  $\theta_r = 2.0$). The threshold is \textbf{one-sided}: only positive                                                                                   
+  deviations are flagged, as a lower-than-baseline heavy ratio indicates                                                                                  
+  free-flowing traffic, which does not constitute an anomalous condition.                                                                                 
+  Algorithm~\ref{alg:zscore} formalises the full per-message classification                                                                               
+  procedure.                                                                                                                                              
+                                                                                                                                                          
+  \begin{algorithm}[H]                                                                                                                                    
+      \small      
+      \caption{$(\,z_r,\; \texttt{is\_anomaly}\,) \gets                                                                                                   
+      \texttt{ZScoreClassify}(r,\; \bar{h}_r^{(t)},\; \mathcal{B})$}                                                                                      
+      \label{alg:zscore}                                                                                                                                  
+      \begin{algorithmic}[1]                                                                                                                              
+          \Require $r$ is the route identifier.                                                                                                           
+          \Require $\bar{h}_r^{(t)}$ is the current window mean heavy\_ratio.                                                                             
+          \Require $\mathcal{B}$ is the baseline map: $r \mapsto                                                                                          
+          (\mu_r^{\text{base}},\; \sigma_r^{\text{base}},\; \theta_r)$.                                                                                   
+          \If{$r \notin \mathcal{B}$ \textbf{or}                                                                                                          
+              $\sigma_r^{\text{base}} = 0$}                                                                                                               
+              \State \Return $(z_r = \texttt{None},\;                                                                                                     
+              \texttt{is\_anomaly} = \texttt{False})$                                                                                                     
+          \EndIf                                                                                                                                          
+          \State $z_r \gets                                                                                                                               
+          (\bar{h}_r^{(t)} - \mu_r^{\text{base}}) \;/\;
+          \sigma_r^{\text{base}}$                                                                                                                         
+          \State $\texttt{is\_anomaly} \gets
+          (z_r > \theta_r)$                                                                                                                               
+          \State \Return $(z_r,\; \texttt{is\_anomaly})$
+      \end{algorithmic}                                                                                                                                   
+  \end{algorithm}                                                                                                                                         
+   
+  The result is stored in the \texttt{online\_route\_features} table                                                                                      
+  under the column \texttt{duration\_zscore} — a historical naming
+  artefact retained for schema continuity; the stored value is the                                                                                        
+  heavy\_ratio Z-score as defined in Equation~\ref{eq:zscore}.                                                                                            
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Signal 2 — Isolation Forest Batch Detector}                                                                                                 
+  \label{subsec:iforest}
+  % ------------------------------------------------------------                                                                                          
+   
+  \subsubsection{Formalizing}                                                                                                                             
+                  
+  The \textbf{Isolation Forest} algorithm \cite{liu2008isolation} is an                                                                                   
+  unsupervised ensemble method that detects anomalies by measuring how
+  easily an observation can be \textit{isolated} from the rest of the                                                                                     
+  dataset using random recursive partitioning. Anomalous observations,
+  being rare and distinct, require fewer partitions to isolate and thus                                                                                   
+  receive shorter average path lengths across the ensemble of trees.                                                                                      
+                                                                                                                                                          
+  Let $\mathbf{x} \in \mathbb{R}^d$ denote the feature vector for a                                                                                       
+  single route-hour observation, where $d = 7$. The feature vector is:                                                                                    
+                                                                                                                                                          
+  \begin{equation}
+  \label{eq:feature_vector}                                                                                                                               
+  \mathbf{x} = \bigl(\,
+  h_{\text{avg}},\;                                                                                                                                       
+  m_{\text{avg}},\;                                                                                                                                       
+  s_{\text{max}},\;                                                                                                                                       
+  \sin\!\left(\tfrac{2\pi \cdot \text{hr}}{24}\right),\;                                                                                                  
+  \cos\!\left(\tfrac{2\pi \cdot \text{hr}}{24}\right),\;                                                                                                  
+  \sin\!\left(\tfrac{2\pi \cdot \text{dow}}{7}\right),\;                                                                                                  
+  \cos\!\left(\tfrac{2\pi \cdot \text{dow}}{7}\right)                                                                                                     
+  \bigr)                                                                                                                                                  
+  \end{equation}  
+                                                                                                                                                          
+  where $h_{\text{avg}}$ is \texttt{avg\_heavy\_ratio},                                                                                                   
+  $m_{\text{avg}}$ is \texttt{avg\_moderate\_ratio},
+  $s_{\text{max}}$ is \texttt{max\_severe\_segments},                                                                                                     
+  \texttt{hr} $\in \{0, \ldots, 23\}$ is the hour of day (UTC),
+  and \texttt{dow} $\in \{0, \ldots, 6\}$ is the day of week                                                                                              
+  (Sunday = 0).
+                                                                                                                                                          
+  The \textbf{cyclical encoding} of \texttt{hr} and \texttt{dow}                                                                                          
+  as sine-cosine pairs \cite{cyclical_encoding} projects circular                                                                                         
+  time dimensions onto the unit circle, ensuring that 23:00 and 00:00                                                                                     
+  are geometrically adjacent in feature space, and that Sunday and                                                                                        
+  Monday are adjacent across the week boundary. Encoding time as a                                                                                        
+  raw integer would impose a false ordinal distance (e.g., hour 23                                                                                        
+  would be maximally distant from hour 0), causing the model to                                                                                           
+  mislearn the periodicity of urban traffic patterns.                                                                                                     
+                                                                                                                                                          
+  Given a training corpus $\mathcal{X} = \{\mathbf{x}_1, \ldots,                                                                                          
+  \mathbf{x}_N\}$ drawn from the Gold layer, the Isolation Forest                                                                                         
+  produces an anomaly score $s(\mathbf{x}) \in [-1, 1]$. An                                                                                               
+  observation is labelled anomalous if $s(\mathbf{x}) < 0$ (the                                                                                           
+  scikit-learn convention, internally inverted to a binary label                                                                                          
+  1 = anomaly, 0 = normal). Algorithm~\ref{alg:iforest} describes                                                                                         
+  the full training and scoring pipeline.                                                                                                                 
+                                                                                                                                                          
+  \begin{algorithm}[H]                                                                                                                                    
+      \small                                                                                                                                              
+      \caption{$\hat{y} \gets
+      \texttt{IForestScore}(\mathbf{x},\; f_{\theta})$}                                                                                                   
+      \label{alg:iforest}                                                                                                                                 
+      \begin{algorithmic}[1]                                                                                                                              
+          \Require $\mathcal{X}$ is the Gold-layer training corpus.                                                                                       
+          \Require $f_{\theta}$ is a trained \texttt{IsolationForest}                                                                                     
+          with contamination $= 0.05$, $T = 100$ trees.                                                                                                   
+          \Comment{Training phase (every 6 h)}                                                                                                            
+          \State $f_{\theta} \gets \texttt{IsolationForest.fit}(\mathcal{X})$                                                                             
+          \State \textbf{log} $f_{\theta}$ parameters and metrics to                                                                                      
+          \textsc{MLflow}; promote to \texttt{@champion} alias.                                                                                           
+          \Comment{Scoring phase (on-demand)}                                                                                                             
+          \State $\mathbf{X}_{\text{now}} \gets$ latest snapshot of                                                                                       
+          \texttt{online\_route\_features}                                                                                                                
+          \State $\mathbf{X}_{\text{feat}} \gets                                                                                                          
+          \texttt{BuildFeatureVector}(\mathbf{X}_{\text{now}})$                                                                                           
+          per Equation~\ref{eq:feature_vector}                                                                                                            
+          \State $\hat{y}_{\text{raw}} \gets f_{\theta}.\texttt{predict}
+          (\mathbf{X}_{\text{feat}})$                                                                                                                     
+          \Comment{Returns $-1$ (anomaly) or $+1$ (normal)}
+          \State $\hat{y} \gets (\hat{y}_{\text{raw}} = -1)$                                                                                              
+          \State \Return $\hat{y} \in \{0, 1\}^{|\mathcal{R}|}$                                                                                           
+      \end{algorithmic}                                                                                                                                   
+  \end{algorithm}                                                                                                                                         
+                                                                                                                                                          
+  The trained model is serialised with \texttt{joblib} and registered                                                                                     
+  in \textbf{MLflow} \cite{mlflow_paper} under the model name
+  \texttt{traffic-anomaly-iforest} with the \texttt{@champion}                                                                                            
+  promotion alias. The serving layer loads the artifact via                                                                                               
+  \texttt{mlflow.artifacts.download\_artifacts} rather than                                                                                               
+  \texttt{mlflow.sklearn.load\_model}, avoiding the implicit                                                                                              
+  \texttt{pandas} dependency introduced by the latter                                                                                                     
+  \cite{mlflow_docs}. The loaded model is cached in-process                                                                                               
+  with a one-hour TTL and refreshed transparently without                                                                                                 
+  restarting the serving container.                                                                                                                       
+                                                                                                                                                          
+  IsolationForest scores are persisted every 15 seconds to a                                                                                              
+  dedicated \texttt{route\_iforest\_scores} PostgreSQL table via
+  the SSE \texttt{/events/traffic} endpoint. This explicit                                                                                                
+  persistence is necessary because IsolationForest is not                                                                                                 
+  computed per-message — without storage, IForest classifications                                                                                         
+  would be ephemeral per request and unavailable for historical                                                                                           
+  queries and RAG indexing.                                                                                                                               
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Dual-Signal Fusion}
+  \label{subsec:fusion}                                                                                                                                   
+  % ------------------------------------------------------------
+                                                                                                                                                          
+  The two signals are merged at the Serving Layer into a                                                                                                  
+  \textbf{three-tier confidence hierarchy}. Let
+  $z_r \in \{0, 1\}$ denote the Z-score anomaly label and                                                                                                 
+  $f_r \in \{0, 1\}$ the IsolationForest anomaly label for                                                                                                
+  route $r$. The fusion mapping is defined in                                                                                                             
+  Algorithm~\ref{alg:fusion}.                                                                                                                             
+                                                                                                                                                          
+  \begin{algorithm}[H]
+      \small                                                                                                                                              
+      \caption{$\texttt{tier}_r \gets
+      \texttt{SignalFusion}(z_r,\; f_r)$}
+      \label{alg:fusion}                                                                                                                                  
+      \begin{algorithmic}[1]
+          \Require $z_r \in \{0, 1\}$ is the Z-score anomaly label.                                                                                       
+          \Require $f_r \in \{0, 1\}$ is the IForest anomaly label.                                                                                       
+          \If{$z_r = 1$ \textbf{and} $f_r = 1$}
+              \State \Return \textbf{Tier 1}: \texttt{both\_anomaly}                                                                                      
+              \Comment{Cross-validated; highest confidence}                                                                                               
+          \ElsIf{$z_r = 1$ \textbf{and} $f_r = 0$}                                                                                                        
+              \State \Return \textbf{Tier 2}: \texttt{zscore\_anomaly}                                                                                    
+              \Comment{Immediate spike; may be transient}                                                                                                 
+          \ElsIf{$z_r = 0$ \textbf{and} $f_r = 1$}
+              \State \Return \textbf{Tier 3}: \texttt{iforest\_anomaly}                                                                                   
+              \Comment{Multivariate pattern; not threshold-detectable}                                                                                    
+          \Else
+              \State \Return \textbf{Normal}                                                                                                              
+          \EndIf                                                                                                                                          
+      \end{algorithmic}
+  \end{algorithm}                                                                                                                                         
+                  
+  Automated Telegram alerts are issued only for Tier 1 and Tier 3                                                                                         
+  signals, filtered through a \textbf{30-minute per-route cooldown}
+  managed in the \texttt{anomaly\_alert\_log} table. This threshold                                                                                       
+  suppresses duplicate notifications during sustained congestion                                                                                          
+  events whilst ensuring that any new independent anomaly episode                                                                                         
+  triggers a fresh alert.                                                                                                                                 
+                                                                                                                                                          
+  % ============================================================                                                                                          
+  \section{Knowledge-Enriched Inference via RAG}
+  \label{sec:rag}                                                                                                                                         
+  % ============================================================
+                                                                                                                                                          
+  Raw anomaly classifications, whilst accurate, provide operators                                                                                         
+  with no causal explanation. UrbanPulse addresses this limitation
+  through a \textbf{Retrieval-Augmented Generation} (RAG) pipeline                                                                                        
+  \cite{lewis2020rag} that retrieves semantically relevant historical                                                                                     
+  context from a vector store and injects it into the prompt of a                                                                                         
+  locally hosted large language model (LLM) to produce human-readable                                                                                     
+  root cause analyses. This approach is preferred over fine-tuning
+  because it allows the knowledge base to be updated incrementally                                                                                        
+  without retraining the model \cite{lewis2020rag}.                                                                                                       
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Vector Store Architecture}
+  \label{subsec:vector_store}                                                                                                                             
+  % ------------------------------------------------------------
+                                                                                                                                                          
+  \textbf{ChromaDB} \cite{chromadb_docs} maintains three                                                                                                  
+  purpose-separated collections, each indexed using the
+  \textbf{nomic-embed-text} embedding model \cite{nomic_embed}                                                                                            
+  ($d = 768$-dimensional dense vectors):
+                                                                                                                                                          
+  \begin{table}[h]
+  \centering                                                                                                                                              
+  \caption{ChromaDB collections and their update schedules}
+  \label{tab:chroma_collections}                                                                                                                          
+  \begin{tabular}{llll}
+  \hline                                                                                                                                                  
+  \textbf{Collection} & \textbf{Contents} & \textbf{Source} &
+  \textbf{Cadence} \\                                                                                                                                     
+  \hline
+  \texttt{anomaly\_events}   & 7-day anomaly windows   & PostgreSQL JOIN & 1 hour \\                                                                      
+  \texttt{traffic\_patterns} & Gold (route, dow, hr) aggregates                                                                                           
+                                $\approx$3360 docs & Iceberg Gold & 6 hours \\                                                                            
+  \texttt{external\_context} & 7-day HCMC hourly weather                                                                                                  
+                                $\approx$192 docs  & Open-Meteo   & 1 hour \\                                                                             
+  \hline                                                                                                                                                  
+  \end{tabular}                                                                                                                                           
+  \end{table}                                                                                                                                             
+   
+  The RAG indexer uses \textbf{upsert} semantics throughout, ensuring                                                                                     
+  that repeated executions are idempotent. The \texttt{traffic\_patterns}
+  full Gold scan is intentionally decoupled from the hourly flow and                                                                                      
+  scheduled only within the 6-hour \texttt{retrain} flow, as it                                                                                           
+  involves scanning the entire Gold table ($\sim$3,360 documents)                                                                                         
+  and is computationally disproportionate for hourly execution.                                                                                           
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Retrieval Strategy and Prompt Construction}                                                                                                 
+  \label{subsec:rag_indexing}
+  % ------------------------------------------------------------                                                                                          
+   
+  \subsubsection{Formalizing}                                                                                                                             
+                  
+  Let $q$ denote a user query string and $r$ a route identifier.                                                                                          
+  Let $\mathcal{C} = \{C_1, C_2, C_3\}$ denote the three ChromaDB
+  collections. The retrieval function $\texttt{Retrieve}$ returns                                                                                         
+  a ranked list of text chunks:                                                                                                                           
+                                                                                                                                                          
+  \begin{equation}                                                                                                                                        
+  \label{eq:retrieval}
+  \texttt{chunks} = \texttt{Retrieve}(q,\; r,\; \text{hr},\;
+  \text{dow},\; \mathcal{C},\; \mathbf{n})                                                                                                                
+  \end{equation}                                                                                                                                          
+                                                                                                                                                          
+  where $\mathbf{n} = (n_{\text{anomaly}}, n_{\text{pattern}},                                                                                            
+  n_{\text{external}}) = (4, 3, 2)$ are the per-collection
+  retrieval budgets and $\text{hr}, \text{dow}$ are the current                                                                                           
+  hour and day-of-week. Algorithm~\ref{alg:rag} formalises the                                                                                            
+  full retrieval, fallback, and prompt construction procedure.                                                                                            
+                                                                                                                                                          
+  \begin{algorithm}[H]                                                                                                                                    
+      \small                                                                                                                                              
+      \caption{$\texttt{response} \gets
+      \texttt{RAGInference}(q,\; r,\; \text{hr},\; \text{dow})$}
+      \label{alg:rag}                                                                                                                                     
+      \begin{algorithmic}[1]
+          \Require $q$ is the user query; $r$ is the route identifier                                                                                     
+          (may be \texttt{None}).                                                                                                                         
+          \Require $\mathcal{C}$ is the ChromaDB client with collections                                                                                  
+          $C_1, C_2, C_3$.                                                                                                                                
+          \Require $\Pi$ is the geo-aware HCMC system prompt.                                                                                             
+          \If{$r \neq \texttt{None}$}
+              \State $\texttt{chunks} \gets                                                                                                               
+              \texttt{RetrieveForRoute}(r,\; \text{hr},\; \text{dow},\;
+              \mathbf{n},\; \mathcal{C})$                                                                                                                 
+          \EndIf  
+          \If{$|\texttt{chunks}| = 0$}                                                                                                                    
+              \Comment{Graceful fallback to free-text retrieval}
+              \State $\texttt{chunks} \gets                                                                                                               
+              \texttt{RetrieveForQuery}(q,\; n{=}5,\; \mathcal{C})$
+          \EndIf                                                                                                                                          
+          \State $\texttt{context} \gets
+          \texttt{FormatChunks}(\texttt{chunks})$                                                                                                         
+          \State $\texttt{prompt} \gets
+          [\texttt{context},\; \texttt{lang\_instruction},\; q]$                                                                                          
+          \State $\texttt{log\_id} \gets                                                                                                                  
+          \texttt{LogInteraction}(\texttt{rag\_interaction\_log},\;
+          r,\; q,\; \texttt{chunks})$                                                                                                                     
+          \State $\texttt{response} \gets                                                                                                                 
+          \texttt{StreamLLM}(\Pi,\; \texttt{prompt},\;                                                                                                    
+          T{=}0.3,\; \texttt{max\_tokens}{=}400)$                                                                                                         
+          \State $\texttt{PersistResponse}(\texttt{log\_id},\;                                                                                            
+          \texttt{response})$                                                                                                                             
+          \State \Return $\texttt{response}$                                                                                                              
+      \end{algorithmic}                                                                                                                                   
+  \end{algorithm} 
+
+  The system prompt $\Pi$ is constructed by \texttt{geo\_knowledge.py},                                                                                   
+  which injects HCMC-specific geographic knowledge — named arterial
+  roads (Xa lộ Hà Nội, Quốc lộ 13, Võ Văn Kiệt), zone descriptions,                                                                                       
+  and landmark references — directing the model to reason about                                                                                           
+  specific HCMC infrastructure rather than generic traffic patterns.                                                                                      
+                                                                                                                                                          
+  LLM responses are streamed token-by-token to the client via                                                                                             
+  \textbf{Server-Sent Events} (SSE) \cite{sse_spec}, providing
+  a sub-second time-to-first-token experience regardless of total                                                                                         
+  response length. The Qwen2.5:3b model \cite{qwen25_report} is                                                                                           
+  served locally via \textbf{Ollama} \cite{ollama_docs} with GPU                                                                                          
+  acceleration, eliminating external API dependency and associated                                                                                        
+  data privacy concerns.                                                                                                                                  
+                                                                                                                                                          
+  % ------------------------------------------------------------
+  \subsection{Feedback Loop and Fine-Tuning Data Collection}                                                                                              
+  \label{subsec:feedback}
+  % ------------------------------------------------------------
+
+  Every LLM interaction — query string, retrieved chunks with                                                                                             
+  similarity scores, and the full generated response — is persisted
+  to the \texttt{rag\_interaction\_log} PostgreSQL table. The                                                                                             
+  \texttt{/rca/feedback} endpoint accepts a thumbs-up ($+1$) or                                                                                           
+  thumbs-down ($-1$) rating per interaction, stored in the                                                                                                
+  \texttt{feedback} column. This produces a continuously growing,                                                                                         
+  human-labelled dataset suitable for future \textit{supervised                                                                                           
+  fine-tuning} of the retrieval ranking or generation components                                                                                          
+  \cite{rlhf_paper}, distinguishing UrbanPulse from systems that                                                                                          
+  treat the LLM as a stateless inference endpoint.                                                                                                        
+                                                                                                                                                          
+  % ============================================================                                                                                          
+  \section{Evaluation Framework}                                                                                                                          
+  \label{sec:evaluation}                                                                                                                                  
+  % ============================================================
+                                                                                                                                                          
+  The methodologies described in the preceding sections are designed                                                                                      
+  to satisfy the three operational pillars established in
+  Section~\ref{sec:requirements}: \textit{temporal integrity},                                                                                            
+  \textit{reproducibility}, and \textit{observability}. This section                                                                                      
+  defines the specific metrics and measurement boundaries that                                                                                            
+  Chapter~4 will report.                                                                                                                                  
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Temporal Integrity}
+  \label{subsec:eval_temporal}
+  % ------------------------------------------------------------                                                                                          
+   
+  All Bronze Parquet files are partitioned by event timestamp.                                                                                            
+  End-to-end ingestion lag $L_{\text{e2e}}$ is defined as:
+                                                                                                                                                          
+  \begin{equation}
+  \label{eq:lag}                                                                                                                                          
+  L_{\text{e2e}}^{(r,t)} = t_{\text{feature}} - t_{\text{ingest\_ts}}
+  \end{equation}                                                                                                                                          
+   
+  where $t_{\text{ingest\_ts}}$ is the Unix millisecond timestamp                                                                                         
+  recorded immediately before the VietMap API call (embedded in the
+  Kafka message header) and $t_{\text{feature}}$ is the time at which                                                                                     
+  the corresponding \texttt{UPSERT} completes in PostgreSQL. This metric
+  is exposed per-route and aggregated at \texttt{/online/lag} as                                                                                          
+  $p_{50}$, $p_{95}$, and $\max$. The target for NFR-1 is                                                                                                 
+  $L_{\text{e2e}}^{p_{95}} < 20\,\text{s}$.                                                                                                               
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Reproducibility}                                                                                                                            
+  \label{subsec:eval_reproducibility}
+  % ------------------------------------------------------------
+
+  Two mechanisms jointly ensure reproducibility. First, the                                                                                               
+  \textbf{Apache Iceberg} time-travel API allows any Silver or
+  Gold table to be queried at any historical snapshot by ID                                                                                               
+  or timestamp — meaning the exact data state at the time of
+  any anomaly classification can be reconstructed. Second,                                                                                                
+  \textbf{MLflow} records the full provenance of every                                                                                                    
+  IsolationForest training run: hyperparameters                                                                                                           
+  (\texttt{contamination}, \texttt{n\_estimators},                                                                                                        
+  \texttt{random\_state}), feature schema, training data time                                                                                             
+  can therefore be replayed against the same model version and                                                                                            
+  data snapshot.                                                                                                                                          
+                                                                                                                                                          
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Key Performance Indicators}                       
+  \label{subsec:kpis}                                                                                                                                     
+  % ------------------------------------------------------------
+                                                                
+  Table~\ref{tab:kpis} summarises the KPIs to be reported in
+  Chapter~4.                                                                                                                                              
+            
+  \begin{table}[h]                                                                                                                                        
+  \centering      
+  \caption{Key performance indicators and measurement boundaries}
+  \label{tab:kpis}                                               
+  \begin{tabular}{llll}                                                                                                                                   
+  \hline               
+  \textbf{KPI} & \textbf{Definition} & \textbf{Target} &                                                                                                  
+  \textbf{Measurement point} \\                         
+  \hline                                                                                                                                                  
+  Ingestion lag $p_{95}$    & $t_{\text{feature}} - t_{\text{ingest\_ts}}$
+                            & $< 20\,\text{s}$                                                                                                            
+                            & \texttt{/online/lag} \\                                                                                                     
+  Microbatch freshness      & Bronze write $\to$ Silver commit
+                            & $< 5\,\text{min}$                                                                                                           
+                            & Prefect task duration \\                                                                                                    
+  IForest inference latency & \texttt{/predict/anomalies}                                                                                                 
+                              request $\to$ response                                                                                                      
+                            & $< 2\,\text{s}$                                                                                                             
+                            & Serving API logs \\                                                                                                         
+  RAG time-to-first-token   & \texttt{/rca} request $\to$                                                                                                 
+                              first SSE chunk                                                                                                             
+                            & $< 3\,\text{s}$                                                                                                             
+                            & Client-side measurement \\                                                                                                  
+  Streaming throughput      & Messages processed per minute                                                                                               
+                            & Stable under 2$\times$ normal load
+                            & Prometheus container metrics \\                                                                                             
+  Alert precision           & \texttt{both\_anomaly} alerts                                                                                               
+                              matching real congestion                                                                                                    
+                            & $> 80\%$                                                                                                                    
+                            & Manual review of alert log \\
+  \hline                                                                                                                                                  
+  \end{tabular}   
+  \end{table}                                                                                                                                             
+                                                                                                                                                          
+  By integrating periodic high-velocity API polling with an incrementally
+  processed, versioned Data Lakehouse and two independent, orthogonal                                                                                     
+  anomaly detectors, the methodology presented in this chapter provides
+  a rigorous foundation for evaluating UrbanPulse's ability to maintain                                                                                   
+  low-latency, reproducible situational awareness under real-world                                                                                        
+  metropolitan workloads in Ho Chi Minh City.                                                                                                             
+                                                                                                                                                          
+ 
