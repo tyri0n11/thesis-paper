@@ -1,19 +1,19 @@
 \section{Problem Statement}
 
-Urban monitoring systems in modern smart cities are increasingly transitioning toward data-driven architectures; however, several critical gaps remain unresolved in high-frequency, real-time traffic anomaly detection pipelines. While current frameworks utilize \textbf{Kafka-based ingestion} to handle high-throughput traffic signals, there remains a persistent \textit{semantic gap between raw telemetry and actionable intelligence}.
+Urban monitoring systems in modern smart cities are increasingly adopting data-driven architectures;
 
-In the context of the UrbanPulse system, traffic data is ingested from the VietMap API—capturing travel duration and congestion ratios—and processed through a \textbf{Medallion Lakehouse architecture} (comprising Bronze, Silver, and Gold layers). Despite this structured approach, interpreting anomalies in a streaming environment introduces several challenges:
+In the context of the UrbanPulse system, traffic data is ingested from the VietMap API—capturing travel duration and congestion ratios—and processed through a \textbf{hybrid Medallion Lakehouse architecture} combining streaming inference paths and micro-batch analytical layers. Despite this structured approach, interpreting anomalies in a streaming environment introduces several challenges:
 
 \begin{itemize}
-\item \textbf{Signal Inconsistency}: The system utilizes a \textbf{dual-signal detection framework} that combines statistical methods (Z-score) with machine learning models (Isolation Forest). Statistical detection often operates on real-time windows with restricted temporal context, whereas machine learning models rely on periodically retrained historical features, leading to potential misalignment in anomaly interpretation.
-\item \textbf{Cold-start and Data Sparsity}: Effective Z-score computation requires a stable historical baseline of road segment activity. During the initial system bootstrap or in low-variance traffic conditions, the lack of robust baseline statistics results in null or unreliable anomaly signals.
-\item \textbf{Model Staleness}: Machine learning models stored in the \textbf{MinIO-based model registry} are typically retrained on a batch schedule. This introduces a "staleness" factor, where the model may fail to adapt to sudden distribution shifts caused by unpredicted road incidents or temporary construction.
+\item \textbf{Signal Inconsistency}: The system utilizes a \textbf{dual-signal detection framework} that combines statistical methods (Z-score) with machine learning models (Isolation Forest). Statistical detection operates on real-time rolling windows, whereas machine learning models rely on periodically refreshed historical features maintained through offline feature pipelines, potentially causing inconsistency in anomaly interpretation.
+\item \textbf{Cold-start and Data Sparsity}: Effective Z-score computation requires a stable historical baseline of road segment activity. During the initial system bootstrap or in low-variance traffic conditions, the lack of robust baseline statistics results in missing or unreliable anomaly signals.
+\item \textbf{Model Staleness}: Machine learning models stored in the \textbf{MinIO-based model registry} are typically retrained on a schedule. This introduces a "staleness" factor, where the model may fail to adapt to sudden distribution shifts caused by unpredicted road incidents or temporary construction.
 \item \textbf{High-Dimensional Latency Constraints}: Ensuring low-latency propagation from the \textbf{Redpanda broker} to the end-user dashboard via \textbf{Server-Sent Events (SSE)} requires a highly optimized serving layer that must reconcile high-frequency ingestion without introducing significant lag.
 \end{itemize}
 
 Therefore, the core problem addressed in this research is:
 \begin{quote}
-\textit{How to design a \textbf{streaming-first, low-latency traffic anomaly detection architecture} that ensures consistency between real-time signals and historical baselines while maintaining scalability through a unified lakehouse strategy?}
+\textit{How to design a \textbf{hybrid low-latency traffic anomaly detection architecture} that ensures consistency between real-time signals and historical baselines while maintaining scalability through a unified lakehouse strategy?}
 \end{quote}
 
 \section{Scope}
@@ -30,7 +30,8 @@ This research focuses on the design and implementation of the "UrbanPulse" platf
 \begin{itemize}
 \item The system leverages a \textbf{Kafka messaging backbone} for high-throughput event propagation and fault-tolerant ingestion.
 \item Data storage and lifecycle management are governed by a \textbf{Lakehouse pattern} utilizing \textbf{Apache Iceberg} for table formats, \textbf{Project Nessie} for catalog versioning, and \textbf{MinIO} as the underlying object store.
-\item The processing pipeline is implemented in \textbf{Python}, utilizing micro-batching logic to transition data across the Medallion layers (Bronze $\rightarrow$ Silver $\rightarrow$ Gold).
+\item The processing pipeline is implemented in \textbf{Python}, combining streaming computations for online anomaly scoring and batch processing pipelines for data quality validation, feature engineering, model retraining, and the Medallion data governance layers (Bronze $\rightarrow$ Silver $\rightarrow$ Gold).
+\item A centralized feature layer is maintained to ensure consistency between online inference features and offline training datasets.
 \end{itemize}
 \item \textbf{Analytical and Serving Boundary}
 \begin{itemize}
@@ -41,7 +42,7 @@ This research focuses on the design and implementation of the "UrbanPulse" platf
 
 \section{Objectives}
 
-The primary goal of this thesis is to engineer a scalable, streaming-first platform for detecting traffic anomalies. Specific objectives include:
+The primary goal of this thesis is to engineer a scalable, hybrid real-time analytics platform for detecting traffic anomalies. Specific objectives include:
 
 \begin{itemize}
 \item \textbf{Architecture Realization}: Implement a robust Medallion-based data lakehouse that supports incremental processing of \textbf{Bronze} (raw), \textbf{Silver} (cleaned), and \textbf{Gold} (aggregated) traffic datasets.

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.28)  19 APR 2026 23:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.28)  21 APR 2026 16:10
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -892,30 +892,30 @@ Overfull \hbox (4.03325pt too wide) in paragraph at lines 11--12
 
 [1
 
-] [2]) [3]
+]) [2]
 Chapter 2.
 (./chapters/work.tex
-<images/system-arch.png, id=74, 14260.27625pt x 9907.0125pt>
+<images/system-arch.png, id=71, 14260.27625pt x 9907.0125pt>
 File: images/system-arch.png Graphic file (type png)
 <use images/system-arch.png>
 Package pdftex.def Info: images/system-arch.png  used on input line 17.
 (pdftex.def)             Requested size: 441.01775pt x 306.26767pt.
- [4
+ [3
 
-] [5 <./images/system-arch.png>]) [6]
+] [4 <./images/system-arch.png>]) [5]
 Chapter 3.
 (./chapters/methodology.tex
 Overfull \hbox (9.60269pt too wide) in paragraph at lines 63--66
 []\T5/cmr/bx/n/12 FR-5 Ex-plain-abil-ity: \T5/cmr/m/n/12 The sys-tem shall pro-vide human-readable natural-language
  []
 
-[7
+[6
 
 ]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[8] [9] [10]
+[7] [8] [9]
 Overfull \hbox (1.54085pt too wide) in paragraph at lines 404--412
 \T5/cmr/m/n/12 The \T5/cmtt/m/n/12 apps/streaming \T5/cmr/m/n/12 con-sumer buffers in-com-ing Kafka mes-sages in mem-ory and flushes
  []
@@ -925,15 +925,15 @@ Overfull \hbox (36.69891pt too wide) in paragraph at lines 413--420
 []\T5/cmr/m/n/12 Kafka off-sets are com-mit-ted only af-ter a con-firmed suc-cess-ful MinIO up-load (\T5/cmtt/m/n/12 asynchronous
  []
 
-[11]
+[10]
 Overfull \hbox (47.32425pt too wide) in paragraph at lines 470--480
 \T5/cmr/m/n/12 Every hour, the \T5/cmtt/m/n/12 hourly-gold \T5/cmr/m/n/12 Pre-fect flow ag-gre-gates the Sil-ver ta-ble into \T5/cmtt/m/n/12 gold.traffic_hourly
  []
 
-[12]
+[11]
 Underfull \vbox (badness 2961) has occurred while \output is active []
 
- [13]
+ [12]
 Overfull \hbox (13.26585pt too wide) in paragraph at lines 615--619
 []\T5/cmr/m/n/12 The re-sult is stored in the \T5/cmtt/m/n/12 online_route_features \T5/cmr/m/n/12 ta-ble un-der the col-umn \T5/cmtt/m/n/12 duration_
  []
@@ -943,15 +943,15 @@ Overfull \hbox (50.53036pt too wide) in paragraph at lines 650--656
 []\T5/cmr/m/n/12 where $\OML/cmm/m/it/12 h[]$ \T5/cmr/m/n/12 is \T5/cmtt/m/n/12 avg_heavy_ratio\T5/cmr/m/n/12 , $\OML/cmm/m/it/12 m[]$ \T5/cmr/m/n/12 is \T5/cmtt/m/n/12 avg_moderate_ratio\T5/cmr/m/n/12 , $\OML/cmm/m/it/12 s[]$ \T5/cmr/m/n/12 is \T5/cmtt/m/n/12 max_severe_segments\T5/cmr/m/n/12 ,
  []
 
-[14]
+[13]
 Underfull \vbox (badness 7012) has occurred while \output is active []
 
- [15]
+ [14]
 Underfull \vbox (badness 1048) has occurred while \output is active []
 
- [16] [17]) [18]
+ [15] [16]) [17]
 Chapter 4.
-(./chapters/prototyping.tex [19
+(./chapters/prototyping.tex [18
 
 ]
 LaTeX Font Info:    Font shape `T5/cmtt/bx/n' in size <12> not available
@@ -961,7 +961,7 @@ Overfull \hbox (9.61523pt too wide) in paragraph at lines 170--172
 []\T5/cmtt/m/n/12 route_id\T5/cmr/m/n/12 : unique string iden-ti-fier of the inter-zone route (e.g., \T5/cmtt/m/n/12 zone1_urban_core_
  []
 
-[20]
+[19]
 Overfull \hbox (5.6224pt too wide) in paragraph at lines 176--181
 []\T5/cmtt/m/n/12 congestion\T5/cmr/m/n/12 : nested ob-ject con-tain-ing \T5/cmtt/m/n/12 heavy_ratio\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 moderate_ratio\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 low_ratio
  []
@@ -996,14 +996,14 @@ Overfull \hbox (3.03906pt too wide) in paragraph at lines 235--240
 \T5/cmr/m/n/12 The \T5/cmtt/m/n/12 Makefile \T5/cmr/m/n/12 pro-vides val-i-dated en-try points (\T5/cmtt/m/n/12 make dev\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 make prod\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 make bootstrap\T5/cmr/m/n/12 ,
  []
 
-[21] [22]
+[20] [21]
 Chapter 5.
 (./chapters/implementation.tex (/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 )
 LaTeX Font Info:    Font shape `T5/cmtt/bx/n' in size <10> not available
 (Font)              Font shape `T5/cmtt/m/n' tried instead on input line 26.
-<images/redpanda-topic.png, id=149, 2007.5pt x 713.66624pt>
+<images/redpanda-topic.png, id=146, 2007.5pt x 713.66624pt>
 File: images/redpanda-topic.png Graphic file (type png)
 <use images/redpanda-topic.png>
 Package pdftex.def Info: images/redpanda-topic.png  used on input line 54.
@@ -1013,69 +1013,69 @@ Overfull \hbox (26.7527pt too wide) in paragraph at lines 74--77
 \T5/cmr/m/n/12 The \T5/cmr/bx/n/12 Stream-ing Ser-vice \T5/cmr/m/n/12 sub-scribes to \T5/cmtt/m/n/12 traffic-route-bronze \T5/cmr/m/n/12 (con-sumer group \T5/cmtt/m/n/12 streaming
  []
 
-[23
+[22
 
 ]
 Overfull \hbox (1.6223pt too wide) in paragraph at lines 84--90
 \T5/cmr/m/n/12 flushes it to MinIO via \T5/cmtt/m/n/12 sinks/minio.py\T5/cmr/m/n/12 . This write-once-per-message ap-proach (micro-
  []
 
-[24 <./images/redpanda-topic.png>]
-<images/prefect-deployments.png, id=159, 2007.5pt x 560.0925pt>
+[23 <./images/redpanda-topic.png>]
+<images/prefect-deployments.png, id=155, 2007.5pt x 560.0925pt>
 File: images/prefect-deployments.png Graphic file (type png)
 <use images/prefect-deployments.png>
 Package pdftex.def Info: images/prefect-deployments.png  used on input line 217.
 (pdftex.def)             Requested size: 441.01775pt x 123.04124pt.
- [25]
+ [24]
 Overfull \hbox (24.94162pt too wide) in paragraph at lines 246--253
 \T5/cmr/m/n/12 centile of the per-route dis-tri-bu-tion. These statis-tics are writ-ten to \T5/cmtt/m/n/12 gold.traffic_baseline
  []
 
-[26 <./images/prefect-deployments.png>]
+[25 <./images/prefect-deployments.png>]
 Overfull \hbox (19.64072pt too wide) in paragraph at lines 297--305
 \T5/cmr/m/n/12 the Serv-ing API to load the lat-est production-ready model via \T5/cmtt/m/n/12 mlflow.pyfunc.load_model
  []
 
-[27]
-<images/ai-explanation.png, id=170, 671.50874pt x 269.005pt>
+[26]
+<images/ai-explanation.png, id=167, 671.50874pt x 269.005pt>
 File: images/ai-explanation.png Graphic file (type png)
 <use images/ai-explanation.png>
 Package pdftex.def Info: images/ai-explanation.png  used on input line 382.
 (pdftex.def)             Requested size: 374.86777pt x 150.16972pt.
- [28 <./images/ai-explanation.png>]
-<images/ai-chat.png, id=175, 327.2225pt x 454.69875pt>
+ [27 <./images/ai-explanation.png>]
+<images/ai-chat.png, id=172, 327.2225pt x 454.69875pt>
 File: images/ai-chat.png Graphic file (type png)
 <use images/ai-chat.png>
 Package pdftex.def Info: images/ai-chat.png  used on input line 398.
 (pdftex.def)             Requested size: 374.86777pt x 520.90825pt.
-<images/ai-chat-english.png, id=176, 421.575pt x 591.20876pt>
+<images/ai-chat-english.png, id=173, 421.575pt x 591.20876pt>
 File: images/ai-chat-english.png Graphic file (type png)
 <use images/ai-chat-english.png>
 Package pdftex.def Info: images/ai-chat-english.png  used on input line 415.
 (pdftex.def)             Requested size: 317.53331pt x 445.30893pt.
-<images/dashboard-heatmap-zscore.png, id=177, 2007.5pt x 896.34875pt>
+<images/dashboard-heatmap-zscore.png, id=174, 2007.5pt x 896.34875pt>
 File: images/dashboard-heatmap-zscore.png Graphic file (type png)
 <use images/dashboard-heatmap-zscore.png>
 Package pdftex.def Info: images/dashboard-heatmap-zscore.png  used on input line 452.
 (pdftex.def)             Requested size: 441.01775pt x 196.91011pt.
-<images/dashboard-heatmap-both.png, id=178, 2007.5pt x 791.95876pt>
+<images/dashboard-heatmap-both.png, id=175, 2007.5pt x 791.95876pt>
 File: images/dashboard-heatmap-both.png Graphic file (type png)
 <use images/dashboard-heatmap-both.png>
 Package pdftex.def Info: images/dashboard-heatmap-both.png  used on input line 461.
 (pdftex.def)             Requested size: 441.01775pt x 173.97769pt.
-) [29] [30 <./images/ai-chat.png>] [31 <./images/ai-chat-english.png>] [32 <./images/dashboard-heatmap-zscore.png> <./images/dashboard-heatmap-both.png>]
+) [28] [29 <./images/ai-chat.png>] [30 <./images/ai-chat-english.png>] [31 <./images/dashboard-heatmap-zscore.png> <./images/dashboard-heatmap-both.png>]
 Chapter 6.
 (./chapters/result.tex
 Overfull \hbox (32.04541pt too wide) in paragraph at lines 13--23
 \T5/cmr/m/n/12 City. Each hourly record in the Gold ta-ble cap-tures \T5/cmtt/m/n/12 avg_heavy_ratio\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 avg_moderate_ratio\T5/cmr/m/n/12 ,
  []
 
-<images/dremio-eda.png, id=196, 2007.5pt x 1012.78375pt>
+<images/dremio-eda.png, id=193, 2007.5pt x 1012.78375pt>
 File: images/dremio-eda.png Graphic file (type png)
 <use images/dremio-eda.png>
 Package pdftex.def Info: images/dremio-eda.png  used on input line 26.
 (pdftex.def)             Requested size: 441.01775pt x 222.48859pt.
-[33
+[32
 
  <./images/dremio-eda.png>]
 Overfull \hbox (27.03203pt too wide) in paragraph at lines 121--128
@@ -1087,113 +1087,113 @@ Overfull \hbox (44.99553pt too wide) in paragraph at lines 121--128
 \T5/cmr/m/n/12 which recorded \T5/cmtt/m/n/12 model_agreement = 0.96\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 anomaly_jaccard = 0.36\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 iforest_anomaly_rate
  []
 
-[34]
-<images/mlflow-experiments.png, id=204, 2007.5pt x 1121.18875pt>
+[33]
+<images/mlflow-experiments.png, id=201, 2007.5pt x 1121.18875pt>
 File: images/mlflow-experiments.png Graphic file (type png)
 <use images/mlflow-experiments.png>
 Package pdftex.def Info: images/mlflow-experiments.png  used on input line 131.
 (pdftex.def)             Requested size: 441.01775pt x 246.30302pt.
-<images/mlflow-route-metrics.png, id=205, 2007.5pt x 1030.85126pt>
+<images/mlflow-route-metrics.png, id=202, 2007.5pt x 1030.85126pt>
 File: images/mlflow-route-metrics.png Graphic file (type png)
 <use images/mlflow-route-metrics.png>
 Package pdftex.def Info: images/mlflow-route-metrics.png  used on input line 140.
 (pdftex.def)             Requested size: 441.01775pt x 226.45766pt.
- [35 <./images/mlflow-experiments.png>] [36 <./images/mlflow-route-metrics.png>]
-<images/dashboard-anomaly-bar.png, id=215, 2007.5pt x 954.56625pt>
+ [34 <./images/mlflow-experiments.png>] [35 <./images/mlflow-route-metrics.png>]
+<images/dashboard-anomaly-bar.png, id=211, 2007.5pt x 954.56625pt>
 File: images/dashboard-anomaly-bar.png Graphic file (type png)
 <use images/dashboard-anomaly-bar.png>
 Package pdftex.def Info: images/dashboard-anomaly-bar.png  used on input line 236.
 (pdftex.def)             Requested size: 441.01775pt x 209.69934pt.
- [37 <./images/dashboard-anomaly-bar.png>]
-<images/grafana-online-features.png, id=221, 2007.5pt x 1000.73875pt>
+ [36 <./images/dashboard-anomaly-bar.png>]
+<images/grafana-online-features.png, id=217, 2007.5pt x 1000.73875pt>
 File: images/grafana-online-features.png Graphic file (type png)
 <use images/grafana-online-features.png>
 Package pdftex.def Info: images/grafana-online-features.png  used on input line 298.
 (pdftex.def)             Requested size: 441.01775pt x 219.84253pt.
-<images/grafana-anomaly-signals.png, id=222, 2007.5pt x 1006.76125pt>
+<images/grafana-anomaly-signals.png, id=218, 2007.5pt x 1006.76125pt>
 File: images/grafana-anomaly-signals.png Graphic file (type png)
 <use images/grafana-anomaly-signals.png>
 Package pdftex.def Info: images/grafana-anomaly-signals.png  used on input line 307.
 (pdftex.def)             Requested size: 441.01775pt x 221.16556pt.
-<images/grafana-ingestion.png, id=223, 2007.5pt x 804.00375pt>
+<images/grafana-ingestion.png, id=219, 2007.5pt x 804.00375pt>
 File: images/grafana-ingestion.png Graphic file (type png)
 <use images/grafana-ingestion.png>
 Package pdftex.def Info: images/grafana-ingestion.png  used on input line 317.
 (pdftex.def)             Requested size: 441.01775pt x 176.62373pt.
- [38 <./images/grafana-online-features.png>] [39 <./images/grafana-anomaly-signals.png> <./images/grafana-ingestion.png>]
-<images/grafana-batch-pipeline.png, id=233, 2007.5pt x 1019.81pt>
+ [37 <./images/grafana-online-features.png>] [38 <./images/grafana-anomaly-signals.png> <./images/grafana-ingestion.png>]
+<images/grafana-batch-pipeline.png, id=230, 2007.5pt x 1019.81pt>
 File: images/grafana-batch-pipeline.png Graphic file (type png)
 <use images/grafana-batch-pipeline.png>
 Package pdftex.def Info: images/grafana-batch-pipeline.png  used on input line 349.
 (pdftex.def)             Requested size: 441.01775pt x 224.0321pt.
-) [40 <./images/grafana-batch-pipeline.png>]
+) [39 <./images/grafana-batch-pipeline.png>]
 Chapter 7.
-(./chapters/discussion.tex [41
+(./chapters/discussion.tex [40
 
-] [42]) [43]
+] [41]) [42]
 Chapter 8.
-(./chapters/conclusion.tex) [44
+(./chapters/conclusion.tex) [43
 
-] (./main.bbl [45]
-Underfull \hbox (badness 10000) in paragraph at lines 9--13
+] (./main.bbl [44]
+Underfull \hbox (badness 10000) in paragraph at lines 8--10
 []\T5/cmr/m/n/12 T. Ade-pitan, ``5 Steps to Find Re-search Gaps &
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 9--13
+Underfull \hbox (badness 10000) in paragraph at lines 8--10
 \T5/cmr/m/n/12 Write SMART Ob-jec-tives.'' $\T5/cmtt/m/n/12 https : / / glintplus . com / blog /
  []
 
 
-Underfull \hbox (badness 1960) in paragraph at lines 9--13
+Underfull \hbox (badness 1960) in paragraph at lines 8--10
 \T5/cmtt/m/n/12 find-[]research-[]gaps-[]write-[]smart-[]objectives/$\T5/cmr/m/n/12 , Au-gust 2025.  Glint-plus
  []
 
 
-Underfull \hbox (badness 1038) in paragraph at lines 55--59
+Underfull \hbox (badness 1038) in paragraph at lines 44--46
 \T5/cmr/m/n/12 a-lyt-ics.'' $\T5/cmtt/m/n/12 https : / / www . cidrdb . org / cidr2021 / papers / cidr2021 _ paper17 . pdf$\T5/cmr/m/n/12 ,
  []
 
 
-Underfull \hbox (badness 4872) in paragraph at lines 66--70
+Underfull \hbox (badness 4872) in paragraph at lines 52--54
 []\T5/cmr/m/n/12 Apache Soft-ware Foun-da-tion, ``HDFS Ar-chi-tec-ture: Small Files Prob-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 66--70
+Underfull \hbox (badness 10000) in paragraph at lines 52--54
 \T5/cmr/m/n/12 lem.'' $\T5/cmtt/m/n/12 https : / / hadoop . apache . org / docs / stable / hadoop-[]project-[]dist /
  []
 
 
-Underfull \hbox (badness 6141) in paragraph at lines 77--81
+Underfull \hbox (badness 6141) in paragraph at lines 60--62
 []\T5/cmr/m/n/12 Apache Soft-ware Foun-da-tion, ``Apache Flink: Event Time and Wa-
  []
 
-[46
+[45
 
 ]
-Underfull \hbox (badness 7308) in paragraph at lines 131--136
+Underfull \hbox (badness 7308) in paragraph at lines 99--101
 []\T5/cmr/m/n/12 D. S. Phatak and I. Ko-ren, ``Cyclic En-cod-ings for Tem-po-ral Fea-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 131--136
+Underfull \hbox (badness 10000) in paragraph at lines 99--101
 \T5/cmr/m/n/12 tures in Ma-chine Learn-ing.'' $\T5/cmtt/m/n/12 https : / / towardsdatascience . com /
  []
 
 
-Overfull \hbox (16.36453pt too wide) in paragraph at lines 131--136
+Overfull \hbox (16.36453pt too wide) in paragraph at lines 99--101
 \T5/cmtt/m/n/12 cyclical-[]features-[]encoding-[]its-[]actually-[]norm-[]unit-[]circle-[]c6dc1b92b3d0$\T5/cmr/m/n/12 ,
  []
 
 
-Underfull \hbox (badness 5533) in paragraph at lines 145--148
+Underfull \hbox (badness 5533) in paragraph at lines 107--109
 []\T5/cmr/m/n/12 Databricks, ``MLflow Doc-u-men-ta-tion.'' $\T5/cmtt/m/n/12 https : / / mlflow . org / docs / latest /
  []
 
-[47]) [48]
+[46]) [47]
 Appendix A.
-(./chapters/appendix.tex) [49
+(./chapters/appendix.tex) [48
 
 ] (./main.aux)
  ***********
@@ -1204,16 +1204,16 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  19776 strings out of 467525
  370142 string characters out of 5418982
- 1107677 words of memory out of 5000000
+ 1107676 words of memory out of 5000000
  48289 multiletter control sequences out of 15000+600000
  657761 words of font info for 101 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,14n,104p,1025b,1317s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/zapfding/uzdr.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbxti10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vncsc10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vntt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vntt12.pfb>
-Output written on main.pdf (62 pages, 13131741 bytes).
+Output written on main.pdf (61 pages, 13130878 bytes).
 PDF statistics:
- 390 PDF objects out of 1000 (max. 8388607)
- 231 compressed objects within 3 object streams
+ 387 PDF objects out of 1000 (max. 8388607)
+ 229 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
  98 words of extra memory for PDF output out of 10000 (max. 10000000)
 
