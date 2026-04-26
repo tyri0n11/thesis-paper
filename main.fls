@@ -318,11 +318,11 @@ INPUT ./chapters/work.tex
 INPUT ./chapters/work.tex
 INPUT chapters/work.tex
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/vntex/vnr/vnr12.tfm
-INPUT ./images/system-arch.png
-INPUT ./images/system-arch.png
-INPUT ./images/system-arch.png
-INPUT ./images/system-arch.png
-INPUT ./images/system-arch.png
+INPUT ./images/lakehouse-overview.png
+INPUT ./images/lakehouse-overview.png
+INPUT ./images/lakehouse-overview.png
+INPUT ./images/lakehouse-overview.png
+INPUT ./images/lakehouse-overview.png
 INPUT ./chapters/methodology.tex
 INPUT ./chapters/methodology.tex
 INPUT ./chapters/methodology.tex

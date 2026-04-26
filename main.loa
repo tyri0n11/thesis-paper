@@ -1,5 +1,5 @@
 \contentsline {algorithm}{\numberline {1}{\ignorespaces $(\hat {\mu }, \hat {\sigma }, n) \gets \texttt {WelfordUpdate}(x, \hat {\mu }_{\text {prev}}, M_{2,\text {prev}}, n_{\text {prev}})$}}{12}{}%
-\contentsline {algorithm}{\numberline {2}{\ignorespaces $(\,z_r,\tmspace +\thickmuskip {.2777em} \texttt {is\_anomaly}\,) \gets \texttt {ZScoreClassify}(r,\tmspace +\thickmuskip {.2777em} \bar {h}_r^{(t)},\tmspace +\thickmuskip {.2777em} \mathcal {B})$}}{13}{}%
-\contentsline {algorithm}{\numberline {3}{\ignorespaces $\hat {y} \gets \texttt {IForestScore}(\mathbf {x},\tmspace +\thickmuskip {.2777em} f_{\theta })$}}{14}{}%
-\contentsline {algorithm}{\numberline {4}{\ignorespaces $\texttt {tier}_r \gets \texttt {SignalFusion}(z_r,\tmspace +\thickmuskip {.2777em} f_r)$}}{15}{}%
-\contentsline {algorithm}{\numberline {5}{\ignorespaces $\texttt {response} \gets \texttt {RAGInference}(q,\tmspace +\thickmuskip {.2777em} r,\tmspace +\thickmuskip {.2777em} \text {hr},\tmspace +\thickmuskip {.2777em} \text {dow})$}}{16}{}%
+\contentsline {algorithm}{\numberline {2}{\ignorespaces $(\,z_r,\tmspace +\thickmuskip {.2777em} \texttt {is\_anomaly}\,) \gets \texttt {ZScoreClassify}(r,\tmspace +\thickmuskip {.2777em} \bar {h}_r^{(t)},\tmspace +\thickmuskip {.2777em} \mathcal {B})$}}{14}{}%
+\contentsline {algorithm}{\numberline {3}{\ignorespaces $\hat {y} \gets \texttt {IForestScore}(\mathbf {x},\tmspace +\thickmuskip {.2777em} f_{\theta })$}}{15}{}%
+\contentsline {algorithm}{\numberline {4}{\ignorespaces $\texttt {tier}_r \gets \texttt {SignalFusion}(z_r,\tmspace +\thickmuskip {.2777em} f_r)$}}{16}{}%
+\contentsline {algorithm}{\numberline {5}{\ignorespaces $\texttt {response} \gets \texttt {RAGInference}(q,\tmspace +\thickmuskip {.2777em} r,\tmspace +\thickmuskip {.2777em} \text {hr},\tmspace +\thickmuskip {.2777em} \text {dow})$}}{17}{}%

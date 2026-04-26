@@ -214,6 +214,75 @@ Service reconstructs Welford accumulators from stored
 $M_2 = \sigma^2 \times (n - 1)$.
 
 % ============================================================
+\section{End-to-End Data Flow Through the Medallion Layers}
+\label{sec:medallion-flow}
+% ============================================================
+
+The three schema tiers described above form a progressive refinement
+pipeline. Table~\ref{tab:medallion-flow} summarises the transformation
+applied at each layer, the responsible service, and the latency
+guarantee relative to the originating API poll.
+
+\begin{table}[htbp]
+\centering
+\caption{Medallion data flow: transformation, ownership, and latency per layer.}
+\label{tab:medallion-flow}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllll}
+\hline
+\textbf{Layer} & \textbf{Format} & \textbf{Transformation} &
+\textbf{Owner} & \textbf{Freshness} \\
+\hline
+Bronze & Parquet (MinIO) & Raw JSON → typed columns, Snappy-compressed &
+  Streaming Service & $\leq$30 s \\
+Silver & Iceberg table (Nessie) & Dedup, type-coerce, partition by day &
+  Batch Service (microbatch) & $\leq$5 min \\
+Gold   & Iceberg table (Nessie) & Hourly aggregation (avg, p95) per route &
+  Batch Service (hourly) & $\leq$1 h \\
+Baseline & Iceberg table (Nessie) & Per-route/hour/dow mean+stddev for Z-score &
+  Batch Service (hourly) & $\leq$1 h \\
+Online & PostgreSQL & Welford rolling window, live Z-score signal &
+  Online Service & $\leq$20 s \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\noindent A critical design property is that the \textbf{Bronze layer is
+never modified after writing}: it is an immutable, append-only archive.
+All refinements --- deduplication, type coercion, aggregation --- are
+performed by downstream layers that \textit{read} Bronze and
+\textit{write} Silver or Gold as new Iceberg snapshots. This separation
+means that any downstream corruption can be fully repaired by replaying
+the Bronze-to-Silver micro-batch from any historical Kafka offset, without
+re-polling the VietMap API.
+
+\subsection{Data Versioning with Nessie and Iceberg}
+
+\textbf{Project Nessie} acts as a Git-like catalog for Iceberg tables.
+Each micro-batch commit to \texttt{silver.traffic\_route} or
+\texttt{gold.traffic\_hourly} creates a new \textit{snapshot} in Nessie,
+identified by a monotonically increasing snapshot ID and a wall-clock
+timestamp. This versioning provides two operational guarantees:
+
+\begin{enumerate}
+  \item \textbf{Reproducibility (NFR-2):} Any anomaly classification can
+        be re-run against the exact data state at the time of inference by
+        querying the Iceberg table \texttt{AS OF} the snapshot ID recorded
+        in the MLflow run. This is the same time-travel mechanism used in
+        the evaluation framework (Section~\ref{sec:evaluation}).
+
+  \item \textbf{Stream-batch consistency:} The Online Service's Z-score
+        baseline is loaded from \texttt{gold.traffic\_baseline} every
+        6~hours via PyIceberg. Because the batch pipeline commits to
+        Iceberg atomically (all rows of a micro-batch in a single
+        snapshot), the Online Service always reads a \textit{complete},
+        consistent view of the Gold table --- never a partial write mid-aggregation.
+        This eliminates the \textit{phantom read} problem that arises when
+        streaming systems read from mutable database tables.
+\end{enumerate}
+
+% ============================================================
 \section{Infrastructure Prototyping}
 \label{sec:infra-proto}
 % ============================================================

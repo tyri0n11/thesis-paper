@@ -368,3 +368,46 @@ via Ollama achieved a \textbf{time-to-first-token of 0.8--1.2 seconds} and a
 \textbf{total response time of 4--7 seconds} for a 2--3 sentence explanation.
 The SSE token-streaming approach ensures the user perceives a near-immediate
 response even before the full explanation is generated.
+
+\subsection{Summary of Performance Against Requirements}
+
+Table~\ref{tab:perf-summary} consolidates the system-level performance results
+against the non-functional requirements established in
+Section~\ref{sec:requirements}. All latency targets were met under the
+40-day continuous production workload on homelab hardware (Intel Core i5-8500,
+24~GB RAM, NVIDIA GTX~1060 6~GB VRAM).
+
+\begin{table}[htbp]
+\centering
+\caption{Measured performance vs.\ non-functional requirements.}
+\label{tab:perf-summary}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccc}
+\hline
+\textbf{NFR} & \textbf{Metric} & \textbf{Target} &
+\textbf{Measured} & \textbf{Status} \\
+\hline
+NFR-1 Latency     & Ingestion lag p95 (API $\to$ PostgreSQL) & $<$20 s  & $<$20 s (p95 = 318 ms typical) & \cmark \\
+NFR-1 Latency     & Ingestion lag p50                        & ---      & 153 ms                          & \cmark \\
+NFR-1 Latency     & SSE delivery TTFB (median)               & ---      & 340 ms                          & \cmark \\
+NFR-1 Latency     & LLM time-to-first-token                  & $<$3 s   & 0.8--1.2 s                      & \cmark \\
+NFR-2 Reproducibility & Iceberg time-travel + MLflow provenance & Auditable & Full provenance logged          & \cmark \\
+NFR-3 Fault Tolerance & Welford crash-recovery (mid-hour restart) & No data loss & Validated over 2 restarts  & \cmark \\
+NFR-4 Scalability & Micro-batch execution time               & $<$5 min & $<$8 s per cycle                & \cmark \\
+NFR-5 Observability & Grafana/Loki dashboards                & Centralised & 3 dashboards, zero blind spots & \cmark \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\noindent The p50 ingestion lag of \textbf{153~ms} and p95 of \textbf{318~ms} are
+particularly noteworthy: they represent the end-to-end time from VietMap API
+poll to a queryable feature in PostgreSQL, inclusive of Kafka publish,
+consumer deserialization, Welford update, and UPSERT confirmation.
+Traditional batch-based urban monitoring systems report equivalent latencies
+in the range of 5--30 minutes \cite{batch_latency_survey}, making
+UrbanPulse approximately \textbf{1,000$\times$ faster} at the feature
+materialisation step. The mean dual-signal model agreement of
+\textbf{93.8\%} across 32,302 observations provides strong evidence that
+the two detectors converge on consistent labels, whilst the low mean Jaccard
+of 16.3\% confirms that they remain complementary rather than redundant.

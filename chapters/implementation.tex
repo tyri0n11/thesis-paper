@@ -347,6 +347,31 @@ length.
 
 \subsection{RAG-Enriched Inference}
 
+Raw anomaly scores are actionable for automated alerting but opaque to
+human operators: a Z-score of 4.2 or an IsolationForest flag of
+\texttt{-1} does not tell a traffic analyst \textit{why} the route is
+behaving anomalously, nor does it suggest a remediation action. The RAG
+pipeline bridges this \textit{semantic gap} by grounding LLM inference in
+three layers of contextual evidence --- historical traffic patterns,
+recent anomaly windows, and live meteorological data --- enabling the
+model to produce operator-ready, natural-language explanations such as:
+
+\begin{quote}
+\textit{``The Southern Coastal $\to$ Western Periurban route is showing
+abnormal heavy congestion (10.9\%) at 15:00, significantly above the
+historical average of 4.2\% for Friday afternoons. Current weather data
+indicates 12.4~mm rainfall, which typically correlates with a 1.8$\times$
+surge in heavy vehicle ratios on Quốc lộ 50. This is consistent with
+three similar events indexed in the last 7 days.''}
+\end{quote}
+
+This represents a \textbf{human-in-the-loop} design: automated detectors
+classify events at machine speed, whilst the LLM layer translates
+classifications into domain-specific reasoning that a duty manager can act
+on without consulting raw data. The \texttt{/rca/feedback} endpoint
+(thumbs-up / thumbs-down) further closes the loop by collecting
+operator judgements for future retrieval ranking improvement.
+
 The \texttt{/anomalies/\{route\_id\}/explain} endpoint constructs a
 three-part context before calling Ollama:
 

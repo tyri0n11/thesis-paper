@@ -2,9 +2,9 @@
 This chapter delves into the existing literature and technological advancements that form the foundation of the UrbanPulse platform. It evaluates current methodologies in real-time urban monitoring, analyzes the architectural shift toward Data Lakehouses, and identifies the research gaps that necessitate a dual-signal anomaly detection framework.
 %% TODO: Make sure to use \textbf or \textit for highlighting keywords, and \cite{} to cite the corresponding quotations
 \section{Current Advancements}
-The landscape of Intelligent Transportation Systems (ITS) has evolved significantly with the integration of high-throughput messaging systems. Recent studies emphasize the use of \textbf{Apache Kafka} and \textbf{Redpanda} for low-latency ingestion of heterogeneous urban signals, such as traffic flow and weather telemetry~\cite{urban-pulse-platform}. In the domain of data storage, the industry is transitioning from traditional data warehouses to the \textbf{Medallion Lakehouse architecture}. Utilizing table formats like \textbf{Apache Iceberg} allows for transactional integrity and schema evolution, which are critical for maintaining long-term urban datasets. Furthermore, state-of-the-art anomaly detection now leverages a combination of \textbf{statistical baselines} and \textbf{unsupervised learning}, such as Isolation Forest, to handle the high dimensionality of city-scale data.
+Traditional batch processing systems, such as those built on \textbf{Apache Spark}~\cite{spark_streaming} or Hadoop-era ETL pipelines~\cite{kleppmann_ddia}, excel at high-throughput historical analysis but introduce latency on the order of hours, making them unsuitable for time-critical urban incident detection. The \textbf{Lambda Architecture}~\cite{kleppmann_ddia} addressed real-time needs by running a parallel speed layer, yet at the cost of duplicated processing logic and operational complexity. The \textbf{Kappa Architecture}~\cite{kafka-definitive-guide} simplified this by eliminating the batch layer entirely, unifying all processing through a single streaming pipeline using systems such as \textbf{Apache Kafka}~\cite{kafka-definitive-guide} and \textbf{Redpanda}~\cite{redpanda-streaming}. However, Kappa systems typically lack native support for schema evolution and transactional data versioning, which are essential for long-lived urban datasets. The emergence of the \textbf{Medallion Lakehouse architecture}~\cite{databricks_lakehouse}, powered by table formats such as \textbf{Apache Iceberg}~\cite{iceberg-table-format}, offers transactional integrity and schema evolution alongside a structured Bronze–Silver–Gold data lineage. In the domain of anomaly detection, state-of-the-art approaches~\cite{chandola2009anomaly} leverage a combination of \textbf{statistical baselines} and \textbf{unsupervised learning} — such as Isolation Forest~\cite{isolation-forest} — to handle the high dimensionality of city-scale telemetry, but these approaches have primarily been evaluated on offline, static benchmark datasets~\cite{chandola2009anomaly}.
 \section{Research Gap}
-Despite these advancements, a significant \textit{semantic gap} persists between raw telemetry ingestion and actionable intelligence. Most existing systems process traffic data in isolated batches, leading to high latency in incident response. There is a lack of integrated frameworks that ensure \textbf{stream-to-batch consistency}, where real-time anomaly signals are validated against historical neighborhood rhythms stored in a Lakehouse~\cite{5steps-gaps}. Furthermore, many platforms struggle with the "cold-start" problem in low-variance traffic conditions, often resulting in high False Positive Rates (FPR). UrbanPulse addresses these gaps by implementing a unified \textbf{dual-signal detector} that reconciles instant Z-score deviations with historical machine learning inference.
+Despite these advancements, a significant \textit{semantic gap} persists between raw telemetry ingestion and actionable intelligence. Most existing systems process traffic data in isolated batches, leading to high latency in incident response. There is a lack of integrated frameworks that ensure \textbf{stream-to-batch consistency}, where real-time anomaly signals are validated against historical neighborhood rhythms stored in a Lakehouse. In our own experiments, systems that rely solely on static thresholds exhibit elevated False Positive Rates under low-variance, off-peak traffic conditions — a limitation we term the \textit{cold-start} problem. Critically, existing systems often treat anomaly detection as a \textit{static} problem, whereas UrbanPulse treats it as a \textbf{dynamic evolution}, leveraging \textbf{Welford's online algorithm} for continuous baseline updates without heavy recomputation. UrbanPulse addresses these gaps by implementing a unified \textbf{dual-signal detector} that reconciles instant Z-score deviations with historical machine learning inference.
 
 %% TODO: Make sure to use \subsection{} and \subsubsection{} for smaller sections inside a larger sections
 \section{Theoretical Background}
@@ -14,27 +14,26 @@ The core data strategy of this research follows the Medallion pattern, organized
 \begin{figure}[ht]
 	\centering
 	% Đổi tên file thành hình kiến trúc thực tế của bạn nếu có
-	\includegraphics[width=1\linewidth]{images/system-arch.png} 
+	\includegraphics[width=1\linewidth]{images/lakehouse-overview.png} 
 	\caption{Conceptual overview of the Medallion Lakehouse architecture in UrbanPulse.}
 	\label{fig:lakehouse}
 \end{figure}
 
-\subsubsection{Streaming-First Processing}
-Unlike traditional ETL, a \textbf{streaming-first approach} minimizes the temporal gap between event occurrence and dashboard visualization. By using micro-batching in Python and pushing updates via \textbf{Server-Sent Events (SSE)}, the system achieves near-real-time updates for end-users. A comparison of the architectural components used in UrbanPulse versus traditional systems is provided in Table~\ref{tab:1}.
+\subsubsection{Event-Driven Hybrid Stream-Batch Architecture}
+Unlike traditional batch ETL pipelines~\cite{kleppmann_ddia}, which accumulate data in periodic jobs and introduce multi-hour latency, UrbanPulse employs an \textbf{event-driven, hybrid stream-batch architecture}. \textbf{Redpanda} (Kafka-compatible) acts as the central event bus, decoupling producers from consumers and enabling two independent processing tiers to operate on the same event stream. The \textbf{speed layer} consumes each Kafka message immediately: the online service applies Welford's online algorithm~\cite{welford1962} per-event to maintain a live statistical baseline and writes anomaly flags to PostgreSQL within seconds. Concurrently, the \textbf{batch layer} — orchestrated by \textbf{Prefect}~\cite{prefect_docs} — runs scheduled micro-batch and hourly jobs to promote data through the Bronze~$\rightarrow$~Silver~$\rightarrow$~Gold medallion pipeline and retrain the Isolation Forest model. A unified serving API merges both tiers at query time, delivering near-real-time anomaly results enriched with historical context. Incremental updates are then pushed to clients via \textbf{Server-Sent Events (SSE)}~\cite{sse_spec}. A comparison of the architectural patterns considered in this work is provided in Table~\ref{tab:1}.
 
-%% TODO: Adjust the size of the figure by using [widht=.x\linewidth] (x is a fraction) to fit within the page width. Then rename to your picture file name, add the caption and a label
 \begin{table}[ht]
 	\centering
-	\caption{Comparison of different architectural methods (\protect\cmark: YES, \protect\xmark: NO).}
+	\caption{Comparison of data pipeline architectural patterns (\protect\cmark~yes, \protect\xmark~no). Iceberg features evaluated without additional table format layers.}
 	\label{tab:1}
 	\resizebox{\textwidth}{!}{%
 		\begin{tabular}{lcccc}
 			\hline
-			\textbf{Feature}          & \textbf{UrbanPulse} & Traditional Batch & Lambda Architecture & Lambda-Plus \\ \hline
-			Real-time Processing      & \cmark              & \xmark            & \cmark              & \cmark      \\ 
-			Schema Evolution (Iceberg)& \cmark              & \xmark            & \xmark              & \cmark      \\ 
-			Dual-Signal Detection     & \cmark              & \xmark            & \xmark              & \xmark      \\ 
-			Time-Travel Queries       & \cmark              & \cmark            & \xmark              & \cmark      \\ \hline
+			\textbf{Feature} & \textbf{UrbanPulse} & Traditional Batch~\cite{spark_streaming} & Lambda Architecture~\cite{kleppmann_ddia} & Kappa Architecture~\cite{kafka-definitive-guide} \\ \hline
+			Event-Driven Speed Layer (per-event)                                      & \cmark & \xmark & \cmark & \cmark \\
+			Scheduled Batch Layer (medallion pipeline)                                & \cmark & \cmark & \cmark & \xmark \\
+			Table Format: Schema Evolution \& Time-Travel~\cite{iceberg-table-format} & \cmark & \xmark & \xmark & \xmark \\
+			Versioned Catalog (Git-like semantics)~\cite{nessie-catalog}              & \cmark & \xmark & \xmark & \xmark \\ \hline
 		\end{tabular}%
 	}
 \end{table}
@@ -46,11 +45,19 @@ UrbanPulse utilizes a dual-signal framework to identify traffic incidents. The s
     Z = \frac{r - \mu}{\sigma}
 \end{equation}
 
-Simultaneously, an \textbf{Isolation Forest} model operates on cyclical temporal features (e.g., hour of day, day of week) to identify non-recurrent patterns that simple statistics might miss. The relationship between the input features and the anomaly score is modeled through a multi-dimensional mapping:
+Simultaneously, an \textbf{Isolation Forest}~\cite{isolation-forest} model operates on a \textbf{7-dimensional feature vector} — four cyclical temporal encodings ($\sin$/$\cos$ of hour of day and day of week~\cite{cyclical_encoding}) combined with three traffic ratio features — to identify non-recurrent patterns that simple statistics might miss. The model is formalized as:
 
 \begin{align}
-	f : \mathbb{R}^n \times \mathcal{T} & \rightarrow [-1, 1] \\
-	(\mathbf{x}, t)                     & \mapsto s          
+	f &: \mathbb{R}^7 \rightarrow \mathbb{R} \\
+	\mathbf{x} &= [\sin_h,\ \cos_h,\ \sin_{dow},\ \cos_{dow},\ r_{heavy},\ r_{moderate},\ n_{severe}]
 \end{align}
 
-where $\mathbf{x}$ represents traffic metrics, $t$ is the cyclical time component, and $s$ is the resulting anomaly score.
+where $f(\mathbf{x})$ is the anomaly score returned by the Isolation Forest's \texttt{decision\_function}~\cite{isolation-forest}. The score partitions the real line into two decision regions:
+\begin{equation}
+	\text{label}(\mathbf{x}) =
+	\begin{cases}
+		\text{anomaly} & \text{if } f(\mathbf{x}) < 0 \quad (s \in [-1,\ 0)) \\
+		\text{normal}  & \text{if } f(\mathbf{x}) \geq 0 \quad (s \in [0,\ +1])
+	\end{cases}
+\end{equation}
+A score approaching $-1$ indicates a strong anomaly, while scores near $+1$ correspond to densely clustered, normal traffic observations.

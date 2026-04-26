@@ -1,12 +1,52 @@
 \begin{thebibliography}{10}
 
-\bibitem{urban-pulse-platform}
-C.~Th{\d{i}}nh, ``{UrbanPulse: Real-Time Traffic Anomaly Detection Platform}.'' \url{https://github.com/tyri0n11/urban-pulse-platform}, 2026.
-\newblock Accessed: 2026-04-09.
+\bibitem{spark_streaming}
+M.~Zaharia, T.~Das, H.~Li, T.~Hunter, S.~Shenker, and I.~Stoica, ``{Discretized Streams: Fault-Tolerant Streaming Computation at Scale},'' in {\em Proceedings of the 24th ACM Symposium on Operating Systems Principles}, pp.~423--438, 2013.
 
-\bibitem{5steps-gaps}
-T.~Adepitan, ``{5 Steps to Find Research Gaps \& Write SMART Objectives}.'' \url{https://glintplus.com/blog/find-research-gaps-write-smart-objectives/}, August 2025.
-\newblock Glintplus PhD Thesis Guide.
+\bibitem{kleppmann_ddia}
+M.~Kleppmann, {\em {Designing Data-Intensive Applications}}.
+\newblock O'Reilly Media, 2017.
+
+\bibitem{kafka-definitive-guide}
+G.~Shapira, T.~Palino, R.~Sivaram, and K.~Leyland, {\em {Kafka: The Definitive Guide}}.
+\newblock O'Reilly Media, 2nd~ed., 2021.
+
+\bibitem{redpanda-streaming}
+{Redpanda Data}, ``{Redpanda: The Streaming Data Platform for Developers}.'' \url{https://redpanda.com/}, 2025.
+\newblock Accessed: 2025-10-01.
+
+\bibitem{databricks_lakehouse}
+M.~Armbrust, A.~Ghodsi, R.~Xin, and M.~Zaharia, ``{Lakehouse: A New Generation of Open Platforms that Unify Data Warehousing and Advanced Analytics}.'' \url{https://www.cidrdb.org/cidr2021/papers/cidr2021_paper17.pdf}, 2021.
+\newblock CIDR 2021.
+
+\bibitem{iceberg-table-format}
+{Apache Software Foundation}, ``{Apache Iceberg: A Table Format for Huge Analytic Datasets}.'' \url{https://iceberg.apache.org/}, 2024.
+\newblock Accessed: 2025-11-01.
+
+\bibitem{chandola2009anomaly}
+V.~Chandola, A.~Banerjee, and V.~Kumar, ``{Anomaly Detection: A Survey},'' {\em ACM Computing Surveys}, vol.~41, no.~3, pp.~1--58, 2009.
+
+\bibitem{isolation-forest}
+F.~T. Liu, K.~M. Ting, and Z.-H. Zhou, ``{Isolation Forest},'' in {\em 2008 Eighth IEEE International Conference on Data Mining}, pp.~413--422, 2008.
+
+\bibitem{welford1962}
+B.~P. Welford, ``{Note on a Method for Calculating Corrected Sums of Squares and Products},'' {\em Technometrics}, vol.~4, no.~3, pp.~419--420, 1962.
+
+\bibitem{prefect_docs}
+{Prefect Technologies}, ``{Prefect: The New Standard in Dataflow Automation}.'' \url{https://docs.prefect.io/}, 2025.
+\newblock Accessed: 2025-11-01.
+
+\bibitem{sse_spec}
+{W3C}, ``{Server-Sent Events: W3C Recommendation}.'' \url{https://www.w3.org/TR/eventsource/}, 2015.
+\newblock Accessed: 2025-10-01.
+
+\bibitem{nessie-catalog}
+{Project Nessie}, ``{Project Nessie: Transactional Catalog for Data Lakes with Git-like semantics}.'' \url{https://projectnessie.org/}, 2025.
+\newblock Accessed: 2025-11-01.
+
+\bibitem{cyclical_encoding}
+D.~S. Phatak and I.~Koren, ``{Cyclic Encodings for Temporal Features in Machine Learning}.'' \url{https://towardsdatascience.com/cyclical-features-encoding-its-actually-norm-unit-circle-c6dc1b92b3d0}, 2021.
+\newblock Accessed: 2025-10-01.
 
 \bibitem{hcmc_transport_report}
 {Ho Chi Minh City Department of Transport}, ``{Annual Transport Infrastructure Report: Ho Chi Minh City}.'' \url{https://www.sogtvt.hochiminhcity.gov.vn/}, 2024.
@@ -28,10 +68,6 @@ A.~Katsifodimos and S.~Schelter, ``{Apache Flink: Stream and Batch Processing in
 {Vietmap Solutions}, ``{Vietmap Traffic API Documentation}.'' Internal technical documentation, 2025.
 \newblock Real-time traffic data provider for UrbanPulse.
 
-\bibitem{kleppmann_ddia}
-M.~Kleppmann, {\em {Designing Data-Intensive Applications}}.
-\newblock O'Reilly Media, 2017.
-
 \bibitem{pydantic_docs}
 {Pydantic}, ``{Pydantic: Data Validation Using Python Type Hints}.'' \url{https://docs.pydantic.dev/}, 2025.
 \newblock Accessed: 2025-11-01.
@@ -39,10 +75,6 @@ M.~Kleppmann, {\em {Designing Data-Intensive Applications}}.
 \bibitem{openmeteo_api}
 {Open-Meteo}, ``{Open-Meteo: Free Weather API}.'' \url{https://open-meteo.com/}, 2024.
 \newblock Accessed: 2025-12-01.
-
-\bibitem{databricks_lakehouse}
-M.~Armbrust, A.~Ghodsi, R.~Xin, and M.~Zaharia, ``{Lakehouse: A New Generation of Open Platforms that Unify Data Warehousing and Advanced Analytics}.'' \url{https://www.cidrdb.org/cidr2021/papers/cidr2021_paper17.pdf}, 2021.
-\newblock CIDR 2021.
 
 \bibitem{parquet_format}
 {Apache Software Foundation}, ``{Apache Parquet: Columnar Storage Format}.'' \url{https://parquet.apache.org/}, 2024.
@@ -60,10 +92,6 @@ G.~Hohpe and B.~Woolf, {\em {Enterprise Integration Patterns: Designing, Buildin
 {Apache Software Foundation}, ``{Apache Flink: Event Time and Watermarks}.'' \url{https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/time/}, 2024.
 \newblock Accessed: 2025-10-15.
 
-\bibitem{prefect_docs}
-{Prefect Technologies}, ``{Prefect: The New Standard in Dataflow Automation}.'' \url{https://docs.prefect.io/}, 2025.
-\newblock Accessed: 2025-11-01.
-
 \bibitem{duckdb_paper}
 M.~Raasveldt and H.~M{\"u}hleisen, ``{DuckDB: An Embeddable Analytical Database}.'' \url{https://duckdb.org/}, 2019.
 \newblock SIGMOD 2019 Demo.
@@ -79,25 +107,12 @@ M.~Raasveldt and H.~M{\"u}hleisen, ``{DuckDB: An Embeddable Analytical Database}
 \bibitem{flink_paper}
 P.~Carbone, A.~Katsifodimos, S.~Ewen, V.~Markl, S.~Haridi, and K.~Tzoumas, ``{Apache Flink: Stream and Batch Processing in a Single Engine},'' {\em IEEE Data Engineering Bulletin}, vol.~38, no.~4, pp.~28--38, 2015.
 
-\bibitem{spark_streaming}
-M.~Zaharia, T.~Das, H.~Li, T.~Hunter, S.~Shenker, and I.~Stoica, ``{Discretized Streams: Fault-Tolerant Streaming Computation at Scale},'' in {\em Proceedings of the 24th ACM Symposium on Operating Systems Principles}, pp.~423--438, 2013.
-
 \bibitem{pyiceberg_docs}
 {Apache Software Foundation}, ``{PyIceberg: Python Library for Apache Iceberg}.'' \url{https://py.iceberg.apache.org/}, 2024.
 \newblock Accessed: 2025-11-15.
 
-\bibitem{welford1962}
-B.~P. Welford, ``{Note on a Method for Calculating Corrected Sums of Squares and Products},'' {\em Technometrics}, vol.~4, no.~3, pp.~419--420, 1962.
-
-\bibitem{chandola2009anomaly}
-V.~Chandola, A.~Banerjee, and V.~Kumar, ``{Anomaly Detection: A Survey},'' {\em ACM Computing Surveys}, vol.~41, no.~3, pp.~1--58, 2009.
-
 \bibitem{liu2008isolation}
 F.~T. Liu, K.~M. Ting, and Z.-H. Zhou, ``{Isolation Forest},'' in {\em 2008 Eighth IEEE International Conference on Data Mining}, pp.~413--422, 2008.
-
-\bibitem{cyclical_encoding}
-D.~S. Phatak and I.~Koren, ``{Cyclic Encodings for Temporal Features in Machine Learning}.'' \url{https://towardsdatascience.com/cyclical-features-encoding-its-actually-norm-unit-circle-c6dc1b92b3d0}, 2021.
-\newblock Accessed: 2025-10-01.
 
 \bibitem{mlflow_paper}
 M.~Zaharia, A.~Chen, A.~Davidson, A.~Ghodsi, S.~A. Hong, A.~Konwinski, S.~Murching, T.~Nykodym, P.~Ogilvie, M.~Parkhe, F.~Xie, and C.~Zumar, ``{Accelerating the Machine Learning Lifecycle with MLflow}.'' \url{https://mlflow.org/}, 2018.
@@ -117,10 +132,6 @@ P.~Lewis, E.~Perez, A.~Piktus, F.~Petroni, V.~Karpukhin, N.~Goyal, H.~K{\"u}ttle
 \bibitem{nomic_embed}
 {Nomic AI}, ``{Nomic Embed: Training a Reproducible Long Context Text Embedder}.'' \url{https://huggingface.co/nomic-ai/nomic-embed-text-v1}, 2024.
 \newblock Accessed: 2025-11-15.
-
-\bibitem{sse_spec}
-{W3C}, ``{Server-Sent Events: W3C Recommendation}.'' \url{https://www.w3.org/TR/eventsource/}, 2015.
-\newblock Accessed: 2025-10-01.
 
 \bibitem{ollama_docs}
 {Ollama}, ``{Ollama: Run Large Language Models Locally}.'' \url{https://ollama.com/}, 2025.

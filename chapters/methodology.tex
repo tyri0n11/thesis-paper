@@ -541,16 +541,53 @@
   \label{sec:anomaly}                                                                                                                                     
   % ============================================================
                                                                                                                                                           
-  UrbanPulse employs two anomaly detection algorithms that are                                                                                            
+  UrbanPulse employs two anomaly detection algorithms that are
   \textbf{mathematically orthogonal by design}: a \textit{univariate
-  threshold-based} detector operating on the real-time feature stream,                                                                                    
-  and a \textit{multivariate ensemble} detector trained on the historical                                                                                 
-  Gold layer. Neither algorithm is a fallback for the other; they are                                                                                     
-  fused at the serving layer to produce a three-tier confidence hierarchy.                                                                                
-  The rationale for combining both approaches follows from the observation                                                                                
-  that univariate methods miss complex joint anomalies, whilst ensemble                                                                                   
-  methods lack the immediacy of per-message classification                                                                                                
-  \cite{chandola2009anomaly}.                                                                                                                             
+  threshold-based} detector operating on the real-time feature stream,
+  and a \textit{multivariate ensemble} detector trained on the historical
+  Gold layer. Neither algorithm is a fallback for the other; they are
+  fused at the serving layer to produce a three-tier confidence hierarchy.
+  The rationale for combining both approaches follows from the observation
+  that univariate methods miss complex joint anomalies, whilst ensemble
+  methods lack the immediacy of per-message classification
+  \cite{chandola2009anomaly}.
+
+  Specifically, the two detectors address \textbf{complementary failure
+  modes} of urban traffic anomaly detection:
+
+  \begin{itemize}
+    \item \textbf{Z-Score (univariate):} Monitors a single variable ---
+    \texttt{heavy\_ratio}, the fraction of heavily congested road segments
+    --- against a per-route, per-time-slot historical baseline. It detects
+    \textit{acute statistical spikes}: situations where the current
+    window's congestion intensity deviates sharply from what is normal at
+    that hour on that route. Because it operates on a single dimension, it
+    reacts within one Kafka message and is therefore suitable for
+    \textit{immediate} alerting. Its weakness is blindness to
+    \textit{multivariate} patterns: a route may appear normal on
+    \texttt{heavy\_ratio} alone whilst simultaneously exhibiting
+    abnormally elevated \texttt{moderate\_ratio} and
+    \texttt{severe\_segments} --- a joint pattern invisible to univariate
+    methods.
+
+    \item \textbf{Isolation Forest (multivariate):} Operates on a
+    7-dimensional feature space ($h_{\text{avg}}, m_{\text{avg}},
+    s_{\text{max}}, h_{\sin}, h_{\cos}, d_{\sin}, d_{\cos}$) trained on
+    the historical Gold layer. It detects \textit{distributional outliers}
+    --- combinations of variables that are collectively rare given the
+    route's historical traffic rhythm. It captures anomalies that unfold
+    gradually (e.g., a sustained moderate congestion surge on a normally
+    free-flowing suburban route during an atypical weekday), which a
+    univariate Z-score threshold may not exceed. Its weakness is latency:
+    scores are computed in batch every 15 seconds from a model retrained
+    every 6 hours, rather than per-message.
+  \end{itemize}
+
+  The conjunction rule (\texttt{both\_anomaly} = Z-score $\wedge$
+  IForest) is therefore a deliberate precision-recall trade-off: it
+  sacrifices recall on events detectable by only one signal in exchange
+  for a high-confidence, low-false-positive alert channel suitable for
+  automated Telegram notification.                                                                                                                             
                                                                                                                                                           
   % ------------------------------------------------------------                                                                                          
   \subsection{Signal 1 — Z-Score Online Detector}
@@ -654,15 +691,54 @@
   and \texttt{dow} $\in \{0, \ldots, 6\}$ is the day of week                                                                                              
   (Sunday = 0).
                                                                                                                                                           
-  The \textbf{cyclical encoding} of \texttt{hr} and \texttt{dow}                                                                                          
-  as sine-cosine pairs \cite{cyclical_encoding} projects circular                                                                                         
-  time dimensions onto the unit circle, ensuring that 23:00 and 00:00                                                                                     
-  are geometrically adjacent in feature space, and that Sunday and                                                                                        
-  Monday are adjacent across the week boundary. Encoding time as a                                                                                        
-  raw integer would impose a false ordinal distance (e.g., hour 23                                                                                        
-  would be maximally distant from hour 0), causing the model to                                                                                           
-  mislearn the periodicity of urban traffic patterns.                                                                                                     
-                                                                                                                                                          
+  The \textbf{cyclical encoding} of \texttt{hr} and \texttt{dow}
+  as sine-cosine pairs \cite{cyclical_encoding} projects circular
+  time dimensions onto the unit circle, ensuring that 23:00 and 00:00
+  are geometrically adjacent in feature space, and that Sunday and
+  Monday are adjacent across the week boundary. Encoding time as a
+  raw integer would impose a false ordinal distance (e.g., hour 23
+  would be maximally distant from hour 0), causing the model to
+  mislearn the periodicity of urban traffic patterns.
+
+  Concretely, for hour-of-day $\text{hr} \in \{0, \ldots, 23\}$ and
+  day-of-week $\text{dow} \in \{0, \ldots, 6\}$, the four derived
+  features are:
+
+  \begin{equation}
+  \label{eq:cyclical}
+  \begin{aligned}
+    h_{\sin} &= \sin\!\left(\frac{2\pi \cdot \text{hr}}{24}\right), \quad
+    h_{\cos}  = \cos\!\left(\frac{2\pi \cdot \text{hr}}{24}\right) \\
+    d_{\sin} &= \sin\!\left(\frac{2\pi \cdot \text{dow}}{7}\right), \quad
+    d_{\cos}  = \cos\!\left(\frac{2\pi \cdot \text{dow}}{7}\right)
+  \end{aligned}
+  \end{equation}
+
+  As a concrete example, hour 23 maps to
+  $(h_{\sin}, h_{\cos}) = (-0.259, 0.966)$ and hour 0 maps to
+  $(0, 1)$ --- a Euclidean distance of only $0.261$, compared to
+  the raw-integer distance of $23$. Table~\ref{tab:cyclical_example}
+  illustrates the contrast for selected hours.
+
+  \begin{table}[h]
+  \centering
+  \caption{Cyclical vs.\ raw-integer encoding for selected hours.}
+  \label{tab:cyclical_example}
+  \small
+  \begin{tabular}{cccccc}
+  \hline
+  \textbf{Hour} & \textbf{Raw} & $h_{\sin}$ & $h_{\cos}$ &
+  \textbf{Dist to hr=0 (raw)} & \textbf{Dist to hr=0 (cyclical)} \\
+  \hline
+  0  & 0  &  0.000 &  1.000 & 0  & 0.000 \\
+  6  & 6  &  1.000 &  0.000 & 6  & 1.414 \\
+  12 & 12 &  0.000 & $-$1.000 & 12 & 2.000 \\
+  18 & 18 & $-$1.000 &  0.000 & 18 & 1.414 \\
+  23 & 23 & $-$0.259 &  0.966 & 23 & 0.261 \\
+  \hline
+  \end{tabular}
+  \end{table}
+
   Given a training corpus $\mathcal{X} = \{\mathbf{x}_1, \ldots,                                                                                          
   \mathbf{x}_N\}$ drawn from the Gold layer, the Isolation Forest                                                                                         
   produces an anomaly score $s(\mathbf{x}) \in [-1, 1]$. An                                                                                               
