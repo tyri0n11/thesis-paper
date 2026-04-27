@@ -739,39 +739,42 @@
   \end{tabular}
   \end{table}
 
-  Given a training corpus $\mathcal{X} = \{\mathbf{x}_1, \ldots,                                                                                          
-  \mathbf{x}_N\}$ drawn from the Gold layer, the Isolation Forest                                                                                         
-  produces an anomaly score $s(\mathbf{x}) \in [-1, 1]$. An                                                                                               
-  observation is labelled anomalous if $s(\mathbf{x}) < 0$ (the                                                                                           
-  scikit-learn convention, internally inverted to a binary label                                                                                          
-  1 = anomaly, 0 = normal). Algorithm~\ref{alg:iforest} describes                                                                                         
-  the full training and scoring pipeline.                                                                                                                 
-                                                                                                                                                          
-  \begin{algorithm}[H]                                                                                                                                    
-      \small                                                                                                                                              
-      \caption{$\hat{y} \gets
-      \texttt{IForestScore}(\mathbf{x},\; f_{\theta})$}                                                                                                   
-      \label{alg:iforest}                                                                                                                                 
-      \begin{algorithmic}[1]                                                                                                                              
-          \Require $\mathcal{X}$ is the Gold-layer training corpus.                                                                                       
-          \Require $f_{\theta}$ is a trained \texttt{IsolationForest}                                                                                     
-          with contamination $= 0.05$, $T = 100$ trees.                                                                                                   
-          \Comment{Training phase (every 6 h)}                                                                                                            
-          \State $f_{\theta} \gets \texttt{IsolationForest.fit}(\mathcal{X})$                                                                             
-          \State \textbf{log} $f_{\theta}$ parameters and metrics to                                                                                      
-          \textsc{MLflow}; promote to \texttt{@champion} alias.                                                                                           
-          \Comment{Scoring phase (on-demand)}                                                                                                             
-          \State $\mathbf{X}_{\text{now}} \gets$ latest snapshot of                                                                                       
-          \texttt{online\_route\_features}                                                                                                                
-          \State $\mathbf{X}_{\text{feat}} \gets                                                                                                          
-          \texttt{BuildFeatureVector}(\mathbf{X}_{\text{now}})$                                                                                           
-          per Equation~\ref{eq:feature_vector}                                                                                                            
-          \State $\hat{y}_{\text{raw}} \gets f_{\theta}.\texttt{predict}
-          (\mathbf{X}_{\text{feat}})$                                                                                                                     
-          \Comment{Returns $-1$ (anomaly) or $+1$ (normal)}
-          \State $\hat{y} \gets (\hat{y}_{\text{raw}} = -1)$                                                                                              
-          \State \Return $\hat{y} \in \{0, 1\}^{|\mathcal{R}|}$                                                                                           
-      \end{algorithmic}                                                                                                                                   
+  Given a training corpus $\mathcal{X} = \{\mathbf{x}_1, \ldots,
+  \mathbf{x}_N\}$ drawn from the Gold layer, the Isolation Forest
+  produces a continuous anomaly score $s(\mathbf{x}) \in [-1, 1]$
+  via \texttt{decision\_function}. An observation is labelled
+  anomalous if and only if $s(\mathbf{x}) < 0$: negative scores
+  indicate that the observation lies in a sparse region of feature
+  space and is isolated by shorter-than-average path lengths across
+  the ensemble. Algorithm~\ref{alg:iforest} describes the full
+  training and scoring pipeline as implemented in the serving layer.
+
+  \begin{algorithm}[H]
+      \small
+      \caption{$(s_r,\; \hat{y}_r) \gets
+      \texttt{IForestScore}(\mathbf{x}_r,\; f_{\theta})$}
+      \label{alg:iforest}
+      \begin{algorithmic}[1]
+          \Require $\mathcal{X}$ is the Gold-layer training corpus.
+          \Require $f_{\theta}$ is a trained \texttt{IsolationForest}
+          with contamination $= 0.05$, $T = 100$ trees.
+          \Comment{Training phase (every 6 h)}
+          \State $f_{\theta} \gets \texttt{IsolationForest.fit}(\mathcal{X})$
+          \State \textbf{log} $f_{\theta}$ parameters and metrics to
+          \textsc{MLflow}; promote to \texttt{@champion} alias.
+          \Comment{Scoring phase (every 15 s, background task)}
+          \State $\mathbf{X}_{\text{now}} \gets$ latest snapshot of
+          \texttt{online\_route\_features}
+          \State $\mathbf{X}_{\text{feat}} \gets
+          \texttt{BuildFeatureVector}(\mathbf{X}_{\text{now}})$
+          per Equation~\ref{eq:feature_vector}
+          \State $\mathbf{s} \gets f_{\theta}.\texttt{decision\_function}
+          (\mathbf{X}_{\text{feat}})$
+          \Comment{Returns $s_r \in [-1,\,1]$; lower = more anomalous}
+          \State $\hat{y}_r \gets (s_r < 0)$
+          \Comment{$\hat{y}_r = 1$ (anomaly), $\hat{y}_r = 0$ (normal)}
+          \State \Return $(s_r,\; \hat{y}_r)$ for each $r \in \mathcal{R}$
+      \end{algorithmic}
   \end{algorithm}                                                                                                                                         
                                                                                                                                                           
   The trained model is serialised with \texttt{joblib} and registered                                                                                     
