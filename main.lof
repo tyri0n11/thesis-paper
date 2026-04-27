@@ -5,28 +5,28 @@
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {3.1}{\ignorespaces Use case diagram for the UrbanPulse platform.}}{8}{}%
 \contentsline {figure}{\numberline {3.2}{\ignorespaces High-level system architecture of UrbanPulse.}}{9}{}%
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Dual-consumer data flow from Redpanda to Lakehouse and Online Feature Store.}}{10}{}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Dual-consumer data flow from Redpanda to Lakehouse and Online Feature Store.}}{11}{}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces UrbanPulse service topology: six microservices communicating via Redpanda (blue) and PostgreSQL (green). Dashed orange indicates the HTTP trigger from Batch to ML service.}}{20}{}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces UrbanPulse service topology: six microservices communicating via Redpanda (blue) and PostgreSQL (green). Dashed orange indicates the HTTP trigger from Batch to ML service.}}{22}{}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Redpanda Console: \texttt {traffic-route-bronze} topic with 67,428 messages (34.3~MiB) confirming continuous ingestion over the 40-day observation window.}}{24}{}%
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Prefect flow schedules: microbatch and alerter run every 5 minutes; gold aggregation runs hourly; ML retrain runs every 6 hours.}}{25}{}%
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Prefect 3.x Deployments view: seven active flows covering ingestion, batch promotion, model retraining, RAG indexing, and Telegram alerting.}}{26}{}%
-\contentsline {figure}{\numberline {5.4}{\ignorespaces Production AI Explanation modal for the Coastal $\to $ Western route anomaly (Vietnamese output): Qwen2.5:3b generates a contextualised explanation referencing weather conditions and route history via RAG.}}{29}{}%
-\contentsline {figure}{\numberline {5.5}{\ignorespaces Urban Pulse AI Chat interface (Vietnamese): conversational RAG endpoint reporting live congestion percentages per route, powered by Qwen2.5:3b and the ChromaDB \texttt {traffic\_patterns} collection.}}{30}{}%
-\contentsline {figure}{\numberline {5.6}{\ignorespaces Urban Pulse AI Chat (English): Qwen2.5:3b integrates live weather data (26.8\textdegree C, partly cloudy) with congestion metrics in a single natural-language response, demonstrating bilingual RAG capability.}}{31}{}%
-\contentsline {figure}{\numberline {5.7}{\ignorespaces Traffic Metrics heatmap: tooltip showing a Z-score-only anomaly on the Coastal $\to $ Urban Core route at 08:00 ($Z = 4.22$), Apr 12--15, 2026.}}{32}{}%
-\contentsline {figure}{\numberline {5.8}{\ignorespaces Traffic Metrics heatmap: tooltip showing a dual-signal anomaly (\texttt {BOTH}) on the Coastal $\to $ Western route at 15:00 ($Z = 2.02$), Apr 12--15, 2026.}}{32}{}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Redpanda Console: \texttt {traffic-route-bronze} topic with 67,428 messages (34.3~MiB) confirming continuous ingestion over the 40-day observation window.}}{26}{}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Prefect flow schedules: microbatch and alerter run every 5 minutes; gold aggregation runs hourly; ML retrain runs every 6 hours.}}{27}{}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Prefect 3.x Deployments view: seven active flows covering ingestion, batch promotion, model retraining, RAG indexing, and Telegram alerting.}}{28}{}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Production AI Explanation modal for the Coastal $\to $ Western route anomaly (Vietnamese output): Qwen2.5:3b generates a contextualised explanation referencing weather conditions and route history via RAG.}}{31}{}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Urban Pulse AI Chat interface (Vietnamese): conversational RAG endpoint reporting live congestion percentages per route, powered by Qwen2.5:3b and the ChromaDB \texttt {traffic\_patterns} collection.}}{32}{}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Urban Pulse AI Chat (English): Qwen2.5:3b integrates live weather data (26.8\textdegree C, partly cloudy) with congestion metrics in a single natural-language response, demonstrating bilingual RAG capability.}}{33}{}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Traffic Metrics heatmap: tooltip showing a Z-score-only anomaly on the Coastal $\to $ Urban Core route at 08:00 ($Z = 4.22$), Apr 12--15, 2026.}}{34}{}%
+\contentsline {figure}{\numberline {5.8}{\ignorespaces Traffic Metrics heatmap: tooltip showing a dual-signal anomaly (\texttt {BOTH}) on the Coastal $\to $ Western route at 15:00 ($Z = 2.02$), Apr 12--15, 2026.}}{34}{}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {6.1}{\ignorespaces Dremio EDA query on \texttt {nessie.gold.traffic\_hourly}: 20 routes, 76 days covered, confirming the Iceberg Gold table is correctly populated by the batch pipeline.}}{33}{}%
-\contentsline {figure}{\numberline {6.2}{\ignorespaces MLflow experiment \texttt {traffic-anomaly-detection}: 20 per-route runs all completed with status \textsc {finished} in $\sim $3.5~s each, confirming the ML Service retraining pipeline is stable.}}{35}{}%
-\contentsline {figure}{\numberline {6.3}{\ignorespaces MLflow per-route metric charts for \texttt {zone6 $\to $ zone5}: agreement = 0.96, Jaccard = 0.36, IForest rate = 0.05, 43 joint anomaly hours from 1,615 samples.}}{36}{}%
-\contentsline {figure}{\numberline {6.4}{\ignorespaces Model agreement (blue) and Jaccard similarity (orange) for five representative routes. Agreement consistently exceeds 0.90; Jaccard variation reflects route-specific traffic pattern stability.}}{36}{}%
-\contentsline {figure}{\numberline {6.5}{\ignorespaces Production Anomalies Per Hour (Apr 12--15, 2026): yellow = Z-Score only, green = IForest only, red = both detectors agree. Morning peak (07:00--10:00) shows the highest anomaly concentration.}}{37}{}%
-\contentsline {figure}{\numberline {6.6}{\ignorespaces Grafana Online Features dashboard (Apr 13--15, 2026): p50 = 153~ms, p95 = 318~ms, p99 = 336~ms ingestion-to-feature latency. Anomalous routes over time shown in the bottom-right panel.}}{38}{}%
-\contentsline {figure}{\numberline {6.7}{\ignorespaces Grafana Anomaly Detection dashboard (Apr 13--15, 2026): anomalous route count over time (top-left), maximum Z-Score intensity reaching 8.5 during afternoon peak (top-right), and per-route Z-Score time series for all 20 routes (bottom-right).}}{39}{}%
-\contentsline {figure}{\numberline {6.8}{\ignorespaces Grafana Ingestion Service dashboard: periodic 5-minute burst pattern at 0.08--0.12 req/s confirming correct API polling cadence. Zero errors and zero warnings over the observed window.}}{39}{}%
-\contentsline {figure}{\numberline {6.9}{\ignorespaces Grafana Urban Traffic Analytics dashboard: Bronze$\to $Silver 4,850 rows, Silver$\to $Gold 120 rows, Baseline 3,360 records. Batch job completion logs confirm error-free pipeline execution.}}{40}{}%
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Dremio EDA query on \texttt {nessie.gold.traffic\_hourly}: 20 routes, 76 days covered, confirming the Iceberg Gold table is correctly populated by the batch pipeline.}}{35}{}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces MLflow experiment \texttt {traffic-anomaly-detection}: 20 per-route runs all completed with status \textsc {finished} in $\sim $3.5~s each, confirming the ML Service retraining pipeline is stable.}}{37}{}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces MLflow per-route metric charts for \texttt {zone6 $\to $ zone5}: agreement = 0.96, Jaccard = 0.36, IForest rate = 0.05, 43 joint anomaly hours from 1,615 samples.}}{38}{}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Model agreement (blue) and Jaccard similarity (orange) for five representative routes. Agreement consistently exceeds 0.90; Jaccard variation reflects route-specific traffic pattern stability.}}{38}{}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Production Anomalies Per Hour (Apr 12--15, 2026): yellow = Z-Score only, green = IForest only, red = both detectors agree. Morning peak (07:00--10:00) shows the highest anomaly concentration.}}{39}{}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Grafana Online Features dashboard (Apr 13--15, 2026): p50 = 153~ms, p95 = 318~ms, p99 = 336~ms ingestion-to-feature latency. Anomalous routes over time shown in the bottom-right panel.}}{40}{}%
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Grafana Anomaly Detection dashboard (Apr 13--15, 2026): anomalous route count over time (top-left), maximum Z-Score intensity reaching 8.5 during afternoon peak (top-right), and per-route Z-Score time series for all 20 routes (bottom-right).}}{41}{}%
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Grafana Ingestion Service dashboard: periodic 5-minute burst pattern at 0.08--0.12 req/s confirming correct API polling cadence. Zero errors and zero warnings over the observed window.}}{41}{}%
+\contentsline {figure}{\numberline {6.9}{\ignorespaces Grafana Urban Traffic Analytics dashboard: Bronze$\to $Silver 4,850 rows, Silver$\to $Gold 120 rows, Baseline 3,360 records. Batch job completion logs confirm error-free pipeline execution.}}{42}{}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

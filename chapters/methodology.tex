@@ -138,8 +138,44 @@
                                                                                                                                                           
   \begin{figure}[h]                                                                                                                                       
       \centering                                                                                                                                          
-      % TODO: Insert use case diagram here
-      % \includegraphics[width=0.85\textwidth]{figures/use_case_diagram.png}                                                                              
+      \resizebox{0.95\textwidth}{!}{%
+      \begin{tikzpicture}[
+        >=stealth,
+        actor/.style={draw, rounded corners=3pt, fill=gray!8,
+                      minimum width=2.9cm, minimum height=0.7cm,
+                      align=center, font=\footnotesize},
+        usecase/.style={draw, rounded corners=12pt, fill=blue!7,
+                        minimum width=3.6cm, minimum height=0.72cm,
+                        align=center, font=\footnotesize},
+        arr/.style={->, thick, shorten >=2pt, shorten <=2pt}
+      ]
+        \draw[rounded corners=5pt, thick] (-3.1,-3.4) rectangle (3.6,3.4);
+        \node[font=\bfseries\footnotesize] at (0.25,3.05) {UrbanPulse Platform};
+
+        \node[actor] (operator) at (-6.3,2.3) {Traffic Operator};
+        \node[actor] (analyst)  at (-6.3,0.7) {Traffic Analyst};
+        \node[actor] (planner)  at (-6.3,-0.9) {Urban Planner};
+        \node[actor] (manager)  at (-6.3,-2.5) {Duty Manager};
+        \node[actor] (mleng)    at (6.8,1.7) {ML Engineer};
+        \node[actor] (external) at (6.8,-1.7) {External APIs};
+
+        \node[usecase] (monitor) at (0,2.25) {Monitor live traffic map};
+        \node[usecase] (invest)  at (0,1.15) {Investigate anomaly};
+        \node[usecase] (rca)     at (0,0.05) {Request root cause analysis};
+        \node[usecase] (trend)   at (0,-1.05) {Review historical trend};
+        \node[usecase] (alert)   at (0,-2.15) {Receive anomaly alert};
+        \node[usecase] (retrain) at (0,-3.05) {Retrain detection model};
+
+        \draw[arr] (operator) -- (monitor);
+        \draw[arr] (analyst) -- (invest);
+        \draw[arr] (analyst) -- (rca);
+        \draw[arr] (planner) -- (trend);
+        \draw[arr] (manager) -- (alert);
+        \draw[arr] (mleng) -- (retrain);
+        \draw[arr] (external) -- (monitor);
+        \draw[arr] (external) -- (alert);
+      \end{tikzpicture}%
+      }
       \caption{Use case diagram for the UrbanPulse platform.}
       \label{fig:use_case}                                                                                                                                
   \end{figure}    
@@ -300,14 +336,17 @@
   Route-level traffic observations are acquired by periodically polling the
   \textbf{VietMap Directions API} \cite{vietmap_api}, a commercial Vietnamese                                                                             
   mapping provider with national road network coverage. The ingestion service                                                                             
-  iterates over 30 predefined inter-zone routes defined in a canonical                                                                                    
+  iterates over 20 predefined inter-zone routes defined in a canonical                                                                                    
   \texttt{routes.json} configuration file. Routes are generated from a                                                                                    
   \texttt{zones.json} specification that partitions Ho Chi Minh City into six                                                                             
   functional zones: \textit{Urban Core}, \textit{Eastern Innovation},                                                                                     
   \textit{Northern Industrial}, \textit{Southern Port},                                                                                                   
   \textit{Western Peri-urban}, and \textit{Southern Coastal}. Each route is                                                                               
-  expressed as a directed pair of origin and destination zone anchors,                                                                                    
-  yielding a total of 30 directed inter-zone origin–destination pairs.                                                                                    
+  expressed as a directed pair of origin and destination zone anchors.                                                                                    
+  The route set is an operational subset of the full directed zone-pair                                                                                   
+  space, selected to cover the major radial and cross-city corridors while                                                                                
+  keeping the dashboard and alert surface interpretable for thesis-scale                                                                                  
+  evaluation.                                                                                    
                                                                                                                                                           
   For each route, a single API call returns the following fields: travel                                                                                  
   duration $d_r$ (minutes), distance $\delta_r$ (metres), and a congestion                                                                                
@@ -389,8 +428,56 @@
                   
   \begin{figure}[h]                                                                                                                                       
       \centering  
-      % TODO: Insert data flow diagram here
-      % \includegraphics[width=\textwidth]{figures/data_flow.png}                                                                                         
+      \resizebox{\textwidth}{!}{%
+      \begin{tikzpicture}[
+        >=stealth,
+        box/.style={draw, rounded corners=3pt, fill=white,
+                    minimum width=3.0cm, minimum height=0.8cm,
+                    align=center, font=\footnotesize},
+        store/.style={draw, rounded corners=3pt, fill=gray!10,
+                      minimum width=3.2cm, minimum height=0.8cm,
+                      align=center, font=\footnotesize},
+        arr/.style={->, thick, shorten >=2pt, shorten <=2pt}
+      ]
+        \node[box, fill=blue!8] (vietmap) at (-3.4,2.4) {VietMap\\Directions API};
+        \node[box, fill=blue!8] (weather) at (3.4,2.4) {Open-Meteo\\Weather API};
+        \node[box, fill=orange!12, minimum width=5.8cm] (producer) at (0,1.1)
+          {Polling and Validation Producers};
+        \node[box, fill=orange!18, minimum width=5.8cm] (redpanda) at (0,-0.2)
+          {Redpanda Message Log};
+
+        \node[box, fill=teal!10] (archival) at (-4.2,-1.7)
+          {Archival Consumer\\Bronze Writer};
+        \node[box, fill=teal!10] (online) at (4.2,-1.7)
+          {Online Consumer\\Feature Processor};
+
+        \node[store] (bronze) at (-4.2,-3.0) {Bronze Parquet\\MinIO};
+        \node[box, fill=purple!8] (microbatch) at (-4.2,-4.3)
+          {Prefect + DuckDB\\Micro-batch};
+        \node[store] (silvergold) at (-4.2,-5.6)
+          {Silver and Gold\\Iceberg Tables};
+
+        \node[store] (postgres) at (4.2,-3.0)
+          {PostgreSQL\\Online Feature Store};
+        \node[box, fill=red!7] (serving) at (4.2,-4.3)
+          {Serving API\\Z-score + IForest};
+        \node[box, fill=green!8] (dashboard) at (4.2,-5.6)
+          {Dashboard, SSE,\\Telegram Alerts};
+
+        \draw[arr] (vietmap) -- (producer);
+        \draw[arr] (weather) -- (producer);
+        \draw[arr] (producer) -- (redpanda);
+        \draw[arr] (redpanda) -- (archival);
+        \draw[arr] (redpanda) -- (online);
+        \draw[arr] (archival) -- (bronze);
+        \draw[arr] (bronze) -- (microbatch);
+        \draw[arr] (microbatch) -- (silvergold);
+        \draw[arr] (online) -- (postgres);
+        \draw[arr] (postgres) -- (serving);
+        \draw[arr] (silvergold.east) -- (serving.west);
+        \draw[arr] (serving) -- (dashboard);
+      \end{tikzpicture}%
+      }
       \caption{Dual-consumer data flow from Redpanda to Lakehouse and
       Online Feature Store.}                                                                                                                              
       \label{fig:data_flow}
@@ -594,7 +681,7 @@
   \label{subsec:zscore}                                                                                                                                   
   % ------------------------------------------------------------                                                                                          
                                                                                                                                                           
-  \subsubsection{Formalizing}                                                                                                                             
+  \subsubsection{Mathematical Formulation}                                                                                                                             
                   
   Let $r \in \mathcal{R}$ denote a route identifier. Let                                                                                                  
   $\bar{h}_r^{(t)}$ denote the running mean \texttt{heavy\_ratio}
@@ -659,7 +746,7 @@
   \label{subsec:iforest}
   % ------------------------------------------------------------                                                                                          
    
-  \subsubsection{Formalizing}                                                                                                                             
+  \subsubsection{Mathematical Formulation}                                                                                                                             
                   
   The \textbf{Isolation Forest} algorithm \cite{liu2008isolation} is an                                                                                   
   unsupervised ensemble method that detects anomalies by measuring how
@@ -895,7 +982,7 @@
   \label{subsec:rag_indexing}
   % ------------------------------------------------------------                                                                                          
    
-  \subsubsection{Formalizing}                                                                                                                             
+  \subsubsection{Retrieval Procedure}                                                                                                                             
                   
   Let $q$ denote a user query string and $r$ a route identifier.                                                                                          
   Let $\mathcal{C} = \{C_1, C_2, C_3\}$ denote the three ChromaDB
@@ -925,6 +1012,7 @@
           \Require $\mathcal{C}$ is the ChromaDB client with collections                                                                                  
           $C_1, C_2, C_3$.                                                                                                                                
           \Require $\Pi$ is the geo-aware HCMC system prompt.                                                                                             
+          \State $\texttt{chunks} \gets []$                                                                                                               
           \If{$r \neq \texttt{None}$}
               \State $\texttt{chunks} \gets                                                                                                               
               \texttt{RetrieveForRoute}(r,\; \text{hr},\; \text{dow},\;
@@ -992,7 +1080,46 @@
   \textit{reproducibility}, and \textit{observability}. This section                                                                                      
   defines the specific metrics and measurement boundaries that                                                                                            
   Chapter~4 will report.                                                                                                                                  
-                                                                                                                                                          
+                                                                                                                                                         
+  % ------------------------------------------------------------                                                                                          
+  \subsection{Experimental Protocol}
+  \label{subsec:experimental_protocol}
+  % ------------------------------------------------------------                                                                                          
+
+  The empirical evaluation follows a fixed protocol to ensure that
+  Chapter~4 reports repeatable and comparable results. Traffic telemetry
+  is collected continuously over a bounded observation window and retained
+  at Bronze, Silver, Gold, and online-feature granularity. The exact data
+  collection period, number of route observations, and number of generated
+  anomaly labels are reported alongside the results.
+
+  All experiments are executed on a single, fixed deployment environment.
+  The hardware profile (CPU model, memory capacity, GPU availability, and
+  storage type) and software stack (Docker version, Python runtime,
+  Redpanda, PostgreSQL, MinIO, Iceberg/Nessie, MLflow, ChromaDB, and
+  Ollama model version) are recorded before each evaluation run. No
+  configuration changes are made between baseline and UrbanPulse
+  measurements except for the component being compared.
+
+  The workload profile consists of three measurement modes. First, the
+  normal-load run uses the production polling interval and all 20 directed
+  inter-zone routes. Second, the stress run replays or duplicates the
+  message stream at approximately $2\times$ normal throughput to assess
+  queueing behaviour and processing stability. Third, the inference run
+  issues repeated requests to the prediction and RAG endpoints to measure
+  response latency and time-to-first-token under steady-state serving
+  conditions.
+
+  Baseline comparison is performed against a batch-only variant in which
+  anomaly labels become available only after the periodic micro-batch
+  aggregation completes. This baseline isolates the contribution of the
+  online feature path and dual-signal fusion strategy. For each KPI,
+  measurements are computed from persisted logs or monitoring metrics
+  rather than manual timing. Reported latency values use $p_{50}$,
+  $p_{95}$, and maximum statistics, while alert precision is estimated
+  through manual review of the alert log against observed congestion
+  evidence from the traffic dashboard.
+
   % ------------------------------------------------------------                                                                                          
   \subsection{Temporal Integrity}
   \label{subsec:eval_temporal}
@@ -1027,9 +1154,9 @@
   \textbf{MLflow} records the full provenance of every                                                                                                    
   IsolationForest training run: hyperparameters                                                                                                           
   (\texttt{contamination}, \texttt{n\_estimators},                                                                                                        
-  \texttt{random\_state}), feature schema, training data time                                                                                             
-  can therefore be replayed against the same model version and                                                                                            
-  data snapshot.                                                                                                                                          
+  \texttt{random\_state}), feature schema, and training data time                                                                                         
+  range; therefore, each inference can be replayed against the same                                                                                       
+  model version and data snapshot.                                                                                                                                          
                                                                                                                                                           
   % ------------------------------------------------------------                                                                                          
   \subsection{Key Performance Indicators}                       
