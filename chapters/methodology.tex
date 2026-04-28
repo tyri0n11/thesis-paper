@@ -1114,9 +1114,10 @@
   \text{dow},\; \mathcal{C},\; \mathbf{n})                                                                                                                
   \end{equation}                                                                                                                                          
                                                                                                                                                           
-  where $\mathbf{n} = (n_{\text{anomaly}}, n_{\text{pattern}},                                                                                            
+  where $\mathbf{n} = (n_{\text{anomaly}}, n_{\text{pattern}},
   n_{\text{external}}) = (4, 3, 2)$ are the per-collection
-  retrieval budgets and $\text{hr}, \text{dow}$ are the current                                                                                           
+  retrieval budgets used by the \texttt{/rca} endpoint, and
+  $\text{hr}, \text{dow}$ are the current                                                                                           
   hour and day-of-week. Algorithm~\ref{alg:rag} formalises the                                                                                            
   full retrieval, fallback, and prompt construction procedure.                                                                                            
                                                                                                                                                           
@@ -1151,7 +1152,7 @@
           r,\; q,\; \texttt{chunks})$                                                                                                                     
           \State $\texttt{response} \gets                                                                                                                 
           \texttt{StreamLLM}(\Pi,\; \texttt{prompt},\;                                                                                                    
-          T{=}0.3,\; \texttt{max\_tokens}{=}400)$                                                                                                         
+          T{=}0.4,\; \texttt{num\_predict}{=}300)$                                                                                                         
           \State $\texttt{PersistResponse}(\texttt{log\_id},\;                                                                                            
           \texttt{response})$                                                                                                                             
           \State \Return $\texttt{response}$                                                                                                              
@@ -1301,9 +1302,9 @@
   Microbatch freshness      & Bronze write $\to$ Silver commit
                             & $< 5\,\text{min}$                                                                                                           
                             & Prefect task duration \\                                                                                                    
-  IForest inference latency & \texttt{/predict/anomalies}                                                                                                 
-                              request $\to$ response                                                                                                      
-                            & $< 2\,\text{s}$                                                                                                             
+  IForest scoring latency   & Background scorer cycle
+                              duration (15\,s interval)
+                            & $< 5\,\text{s}$
                             & Serving API logs \\                                                                                                         
   RAG time-to-first-token   & \texttt{/rca} request $\to$                                                                                                 
                               first SSE chunk                                                                                                             
