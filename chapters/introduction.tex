@@ -11,14 +11,14 @@ In the context of the UrbanPulse system, traffic data is ingested from the VietM
 \item \textbf{High-Dimensional Latency Constraints}: Ensuring low-latency propagation from the \textbf{Redpanda broker} to the end-user dashboard via \textbf{Server-Sent Events (SSE)} requires a highly optimized serving layer that must reconcile high-frequency ingestion without introducing significant lag.
 \end{itemize}
 
-Therefore, the core problem addressed in this research is:
+Therefore, the core problem addressed in this thesis is:
 \begin{quote}
 \textit{How to design a \textbf{hybrid low-latency traffic anomaly detection architecture} that ensures consistency between real-time signals and historical baselines while maintaining scalability through a unified lakehouse strategy?}
 \end{quote}
 
 \section{Scope}
 
-This research focuses on the design and implementation of the "UrbanPulse" platform, an integrated system for real-time traffic monitoring and event detection within Ho Chi Minh City. The scope is defined as follows:
+This thesis focuses on the design and implementation of the "UrbanPulse" platform, an integrated system for real-time traffic monitoring and event detection within Ho Chi Minh City. The scope is defined as follows:
 
 \begin{enumerate}
 \item \textbf{Data Ingestion and Sources}
