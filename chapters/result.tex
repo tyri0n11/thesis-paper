@@ -11,8 +11,8 @@ performance including ingestion latency, pipeline throughput, and SSE delivery.
 \subsection{Dataset}
 
 Traffic observations were collected continuously from the \textbf{VietMap
-Directions API} at a 5-minute polling interval over a 40-day period
-(January--March 2026), yielding \textbf{23,292 hourly aggregated records}
+Directions API} over a 54-day observation window (January--April 2026),
+yielding \textbf{32,302 hourly aggregated records}
 across \textbf{20 inter-zone routes} in Ho Chi Minh City.
 Each hourly record in the Gold table captures
 \texttt{avg\_heavy\_ratio}, \texttt{avg\_moderate\_ratio},
@@ -43,7 +43,7 @@ Routes                    & 20 \\
 Records per route (mean)  & 1,615.1 \\
 Records per route (range) & 1,613 -- 1,617 \\
 Collection period         & Jan--Apr 2026 (54 full days) \\
-Polling interval          & 5 minutes \\
+Polling interval          & 30 seconds \\
 Gold aggregation window   & 1 hour \\
 \hline
 \end{tabular}
@@ -74,7 +74,7 @@ that are standard for unsupervised systems~\cite{chandola2009anomaly}:
 Table~\ref{tab:anomaly-metrics} reports the per-route metrics logged during
 the most recent MLflow parent run. The IsolationForest anomaly rate is fixed
 at approximately 5.0\% by the \texttt{contamination} hyperparameter. The
-Z-Score rate varies between 0.0\% and 5.7\% across routes, reflecting
+Z-Score rate varies between 0.0\% and 6.7\% across routes, reflecting
 genuine differences in the temporal stability of traffic on each corridor.
 
 \begin{table}[htbp]
@@ -229,7 +229,7 @@ detector, confirming the complementarity documented in
 Table~\ref{tab:anomaly-metrics}: the two signals capture different aspects
 of the traffic distribution. The \textit{Both agree} (red) bars, which
 trigger Telegram alerts, are substantially fewer --- aligning with the
-mean Jaccard of 0.211 from the MLflow evaluation.
+mean Jaccard of 0.163 from the MLflow evaluation.
 
 \begin{figure}[htbp]
   \centering
@@ -256,13 +256,16 @@ conjunction rule (\texttt{both\_anomaly}) thus serves as a high-precision
 filter, yielding 389 joint-alert hours from 32,302 total observations (1.2\%).
 
 \textbf{(2) Route-specific Z-score rates.}
-Three routes (zone4-to-zone2, zone4-to-zone5, and zone5-to-zone1)
-exhibit Z-score rates at or near 0.000, meaning no hourly window in those
-corridors exceeded the $Z>2$ threshold over the observation period.
-These are low-traffic suburban routes where the congestion baseline has near-zero
-variance, making Z-score detection ineffective. IsolationForest still flags 5\%
-of those hours, but no joint alerts are produced --- an appropriate outcome given
-the low incident likelihood.
+Three routes (zone4-to-zone2, zone4-to-zone5, and zone5-to-zone1) exhibit
+near-zero Z-score rates (0.000, 0.000, and 0.010 respectively). For
+zone4-to-zone2 and zone4-to-zone5, no hourly window exceeded the per-route
+$Z>\theta_r$ threshold. Zone5-to-zone1 recorded a Z-score rate of 0.010
+(approximately 16 hours), but these events produced no overlap with the
+IsolationForest anomaly windows, yielding a Jaccard of 0.000. These three
+routes are low-traffic suburban corridors where the congestion baseline has
+near-zero variance, limiting Z-score sensitivity. IsolationForest still flags
+5\% of those hours via multivariate isolation, but no joint alerts are produced ---
+an appropriate outcome given the low incident likelihood on these corridors.
 
 \textbf{(3) Zone-3 northern industrial corridor anomaly concentration.}
 Routes originating from \textit{zone3\_northern\_industrial} exhibit the
@@ -374,8 +377,9 @@ response even before the full explanation is generated.
 Table~\ref{tab:perf-summary} consolidates the system-level performance results
 against the non-functional requirements established in
 Section~\ref{sec:requirements}. All latency targets were met under the
-40-day continuous production workload on homelab hardware (Intel Core i5-8500,
-24~GB RAM, NVIDIA GTX~1060 6~GB VRAM).
+54-day continuous production workload on homelab hardware (Intel Core i5-8500,
+24~GB RAM, NVIDIA GTX~1060 6~GB VRAM); latency figures in the table are
+drawn from the Apr 13--15, 2026 Grafana observability window.
 
 \begin{table}[htbp]
 \centering

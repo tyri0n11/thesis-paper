@@ -83,76 +83,10 @@ channels: the \textbf{Redpanda broker} (event streams) and
 \textbf{PostgreSQL} (materialised feature store). No direct service-to-service
 HTTP calls exist in the hot path, ensuring fault isolation.
 
-Figure~\ref{fig:service-topology} illustrates the container topology and the
-two communication channels.
-
 \begin{figure}[htbp]
 \centering
-\resizebox{0.92\textwidth}{!}{%
-\begin{tikzpicture}[
-  >=stealth, font=\small,
-  svc/.style={draw, rounded corners=4pt, fill=white,
-              minimum width=3.0cm, minimum height=0.9cm,
-              align=center, font=\footnotesize, inner sep=5pt},
-  infra/.style={draw, rounded corners=4pt, fill=gray!10,
-                minimum width=3.0cm, minimum height=0.9cm,
-                align=center, font=\footnotesize, inner sep=5pt},
-  karr/.style={->, thick, blue!60},
-  parr/.style={->, thick, green!50!black},
-  harr/.style={->, thick, orange!80!black},
-  lbl/.style={font=\scriptsize}
-]
-
-%% Infrastructure layer (bottom band)
-\fill[gray!8, rounded corners=5pt] (-7.5,-1.2) rectangle (7.5,1.2);
-\node[font=\scriptsize\itshape] at (0,1.0) {Infrastructure Layer};
-\node[infra] (redpanda) at (-4.5, 0) {Redpanda\\(Kafka broker)};
-\node[infra] (postgres) at (0,    0) {PostgreSQL\\(Feature store)};
-\node[infra] (minio)    at (4.5,  0) {MinIO\\(Object store)};
-
-%% Application services (top)
-\node[svc] (ingest)    at (-6.0,  3.2) {Ingestion\\Service};
-\node[svc] (streaming) at (-2.5,  3.2) {Streaming\\Service};
-\node[svc] (online)    at ( 0.8,  3.2) {Online\\Service};
-\node[svc] (batch)     at ( 3.5,  3.2) {Batch\\Service};
-\node[svc] (ml)        at ( 6.0,  3.2) {ML\\Service};
-\node[svc] (serving)   at ( 0.0,  5.2) {Serving\\(FastAPI)};
-
-%% Ingest → Redpanda
-\draw[karr] (ingest.south) -- ++(0,-0.6) -| (redpanda.north);
-
-%% Redpanda → Streaming, Online
-\draw[karr] (redpanda.north) -- ++(0,0.5) -| (streaming.south);
-\draw[karr] (redpanda.north) -- ++(0,0.5) -| (online.south);
-
-%% Streaming → MinIO
-\draw[->, thick, purple!60] (streaming.east) -- ++(0.4,0) |- (minio.north);
-
-%% Online → PostgreSQL
-\draw[parr] (online.south) -- ++(0,-0.5) -| (postgres.north);
-
-%% Batch → MinIO (read/write) + PostgreSQL (write baseline)
-\draw[->, thick, purple!60] (batch.south) -- ++(0,-0.4) -| (minio.north);
-\draw[parr] (batch.south)   -- ++(0,-0.4) -| (postgres.north);
-
-%% ML ↔ MLflow (external, simplified as arrow to batch)
-\draw[harr, dashed] (ml.west) -- (batch.east) node[midway, above, lbl] {POST /train};
-
-%% Serving ← PostgreSQL + MinIO
-\draw[parr] (postgres.north) -- ++(0,1.0) -| (serving.south);
-\draw[->, thick, purple!60] (minio.north) -- ++(0,0.6) -| (serving.south);
-
-%% Legend
-\node[lbl, blue!60]            at (-5.8,-0.8)  {--- Kafka};
-\node[lbl, green!50!black]     at (-3.8,-0.8)  {--- PostgreSQL};
-\node[lbl, purple!60]          at (-1.8,-0.8)  {--- MinIO/S3};
-\node[lbl, orange!80!black]    at ( 0.6,-0.8)  {- - HTTP};
-
-\end{tikzpicture}%
-}
-\caption{UrbanPulse service topology: six microservices communicating via
-         Redpanda (blue) and PostgreSQL (green). Dashed orange indicates the
-         HTTP trigger from Batch to ML service.}
+\includegraphics[width=\textwidth]{service-topology}
+\caption{UrbanPulse service topology}
 \label{fig:service-topology}
 \end{figure}
 

@@ -205,7 +205,7 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}LLM: Ollama with Qwen2.5:3b}{24}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4.2}Service Topology Design}{24}{}\protected@file@percent }
 \newlabel{sec:topology}{{4.2}{24}{Service Topology Design}{section.4.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces UrbanPulse service topology: six microservices communicating via Redpanda (blue) and PostgreSQL (green). Dashed orange indicates the HTTP trigger from Batch to ML service.}}{24}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces UrbanPulse service topology}}{24}{}\protected@file@percent }
 \newlabel{fig:service-topology}{{4.1}{24}{Service Topology Design}{figure.4.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.3}Data Schema Design}{24}{}\protected@file@percent }
 \newlabel{sec:schema-design}{{4.3}{24}{Data Schema Design}{section.4.3}{}}
@@ -313,17 +313,17 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {6.6}{\ignorespaces Grafana Online Features dashboard (Apr 13--15, 2026): p50 = 153~ms, p95 = 318~ms, p99 = 336~ms ingestion-to-feature latency. Anomalous routes over time shown in the bottom-right panel.}}{42}{}\protected@file@percent }
 \newlabel{fig:grafana-online}{{6.6}{42}{Grafana Observability Dashboards}{figure.6.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3.2}End-to-End Ingestion Latency}{42}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.3}Batch Pipeline Throughput}{42}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {6.7}{\ignorespaces Grafana Anomaly Detection dashboard (Apr 13--15, 2026): anomalous route count over time (top-left), maximum Z-Score intensity reaching 8.5 during afternoon peak (top-right), and per-route Z-Score time series for all 20 routes (bottom-right).}}{43}{}\protected@file@percent }
 \newlabel{fig:grafana-anomaly}{{6.7}{43}{Grafana Observability Dashboards}{figure.6.7}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6.8}{\ignorespaces Grafana Ingestion Service dashboard: periodic 5-minute burst pattern at 0.08--0.12 req/s confirming correct API polling cadence. Zero errors and zero warnings over the observed window.}}{43}{}\protected@file@percent }
 \newlabel{fig:grafana-ingestion}{{6.8}{43}{Grafana Observability Dashboards}{figure.6.8}{}}
-\citation{batch_latency_survey}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.3}Batch Pipeline Throughput}{44}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {6.9}{\ignorespaces Grafana Urban Traffic Analytics dashboard: Bronze$\to $Silver 4,850 rows, Silver$\to $Gold 120 rows, Baseline 3,360 records. Batch job completion logs confirm error-free pipeline execution.}}{44}{}\protected@file@percent }
 \newlabel{fig:grafana-batch}{{6.9}{44}{Batch Pipeline Throughput}{figure.6.9}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3.4}SSE Delivery Latency}{44}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3.5}LLM Inference Latency}{44}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3.6}Summary of Performance Against Requirements}{44}{}\protected@file@percent }
+\citation{batch_latency_survey}
 \@writefile{lot}{\contentsline {table}{\numberline {6.4}{\ignorespaces Measured performance vs.\ non-functional requirements.}}{45}{}\protected@file@percent }
 \newlabel{tab:perf-summary}{{6.4}{45}{Summary of Performance Against Requirements}{table.6.4}{}}
 \citation{iceberg_paper}

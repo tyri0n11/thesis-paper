@@ -10,7 +10,7 @@
 \contentsline {figure}{\numberline {3.5}{\ignorespaces MLflow experiment view showing per-route \texttt {IsolationForest} training runs for the \texttt {traffic-anomaly-detection} experiment. Each row corresponds to one directed inter-zone route model.}}{18}{}%
 \contentsline {figure}{\numberline {3.6}{\ignorespaces MLflow model metrics for route \textit {Southern Coastal~$\to $~Western Peri-urban}. Key indicators: \texttt {iforest\_anomaly\_rate}~$= 0.05$ (matches contamination prior), \texttt {model\_agreement}~$= 0.98$, and \texttt {total\_samples}~$= 1{,}615$.}}{19}{}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces UrbanPulse service topology: six microservices communicating via Redpanda (blue) and PostgreSQL (green). Dashed orange indicates the HTTP trigger from Batch to ML service.}}{24}{}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces UrbanPulse service topology}}{24}{}%
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {5.1}{\ignorespaces Redpanda Console: \texttt {traffic-route-bronze} topic with 67,428 messages (34.3~MiB) confirming continuous ingestion over the 40-day observation window.}}{28}{}%
 \contentsline {figure}{\numberline {5.2}{\ignorespaces Prefect flow schedules: microbatch and alerter run every 5 minutes; gold aggregation runs hourly; ML retrain runs every 6 hours.}}{29}{}%

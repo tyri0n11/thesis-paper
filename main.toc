@@ -94,7 +94,7 @@
 \contentsline {section}{\numberline {6.3}System Performance}{42}{}%
 \contentsline {subsection}{\numberline {6.3.1}Grafana Observability Dashboards}{42}{}%
 \contentsline {subsection}{\numberline {6.3.2}End-to-End Ingestion Latency}{42}{}%
-\contentsline {subsection}{\numberline {6.3.3}Batch Pipeline Throughput}{42}{}%
+\contentsline {subsection}{\numberline {6.3.3}Batch Pipeline Throughput}{44}{}%
 \contentsline {subsection}{\numberline {6.3.4}SSE Delivery Latency}{44}{}%
 \contentsline {subsection}{\numberline {6.3.5}LLM Inference Latency}{44}{}%
 \contentsline {subsection}{\numberline {6.3.6}Summary of Performance Against Requirements}{44}{}%
