@@ -319,6 +319,7 @@
   \end{figure}
                                                                                                                                                           
   % ============================================================
+  \clearpage
   \section{Data Acquisition and Ingestion Strategy}
   \label{sec:ingestion}                                                                                                                                   
   % ============================================================
@@ -385,27 +386,55 @@
   \label{subsec:openmeteo}
   % ------------------------------------------------------------                                                                                          
    
-  Hourly weather data for Ho Chi Minh City (latitude $10.7757^\circ$N,
-  longitude $106.7009^\circ$E, centred on Bến Thành district) is retrieved
-  from the \textbf{Open-Meteo API} \cite{openmeteo_api}, a free,
-  open-source meteorological service requiring no authentication.
-  Retrieved variables include: temperature ($^\circ$C), precipitation
-  ($\text{mm}$), rainfall ($\text{mm}$), wind speed ($\text{km/h}$),
-  wind direction ($^\circ$), cloud cover ($\%$), and WMO weather code.                                                                                         
-                                                                                                                                                          
-  Weather data is consumed in two operationally distinct modes:                                                                                           
-                                                                                                                                                          
-  \begin{enumerate}                                                                                                                                       
-      \item \textbf{Batch indexing mode:} The \texttt{hourly-gold}
-      Prefect flow fetches the trailing 7 days of hourly records                                                                                          
-      ($\approx 192$ documents) and indexes them into the                                                                                                 
-      \texttt{external\_\allowbreak context} ChromaDB collection for RAG retrieval                                                                                    
-      (Section~\ref{sec:rag}).                                                                                                                            
-                                                                                                                                                          
-      \item \textbf{Live fetch mode:} On each \texttt{/chat} API request,                                                                                 
-      the serving layer performs a direct asynchronous HTTP fetch of current                                                                              
-      conditions, cached in-process for 15 minutes, and injects the result                                                                                
-      into the LLM system prompt.                                                                                                                         
+  Hourly weather data is retrieved from the \textbf{Open-Meteo API}
+  \cite{openmeteo_api}, a free, open-source meteorological service
+  requiring no authentication. The \texttt{weather-ingestion} service
+  polls Open-Meteo every 15 minutes ($\texttt{\_CYCLE\_INTERVAL\_S} = 900$)
+  for all \textbf{six} zone-specific coordinates independently
+  (Table~\ref{tab:zone_coords}), publishing one \texttt{WeatherObservation}
+  per zone per cycle to Kafka. Retrieved variables include:
+  temperature ($^\circ$C), precipitation ($\text{mm}$), rainfall
+  ($\text{mm}$), wind speed ($\text{km/h}$), wind direction ($^\circ$),
+  cloud cover ($\%$), and WMO weather code.
+
+  \begin{table}[h]
+  \centering
+  \caption{Zone-specific Open-Meteo query coordinates.}
+  \label{tab:zone_coords}
+  \small
+  \begin{tabular}{llcc}
+  \hline
+  \textbf{Zone ID} & \textbf{Name} & \textbf{Latitude} & \textbf{Longitude} \\
+  \hline
+  zone1 & Urban Core           & $10.7755^\circ$N & $106.6990^\circ$E \\
+  zone2 & Eastern Innovation   & $10.8667^\circ$N & $106.7793^\circ$E \\
+  zone3 & Northern Industrial  & $11.1031^\circ$N & $106.5496^\circ$E \\
+  zone4 & Southern Port        & $10.7630^\circ$N & $106.7722^\circ$E \\
+  zone5 & Western Peri-urban   & $10.6867^\circ$N & $106.5774^\circ$E \\
+  zone6 & Southern Coastal     & $10.5842^\circ$N & $107.0368^\circ$E \\
+  \hline
+  \end{tabular}
+  \end{table}
+
+  Weather data is consumed in two operationally distinct modes:
+
+  \begin{enumerate}
+      \item \textbf{Batch indexing mode:} Zone-level observations flow
+      from Kafka into the batch pipeline, which averages them into a
+      single city-level record per hour and persists the result to the
+      \texttt{gold.weather\_hourly} Iceberg table. The RAG indexer
+      then reads the trailing 7 days from this table
+      ($\approx 192$ documents) and upserts them into the
+      \texttt{external\_\allowbreak context} ChromaDB collection
+      (Section~\ref{sec:rag}). A direct Open-Meteo API fallback is
+      used only when \texttt{gold.weather\_hourly} is not yet
+      available (e.g.\ during initial bootstrap).
+
+      \item \textbf{Live fetch mode:} On each \texttt{/chat} API request,
+      the serving layer performs a direct asynchronous HTTP fetch of
+      current conditions using a single city-centre coordinate
+      ($10.7757^\circ$N, $106.7009^\circ$E), cached in-process for
+      15 minutes, and injects the result into the LLM system prompt.
   \end{enumerate}                                                                                                                                         
                                                                                                                                                           
   Weather data is \textbf{not} used as an input to either anomaly detection                                                                               
@@ -704,13 +733,31 @@
   z_r^{(t)} > \theta_r                                                                                                                                    
   \end{equation}  
 
-  where $\theta_r$ is a \textbf{dynamic, per-route threshold} derived                                                                                     
-  from the 99th percentile of the baseline distribution (default
-  $\theta_r = 2.0$). The threshold is \textbf{one-sided}: only positive                                                                                   
-  deviations are flagged, as a lower-than-baseline heavy ratio indicates                                                                                  
-  free-flowing traffic, which does not constitute an anomalous condition.                                                                                 
-  Algorithm~\ref{alg:zscore} formalises the full per-message classification                                                                               
-  procedure.                                                                                                                                              
+  where $\theta_r$ is a \textbf{dynamic, per-route threshold} resolved
+  at baseline load time according to the following three-case rule:
+
+  \begin{equation}
+  \label{eq:threshold_rule}
+  \theta_r =
+  \begin{cases}
+      2.0 & \text{if } p_{99,r} \text{ is unavailable (new route, no history)} \\
+      1.5 & \text{if } p_{99,r} < 1.5 \quad \text{(floor — prevents excessive sensitivity)} \\
+      p_{99,r} & \text{otherwise}
+  \end{cases}
+  \end{equation}
+
+  where $p_{99,r}$ is the 99th percentile of the historical Z-score
+  distribution for route $r$, computed by the \texttt{baseline\_learning}
+  Prefect task from the Gold layer. The floor of $1.5$ prevents routes
+  with historically low variance from generating continuous false-positive
+  alerts: without it, a route whose heavy\_ratio rarely fluctuates would
+  produce a very small $p_{99,r}$, making even minor deviations appear
+  anomalous. The fallback of $2.0$ applies when no baseline exists yet
+  (e.g.\ a newly added route). The threshold is \textbf{one-sided}:
+  only positive deviations are flagged, as a lower-than-baseline
+  heavy ratio indicates free-flowing traffic, which does not constitute
+  an anomalous condition. Algorithm~\ref{alg:zscore} formalises the
+  full per-message classification procedure.                                                                                                                                              
                                                                                                                                                           
   \begin{algorithm}[H]                                                                                                                                    
       \small      
@@ -736,12 +783,33 @@
       \end{algorithmic}                                                                                                                                   
   \end{algorithm}                                                                                                                                         
    
-  The result is stored in the \texttt{online\_route\_features} table                                                                                      
+  The result is stored in the \texttt{online\_route\_features} table
   under the column \texttt{duration\_\allowbreak zscore} --- a historical naming
-  artefact retained for schema continuity; the stored value is the                                                                                        
-  heavy\_ratio Z-score as defined in Equation~\ref{eq:zscore}.                                                                                            
-                                                                                                                                                          
-  % ------------------------------------------------------------                                                                                          
+  artefact retained for schema continuity; the stored value is the
+  heavy\_ratio Z-score as defined in Equation~\ref{eq:zscore}.
+
+  Figure~\ref{fig:zscore_timeseries} illustrates the Z-score detector
+  operating across all 20 monitored routes over a 24-hour window.
+  The majority of routes remain within $|z| < 2$, whilst two
+  routes (\textit{Urban Core~$\to$~Northern Industrial} and
+  \textit{Southern Port~$\to$~Western Peri-urban}) produce
+  pronounced spikes exceeding $z = 3$ during the 06:00 and
+  16:00--17:00 peak-hour windows — periods consistent with
+  Ho Chi Minh City's morning and evening commute patterns.
+
+  \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=\textwidth]{grafana-zscore-timeseries}
+      \caption{Per-route Z-score over a 24-hour observation window
+      (Grafana). Each line represents one directed inter-zone route.
+      Spikes above the dashed threshold $\theta_r$ trigger the Z-score
+      anomaly signal; the reference line shown at $\theta_r = 2.0$
+      corresponds to the fallback default applied when no per-route
+      baseline is available.}
+      \label{fig:zscore_timeseries}
+  \end{figure}
+
+  % ------------------------------------------------------------
   \subsection{Signal 2 — Isolation Forest Batch Detector}                                                                                                 
   \label{subsec:iforest}
   % ------------------------------------------------------------                                                                                          
@@ -828,7 +896,7 @@
 
   Given a training corpus $\mathcal{X} = \{\mathbf{x}_1, \ldots,
   \mathbf{x}_N\}$ drawn from the Gold layer, the Isolation Forest
-  produces a continuous anomaly score $s(\mathbf{x}) \in [-1, 1]$
+  produces a continuous anomaly score $s(\mathbf{x}) \in \mathbb{R}$
   via \texttt{decision\_function}. An observation is labelled
   anomalous if and only if $s(\mathbf{x}) < 0$: negative scores
   indicate that the observation lies in a sparse region of feature
@@ -857,14 +925,28 @@
           per Equation~\ref{eq:feature_vector}
           \State $\mathbf{s} \gets f_{\theta}.\texttt{decision\_function}
           (\mathbf{X}_{\text{feat}})$
-          \Comment{Returns $s_r \in [-1,\,1]$; lower = more anomalous}
+          \Comment{Returns $s_r \in \mathbb{R}$; $s_r < 0$ is anomalous}
           \State $\hat{y}_r \gets (s_r < 0)$
           \Comment{$\hat{y}_r = 1$ (anomaly), $\hat{y}_r = 0$ (normal)}
           \State \Return $(s_r,\; \hat{y}_r)$ for each $r \in \mathcal{R}$
       \end{algorithmic}
   \end{algorithm}                                                                                                                                         
                                                                                                                                                           
-  The trained model is serialised with \texttt{joblib} and registered                                                                                     
+  The contamination hyperparameter is fixed at $0.05$, following the
+  conventional prior of 5\% anomalous observations adopted in
+  unsupervised anomaly detection literature
+  \cite{liu2008isolation, chandola2009anomaly}.
+  Scikit-learn uses \texttt{contamination} to set the internal score
+  offset $\theta^*$ such that exactly $\lfloor \texttt{contamination}
+  \times N \rfloor$ training samples satisfy
+  $s(\mathbf{x}) < 0$; a lower value therefore raises the effective
+  decision threshold, flagging only the most extreme outliers and
+  biasing the detector towards precision over recall. This trade-off
+  is deliberate: the dual-signal fusion (Section~\ref{subsec:fusion})
+  already handles recall via the Z-score path, so the IForest
+  component is tuned for high-confidence, low-false-positive output.
+
+  The trained model is serialised with \texttt{joblib} and registered
   in \textbf{MLflow} \cite{mlflow_paper} under the model name
   \texttt{traffic-anomaly-iforest} with the \texttt{@champion}                                                                                            
   promotion alias. The serving layer loads the artifact via                                                                                               
@@ -875,15 +957,52 @@
   with a one-hour TTL and refreshed transparently without                                                                                                 
   restarting the serving container.                                                                                                                       
                                                                                                                                                           
-  IsolationForest scores are persisted every 15 seconds to a                                                                                              
-  dedicated \texttt{route\_iforest\_\allowbreak scores} PostgreSQL table via
-  the SSE \texttt{/events/traffic} endpoint. This explicit                                                                                                
-  persistence is necessary because IsolationForest is not                                                                                                 
-  computed per-message — without storage, IForest classifications                                                                                         
-  would be ephemeral per request and unavailable for historical                                                                                           
-  queries and RAG indexing.                                                                                                                               
-                                                                                                                                                          
-  % ------------------------------------------------------------                                                                                          
+  IsolationForest scores are persisted every 15 seconds to a
+  dedicated \texttt{route\_iforest\_\allowbreak scores} PostgreSQL table by
+  a dedicated background task (\texttt{\_iforest\_scorer\_loop}) that
+  runs independently of any client connection. This explicit
+  persistence is necessary because IsolationForest is not
+  computed per-message — without storage, IForest classifications
+  would be ephemeral per request and unavailable for historical
+  queries and RAG indexing.
+
+  Figure~\ref{fig:mlflow_experiments} shows the MLflow experiment
+  view after a full retraining cycle, with one registered run per
+  directed route. Each run records the hyperparameters, training
+  data time range, and evaluation metrics, and is promoted to the
+  \texttt{@champion} alias upon completion.
+
+  \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=\textwidth]{mlflow-experiments}
+      \caption{MLflow experiment view showing per-route
+      \texttt{IsolationForest} training runs for the
+      \texttt{traffic-anomaly-detection} experiment.
+      Each row corresponds to one directed inter-zone route model.}
+      \label{fig:mlflow_experiments}
+  \end{figure}
+
+  Figure~\ref{fig:mlflow_metrics} shows the model metrics logged
+  for a representative route
+  (\textit{Southern Coastal~$\to$~Western Peri-urban}).
+  The \texttt{iforest\_anomaly\_rate} of $0.05$ confirms that the
+  contamination prior is honoured exactly by the decision threshold.
+  The \texttt{model\_agreement} of $0.98$ indicates that the Z-score
+  and IForest signals agree on 98\% of observations, with divergence
+  concentrated in the edge cases each signal is designed to capture.
+
+  \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=\textwidth]{mlflow-route-metrics}
+      \caption{MLflow model metrics for route
+      \textit{Southern Coastal~$\to$~Western Peri-urban}.
+      Key indicators: \texttt{iforest\_anomaly\_rate}~$= 0.05$
+      (matches contamination prior), \texttt{model\_agreement}~$= 0.98$,
+      and \texttt{total\_samples}~$= 1{,}615$.}
+      \label{fig:mlflow_metrics}
+  \end{figure}
+
+  % ------------------------------------------------------------
   \subsection{Dual-Signal Fusion}
   \label{subsec:fusion}                                                                                                                                   
   % ------------------------------------------------------------
@@ -963,8 +1082,8 @@
   \texttt{anomaly\_events}   & 7-day anomaly windows   & PostgreSQL JOIN & 1 hour \\                                                                      
   \texttt{traffic\_patterns} & Gold (route, dow, hr) aggregates                                                                                           
                                 $\approx$3360 docs & Iceberg Gold & 6 hours \\                                                                            
-  \texttt{external\_context} & 7-day HCMC hourly weather                                                                                                  
-                                $\approx$192 docs  & Open-Meteo   & 1 hour \\                                                                             
+  \texttt{external\_context} & 7-day HCMC hourly weather
+                                $\approx$192 docs  & \texttt{gold.weather\_hourly} (Iceberg) & 1 hour \\                                                                             
   \hline                                                                                                                                                  
   \end{tabular}
   }%

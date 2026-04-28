@@ -4,20 +4,21 @@
 \contentsline {table}{\numberline {2.1}{\ignorespaces Comparison of data pipeline architectural patterns (\cmark ~yes, \xmark ~no). Iceberg features evaluated without additional table format layers.}}{4}{}%
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {3.1}{\ignorespaces Primary use cases and actors in UrbanPulse}}{7}{}%
-\contentsline {table}{\numberline {3.2}{\ignorespaces Cyclical vs.\ raw-integer encoding for selected hours.}}{15}{}%
-\contentsline {table}{\numberline {3.3}{\ignorespaces ChromaDB collections and their update schedules}}{17}{}%
-\contentsline {table}{\numberline {3.4}{\ignorespaces Key performance indicators and measurement boundaries}}{20}{}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Zone-specific Open-Meteo query coordinates.}}{11}{}%
+\contentsline {table}{\numberline {3.3}{\ignorespaces Cyclical vs.\ raw-integer encoding for selected hours.}}{17}{}%
+\contentsline {table}{\numberline {3.4}{\ignorespaces ChromaDB collections and their update schedules}}{20}{}%
+\contentsline {table}{\numberline {3.5}{\ignorespaces Key performance indicators and measurement boundaries}}{22}{}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces UrbanPulse technology stack and selection rationale.}}{21}{}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces Medallion data flow: transformation, ownership, and latency per layer.}}{23}{}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces UrbanPulse technology stack and selection rationale.}}{23}{}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Medallion data flow: transformation, ownership, and latency per layer.}}{25}{}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {5.1}{\ignorespaces Serving API endpoint summary.}}{29}{}%
+\contentsline {table}{\numberline {5.1}{\ignorespaces Serving API endpoint summary.}}{31}{}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {6.1}{\ignorespaces Dataset summary for the MLflow training run \texttt {per-route-train-20260419}.}}{36}{}%
-\contentsline {table}{\numberline {6.2}{\ignorespaces Per-route anomaly detection metrics (IsolationForest vs.\ Z-Score), MLflow run \texttt {per-route-train-20260419} (production server).}}{36}{}%
-\contentsline {table}{\numberline {6.3}{\ignorespaces Aggregate dual-signal metrics across 20 routes.}}{37}{}%
-\contentsline {table}{\numberline {6.4}{\ignorespaces Measured performance vs.\ non-functional requirements.}}{43}{}%
+\contentsline {table}{\numberline {6.1}{\ignorespaces Dataset summary for the MLflow training run \texttt {per-route-train-20260419}.}}{38}{}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces Per-route anomaly detection metrics (IsolationForest vs.\ Z-Score), MLflow run \texttt {per-route-train-20260419} (production server).}}{38}{}%
+\contentsline {table}{\numberline {6.3}{\ignorespaces Aggregate dual-signal metrics across 20 routes.}}{39}{}%
+\contentsline {table}{\numberline {6.4}{\ignorespaces Measured performance vs.\ non-functional requirements.}}{45}{}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {7.1}{\ignorespaces Comparison of UrbanPulse against reference architectures.}}{46}{}%
+\contentsline {table}{\numberline {7.1}{\ignorespaces Comparison of UrbanPulse against reference architectures.}}{48}{}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }

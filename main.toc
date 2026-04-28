@@ -22,87 +22,87 @@
 \contentsline {subsection}{\numberline {3.1.3}Use Case Description}{7}{}%
 \contentsline {subsection}{\numberline {3.1.4}Use Case Diagram}{7}{}%
 \contentsline {subsection}{\numberline {3.1.5}System Overview}{8}{}%
-\contentsline {section}{\numberline {3.2}Data Acquisition and Ingestion Strategy}{8}{}%
-\contentsline {subsection}{\numberline {3.2.1}Traffic Telemetry — VietMap Directions API}{8}{}%
+\contentsline {section}{\numberline {3.2}Data Acquisition and Ingestion Strategy}{10}{}%
+\contentsline {subsection}{\numberline {3.2.1}Traffic Telemetry — VietMap Directions API}{10}{}%
 \contentsline {subsection}{\numberline {3.2.2}Meteorological Context — Open-Meteo API}{10}{}%
-\contentsline {section}{\numberline {3.3}Stream Processing and Medallion Architecture}{10}{}%
+\contentsline {section}{\numberline {3.3}Stream Processing and Medallion Architecture}{11}{}%
 \contentsline {subsection}{\numberline {3.3.1}Bronze Layer — Durable Event Archival}{11}{}%
 \contentsline {subsection}{\numberline {3.3.2}Silver Layer — Incremental Micro-Batch Processing}{12}{}%
-\contentsline {subsection}{\numberline {3.3.3}Gold Layer — Hourly Aggregation}{12}{}%
-\contentsline {subsection}{\numberline {3.3.4}Online Feature Store — Real-Time Postgres Path}{12}{}%
-\contentsline {section}{\numberline {3.4}Dual-Signal Anomaly Detection Framework}{13}{}%
-\contentsline {subsection}{\numberline {3.4.1}Signal 1 — Z-Score Online Detector}{14}{}%
-\contentsline {subsubsection}{Mathematical Formulation}{14}{}%
-\contentsline {subsection}{\numberline {3.4.2}Signal 2 — Isolation Forest Batch Detector}{15}{}%
+\contentsline {subsection}{\numberline {3.3.3}Gold Layer — Hourly Aggregation}{13}{}%
+\contentsline {subsection}{\numberline {3.3.4}Online Feature Store — Real-Time Postgres Path}{13}{}%
+\contentsline {section}{\numberline {3.4}Dual-Signal Anomaly Detection Framework}{14}{}%
+\contentsline {subsection}{\numberline {3.4.1}Signal 1 — Z-Score Online Detector}{15}{}%
 \contentsline {subsubsection}{Mathematical Formulation}{15}{}%
-\contentsline {subsection}{\numberline {3.4.3}Dual-Signal Fusion}{16}{}%
-\contentsline {section}{\numberline {3.5}Knowledge-Enriched Inference via RAG}{17}{}%
-\contentsline {subsection}{\numberline {3.5.1}Vector Store Architecture}{17}{}%
-\contentsline {subsection}{\numberline {3.5.2}Retrieval Strategy and Prompt Construction}{17}{}%
-\contentsline {subsubsection}{Retrieval Procedure}{17}{}%
-\contentsline {subsection}{\numberline {3.5.3}Feedback Loop and Fine-Tuning Data Collection}{18}{}%
-\contentsline {section}{\numberline {3.6}Evaluation Framework}{18}{}%
-\contentsline {subsection}{\numberline {3.6.1}Experimental Protocol}{18}{}%
-\contentsline {subsection}{\numberline {3.6.2}Temporal Integrity}{19}{}%
-\contentsline {subsection}{\numberline {3.6.3}Reproducibility}{19}{}%
-\contentsline {subsection}{\numberline {3.6.4}Key Performance Indicators}{19}{}%
-\contentsline {chapter}{\numberline {4}PROTOTYPING}{21}{}%
-\contentsline {section}{\numberline {4.1}Technology Stack Selection}{21}{}%
-\contentsline {subsection}{\numberline {4.1.1}Message Broker: Redpanda over Apache Kafka}{21}{}%
-\contentsline {subsection}{\numberline {4.1.2}Storage: Iceberg + Nessie + MinIO}{21}{}%
-\contentsline {subsection}{\numberline {4.1.3}LLM: Ollama with Qwen2.5:3b}{22}{}%
-\contentsline {section}{\numberline {4.2}Service Topology Design}{22}{}%
-\contentsline {section}{\numberline {4.3}Data Schema Design}{22}{}%
-\contentsline {subsection}{\numberline {4.3.1}Kafka Message Schema}{22}{}%
-\contentsline {subsection}{\numberline {4.3.2}Iceberg Table Schemas}{23}{}%
-\contentsline {subsection}{\numberline {4.3.3}PostgreSQL Online Store}{23}{}%
-\contentsline {section}{\numberline {4.4}End-to-End Data Flow Through the Medallion Layers}{23}{}%
-\contentsline {subsection}{\numberline {4.4.1}Data Versioning with Nessie and Iceberg}{24}{}%
-\contentsline {section}{\numberline {4.5}Infrastructure Prototyping}{24}{}%
-\contentsline {chapter}{\numberline {5}IMPLEMENTATION}{25}{}%
-\contentsline {section}{\numberline {5.1}Ingestion Service}{25}{}%
-\contentsline {subsection}{\numberline {5.1.1}VietMap API Integration}{25}{}%
-\contentsline {subsection}{\numberline {5.1.2}Concurrent Route Polling}{25}{}%
-\contentsline {section}{\numberline {5.2}Streaming Service}{26}{}%
-\contentsline {section}{\numberline {5.3}Online Service}{26}{}%
-\contentsline {subsection}{\numberline {5.3.1}Welford Accumulator}{26}{}%
-\contentsline {subsection}{\numberline {5.3.2}Z-Score Anomaly Signal}{27}{}%
-\contentsline {subsection}{\numberline {5.3.3}Crash Recovery}{27}{}%
-\contentsline {section}{\numberline {5.4}Batch Pipeline}{27}{}%
-\contentsline {subsection}{\numberline {5.4.1}Bronze-to-Silver Promotion}{27}{}%
-\contentsline {subsection}{\numberline {5.4.2}Silver-to-Gold Aggregation}{28}{}%
-\contentsline {subsection}{\numberline {5.4.3}Baseline Learning}{28}{}%
-\contentsline {subsection}{\numberline {5.4.4}Anomaly Alerter}{28}{}%
-\contentsline {section}{\numberline {5.5}ML Service}{28}{}%
-\contentsline {subsection}{\numberline {5.5.1}Feature Engineering}{29}{}%
-\contentsline {subsection}{\numberline {5.5.2}IsolationForest Configuration}{29}{}%
-\contentsline {section}{\numberline {5.6}Serving Layer}{29}{}%
-\contentsline {subsection}{\numberline {5.6.1}Endpoint Overview}{29}{}%
-\contentsline {subsection}{\numberline {5.6.2}SSE Streaming Architecture}{30}{}%
-\contentsline {subsection}{\numberline {5.6.3}RAG-Enriched Inference}{30}{}%
-\contentsline {subsection}{\numberline {5.6.4}Dual-Signal Fusion in Serving}{31}{}%
-\contentsline {subsection}{\numberline {5.6.5}Frontend Dashboard}{31}{}%
-\contentsline {chapter}{\numberline {6}RESULT}{35}{}%
-\contentsline {section}{\numberline {6.1}Experimental Setup}{35}{}%
-\contentsline {subsection}{\numberline {6.1.1}Dataset}{35}{}%
-\contentsline {subsection}{\numberline {6.1.2}Evaluation Approach}{35}{}%
-\contentsline {section}{\numberline {6.2}Dual-Signal Detection Results}{36}{}%
-\contentsline {subsection}{\numberline {6.2.1}Per-Route Metrics}{36}{}%
-\contentsline {subsection}{\numberline {6.2.2}Aggregate Findings}{37}{}%
-\contentsline {subsection}{\numberline {6.2.3}Production Anomaly Distribution}{37}{}%
-\contentsline {subsection}{\numberline {6.2.4}Interpretation}{39}{}%
-\contentsline {section}{\numberline {6.3}System Performance}{40}{}%
-\contentsline {subsection}{\numberline {6.3.1}Grafana Observability Dashboards}{40}{}%
-\contentsline {subsection}{\numberline {6.3.2}End-to-End Ingestion Latency}{40}{}%
-\contentsline {subsection}{\numberline {6.3.3}Batch Pipeline Throughput}{40}{}%
-\contentsline {subsection}{\numberline {6.3.4}SSE Delivery Latency}{42}{}%
-\contentsline {subsection}{\numberline {6.3.5}LLM Inference Latency}{42}{}%
-\contentsline {subsection}{\numberline {6.3.6}Summary of Performance Against Requirements}{42}{}%
-\contentsline {chapter}{\numberline {7}DISCUSSION}{44}{}%
-\contentsline {section}{\numberline {7.1}Analysis of Results}{44}{}%
-\contentsline {section}{\numberline {7.2}Strengths}{44}{}%
-\contentsline {section}{\numberline {7.3}Limitations}{45}{}%
-\contentsline {section}{\numberline {7.4}Comparison with Related Approaches}{45}{}%
-\contentsline {section}{\numberline {7.5}Future Work}{46}{}%
-\contentsline {chapter}{\numberline {8}CONCLUSION}{47}{}%
-\contentsline {chapter}{\numberline {A}LISTINGS}{52}{}%
+\contentsline {subsection}{\numberline {3.4.2}Signal 2 — Isolation Forest Batch Detector}{16}{}%
+\contentsline {subsubsection}{Mathematical Formulation}{16}{}%
+\contentsline {subsection}{\numberline {3.4.3}Dual-Signal Fusion}{18}{}%
+\contentsline {section}{\numberline {3.5}Knowledge-Enriched Inference via RAG}{19}{}%
+\contentsline {subsection}{\numberline {3.5.1}Vector Store Architecture}{20}{}%
+\contentsline {subsection}{\numberline {3.5.2}Retrieval Strategy and Prompt Construction}{20}{}%
+\contentsline {subsubsection}{Retrieval Procedure}{20}{}%
+\contentsline {subsection}{\numberline {3.5.3}Feedback Loop and Fine-Tuning Data Collection}{21}{}%
+\contentsline {section}{\numberline {3.6}Evaluation Framework}{21}{}%
+\contentsline {subsection}{\numberline {3.6.1}Experimental Protocol}{21}{}%
+\contentsline {subsection}{\numberline {3.6.2}Temporal Integrity}{22}{}%
+\contentsline {subsection}{\numberline {3.6.3}Reproducibility}{22}{}%
+\contentsline {subsection}{\numberline {3.6.4}Key Performance Indicators}{22}{}%
+\contentsline {chapter}{\numberline {4}PROTOTYPING}{23}{}%
+\contentsline {section}{\numberline {4.1}Technology Stack Selection}{23}{}%
+\contentsline {subsection}{\numberline {4.1.1}Message Broker: Redpanda over Apache Kafka}{23}{}%
+\contentsline {subsection}{\numberline {4.1.2}Storage: Iceberg + Nessie + MinIO}{23}{}%
+\contentsline {subsection}{\numberline {4.1.3}LLM: Ollama with Qwen2.5:3b}{24}{}%
+\contentsline {section}{\numberline {4.2}Service Topology Design}{24}{}%
+\contentsline {section}{\numberline {4.3}Data Schema Design}{24}{}%
+\contentsline {subsection}{\numberline {4.3.1}Kafka Message Schema}{24}{}%
+\contentsline {subsection}{\numberline {4.3.2}Iceberg Table Schemas}{25}{}%
+\contentsline {subsection}{\numberline {4.3.3}PostgreSQL Online Store}{25}{}%
+\contentsline {section}{\numberline {4.4}End-to-End Data Flow Through the Medallion Layers}{25}{}%
+\contentsline {subsection}{\numberline {4.4.1}Data Versioning with Nessie and Iceberg}{26}{}%
+\contentsline {section}{\numberline {4.5}Infrastructure Prototyping}{26}{}%
+\contentsline {chapter}{\numberline {5}IMPLEMENTATION}{27}{}%
+\contentsline {section}{\numberline {5.1}Ingestion Service}{27}{}%
+\contentsline {subsection}{\numberline {5.1.1}VietMap API Integration}{27}{}%
+\contentsline {subsection}{\numberline {5.1.2}Concurrent Route Polling}{27}{}%
+\contentsline {section}{\numberline {5.2}Streaming Service}{28}{}%
+\contentsline {section}{\numberline {5.3}Online Service}{28}{}%
+\contentsline {subsection}{\numberline {5.3.1}Welford Accumulator}{28}{}%
+\contentsline {subsection}{\numberline {5.3.2}Z-Score Anomaly Signal}{29}{}%
+\contentsline {subsection}{\numberline {5.3.3}Crash Recovery}{29}{}%
+\contentsline {section}{\numberline {5.4}Batch Pipeline}{29}{}%
+\contentsline {subsection}{\numberline {5.4.1}Bronze-to-Silver Promotion}{29}{}%
+\contentsline {subsection}{\numberline {5.4.2}Silver-to-Gold Aggregation}{30}{}%
+\contentsline {subsection}{\numberline {5.4.3}Baseline Learning}{30}{}%
+\contentsline {subsection}{\numberline {5.4.4}Anomaly Alerter}{30}{}%
+\contentsline {section}{\numberline {5.5}ML Service}{30}{}%
+\contentsline {subsection}{\numberline {5.5.1}Feature Engineering}{31}{}%
+\contentsline {subsection}{\numberline {5.5.2}IsolationForest Configuration}{31}{}%
+\contentsline {section}{\numberline {5.6}Serving Layer}{31}{}%
+\contentsline {subsection}{\numberline {5.6.1}Endpoint Overview}{31}{}%
+\contentsline {subsection}{\numberline {5.6.2}SSE Streaming Architecture}{32}{}%
+\contentsline {subsection}{\numberline {5.6.3}RAG-Enriched Inference}{32}{}%
+\contentsline {subsection}{\numberline {5.6.4}Dual-Signal Fusion in Serving}{33}{}%
+\contentsline {subsection}{\numberline {5.6.5}Frontend Dashboard}{33}{}%
+\contentsline {chapter}{\numberline {6}RESULT}{37}{}%
+\contentsline {section}{\numberline {6.1}Experimental Setup}{37}{}%
+\contentsline {subsection}{\numberline {6.1.1}Dataset}{37}{}%
+\contentsline {subsection}{\numberline {6.1.2}Evaluation Approach}{37}{}%
+\contentsline {section}{\numberline {6.2}Dual-Signal Detection Results}{38}{}%
+\contentsline {subsection}{\numberline {6.2.1}Per-Route Metrics}{38}{}%
+\contentsline {subsection}{\numberline {6.2.2}Aggregate Findings}{39}{}%
+\contentsline {subsection}{\numberline {6.2.3}Production Anomaly Distribution}{39}{}%
+\contentsline {subsection}{\numberline {6.2.4}Interpretation}{41}{}%
+\contentsline {section}{\numberline {6.3}System Performance}{42}{}%
+\contentsline {subsection}{\numberline {6.3.1}Grafana Observability Dashboards}{42}{}%
+\contentsline {subsection}{\numberline {6.3.2}End-to-End Ingestion Latency}{42}{}%
+\contentsline {subsection}{\numberline {6.3.3}Batch Pipeline Throughput}{42}{}%
+\contentsline {subsection}{\numberline {6.3.4}SSE Delivery Latency}{44}{}%
+\contentsline {subsection}{\numberline {6.3.5}LLM Inference Latency}{44}{}%
+\contentsline {subsection}{\numberline {6.3.6}Summary of Performance Against Requirements}{44}{}%
+\contentsline {chapter}{\numberline {7}DISCUSSION}{46}{}%
+\contentsline {section}{\numberline {7.1}Analysis of Results}{46}{}%
+\contentsline {section}{\numberline {7.2}Strengths}{46}{}%
+\contentsline {section}{\numberline {7.3}Limitations}{47}{}%
+\contentsline {section}{\numberline {7.4}Comparison with Related Approaches}{47}{}%
+\contentsline {section}{\numberline {7.5}Future Work}{48}{}%
+\contentsline {chapter}{\numberline {8}CONCLUSION}{49}{}%
+\contentsline {chapter}{\numberline {A}LISTINGS}{54}{}%
