@@ -48,10 +48,8 @@
 \@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces Comparison of data pipeline architectural patterns (\cmark ~yes, \xmark ~no). Iceberg features evaluated without additional table format layers.}}{4}{}\protected@file@percent }
 \newlabel{tab:1}{{2.1}{4}{Event-Driven Hybrid Stream-Batch Architecture}{table.2.1}{}}
 \citation{isolation-forest}
-\citation{cyclical_encoding}
 \citation{isolation-forest}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Anomaly Detection Logic}{5}{}\protected@file@percent }
-\citation{hcmc_transport_report}
 \citation{batch_latency_survey}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}METHODOLOGY}{6}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
@@ -130,7 +128,6 @@
 \@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces $(\,z_r,\tmspace  +\thickmuskip {.2777em} \texttt  {is\_anomaly}\,) \gets \texttt  {ZScoreClassify}(r,\tmspace  +\thickmuskip {.2777em} \bar  {h}_r^{(t)},\tmspace  +\thickmuskip {.2777em} \mathcal  {B})$}}{15}{}\protected@file@percent }
 \newlabel{alg:zscore}{{2}{15}{Mathematical Formulation}{algorithm.2}{}}
 \citation{liu2008isolation}
-\citation{cyclical_encoding}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Per-route Z-score over a 24-hour observation window (Grafana). Each line represents one directed inter-zone route. Spikes above the dashed threshold $\theta _r$ trigger the Z-score anomaly signal; the reference line shown at $\theta _r = 2.0$ corresponds to the fallback default applied when no per-route baseline is available.}}{16}{}\protected@file@percent }
 \newlabel{fig:zscore_timeseries}{{3.4}{16}{Mathematical Formulation}{figure.3.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Signal 2 — Isolation Forest Batch Detector}{16}{}\protected@file@percent }
@@ -251,7 +248,6 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.4.4}Anomaly Alerter}{30}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {5.5}ML Service}{30}{}\protected@file@percent }
 \newlabel{sec:impl-ml}{{5.5}{30}{ML Service}{section.5.5}{}}
-\citation{cyclical_encoding}
 \citation{liu2008isolation}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}Feature Engineering}{31}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}IsolationForest Configuration}{31}{}\protected@file@percent }
@@ -323,7 +319,6 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3.4}SSE Delivery Latency}{44}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3.5}LLM Inference Latency}{44}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3.6}Summary of Performance Against Requirements}{44}{}\protected@file@percent }
-\citation{batch_latency_survey}
 \@writefile{lot}{\contentsline {table}{\numberline {6.4}{\ignorespaces Measured performance vs.\ non-functional requirements.}}{45}{}\protected@file@percent }
 \newlabel{tab:perf-summary}{{6.4}{45}{Summary of Performance Against Requirements}{table.6.4}{}}
 \citation{iceberg_paper}
@@ -336,7 +331,6 @@
 \newlabel{sec:discussion-analysis}{{7.1}{46}{Analysis of Results}{section.7.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {7.2}Strengths}{46}{}\protected@file@percent }
 \newlabel{sec:strengths}{{7.2}{46}{Strengths}{section.7.2}{}}
-\citation{hcmc_transport_report}
 \citation{chandola2009anomaly}
 \@writefile{toc}{\contentsline {section}{\numberline {7.3}Limitations}{47}{}\protected@file@percent }
 \newlabel{sec:limitations}{{7.3}{47}{Limitations}{section.7.3}{}}
@@ -364,31 +358,29 @@
 \bibcite{prefect_docs}{10}
 \bibcite{sse_spec}{11}
 \bibcite{nessie-catalog}{12}
-\bibcite{cyclical_encoding}{13}
-\bibcite{hcmc_transport_report}{14}
-\bibcite{batch_latency_survey}{15}
-\bibcite{redpanda_whitepaper}{16}
-\bibcite{qwen25_report}{17}
-\bibcite{vietmap_api}{18}
-\bibcite{pydantic_docs}{19}
-\bibcite{openmeteo_api}{20}
-\bibcite{parquet_format}{21}
-\bibcite{small_file_problem}{22}
-\bibcite{enterprise_integration_patterns}{23}
-\bibcite{flink_event_time}{24}
-\bibcite{duckdb_paper}{25}
-\bibcite{iceberg_paper}{26}
-\bibcite{nessie_docs}{27}
-\bibcite{flink_paper}{28}
-\bibcite{pyiceberg_docs}{29}
-\bibcite{liu2008isolation}{30}
-\bibcite{mlflow_paper}{31}
-\bibcite{mlflow_docs}{32}
-\bibcite{lewis2020rag}{33}
-\bibcite{chromadb_docs}{34}
-\bibcite{nomic_embed}{35}
-\bibcite{ollama_docs}{36}
-\bibcite{rlhf_paper}{37}
+\bibcite{batch_latency_survey}{13}
+\bibcite{redpanda_whitepaper}{14}
+\bibcite{qwen25_report}{15}
+\bibcite{vietmap_api}{16}
+\bibcite{pydantic_docs}{17}
+\bibcite{openmeteo_api}{18}
+\bibcite{parquet_format}{19}
+\bibcite{small_file_problem}{20}
+\bibcite{enterprise_integration_patterns}{21}
+\bibcite{flink_event_time}{22}
+\bibcite{duckdb_paper}{23}
+\bibcite{iceberg_paper}{24}
+\bibcite{nessie_docs}{25}
+\bibcite{flink_paper}{26}
+\bibcite{pyiceberg_docs}{27}
+\bibcite{liu2008isolation}{28}
+\bibcite{mlflow_paper}{29}
+\bibcite{mlflow_docs}{30}
+\bibcite{lewis2020rag}{31}
+\bibcite{chromadb_docs}{32}
+\bibcite{nomic_embed}{33}
+\bibcite{ollama_docs}{34}
+\bibcite{rlhf_paper}{35}
 \@writefile{toc}{\contentsline {chapter}{\numberline {A}LISTINGS}{54}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}

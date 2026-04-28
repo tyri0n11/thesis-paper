@@ -408,10 +408,7 @@ NFR-5 Observability & Grafana/Loki dashboards                & Centralised & 3 d
 particularly noteworthy: they represent the end-to-end time from VietMap API
 poll to a queryable feature in PostgreSQL, inclusive of Kafka publish,
 consumer deserialization, Welford update, and UPSERT confirmation.
-Traditional batch-based urban monitoring systems report equivalent latencies
-in the range of 5--30 minutes \cite{batch_latency_survey}, making
-UrbanPulse approximately \textbf{1,000$\times$ faster} at the feature
-materialisation step. The mean dual-signal model agreement of
+The mean dual-signal model agreement of
 \textbf{93.8\%} across 32,302 observations provides strong evidence that
 the two detectors converge on consistent labels, whilst the low mean Jaccard
 of 16.3\% confirms that they remain complementary rather than redundant.

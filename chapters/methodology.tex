@@ -22,10 +22,9 @@
    
   The requirements of UrbanPulse are derived from the operational needs of                                                                                
   municipal traffic management in a large Southeast Asian metropolitan area.
-  Ho Chi Minh City presents a particularly demanding environment: a road                                                                                  
-  network of over 4,000 kilometres, a registered vehicle population exceeding                                                                             
-  8 million units, and peak-hour congestion patterns that shift substantially                                                                             
-  across zones, time of day, and meteorological conditions \cite{hcmc_transport_report}.                                                                  
+  Ho Chi Minh City presents a particularly demanding environment, with
+  peak-hour congestion patterns that shift substantially across zones,
+  time of day, and meteorological conditions.                                                                  
   Existing monitoring approaches rely on periodic batch reporting, introducing                                                                            
   temporal gaps of up to several hours between event occurrence and situational                                                                           
   awareness \cite{batch_latency_survey}. UrbanPulse is designed to close this                                                                             
@@ -847,7 +846,7 @@
   (Sunday = 0).
                                                                                                                                                           
   The \textbf{cyclical encoding} of \texttt{hr} and \texttt{dow}
-  as sine-cosine pairs \cite{cyclical_encoding} projects circular
+  as sine-cosine pairs projects circular
   time dimensions onto the unit circle, ensuring that 23:00 and 00:00
   are geometrically adjacent in feature space, and that Sunday and
   Monday are adjacent across the week boundary. Encoding time as a

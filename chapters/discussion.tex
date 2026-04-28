@@ -40,8 +40,9 @@ without observable discontinuities in the per-route rolling statistics.
 
 \textbf{Streaming-first, low-latency design.}
 The p95 end-to-end ingestion lag below 20~seconds is a significant improvement
-over batch-based systems that typically report latencies in the range of
-5--30~minutes~\cite{batch_latency_survey}. The Server-Sent Events delivery
+over batch-based systems, where feature materialisation latency is governed by
+the periodic aggregation schedule rather than event arrival
+time~\cite{batch_latency_survey}. The Server-Sent Events delivery
 model eliminates polling overhead and provides a push-based update channel
 that scales linearly with the number of frontend clients.
 
@@ -78,8 +79,7 @@ The most significant limitation is the lack of labelled anomaly events. The
 proxy metrics (model agreement, Jaccard similarity) measure internal
 consistency between the two detectors rather than true recall against real
 traffic incidents. A dataset of confirmed incidents from the Ho Chi Minh City
-Department of Transport~\cite{hcmc_transport_report} would enable computation
-of true precision and recall.
+Department of Transport would enable computation of true precision and recall.
 
 \textbf{VietMap API scope restriction.}
 Traffic data is sourced exclusively from the VietMap Directions API, which
@@ -134,7 +134,7 @@ patterns discussed in the Related Work chapter.
 \textbf{Lambda Arch.} &
 \textbf{Kappa Arch.} \\
 \hline
-Ingestion latency (p95)   & $<$20 s & 5--30 min & $<$1 min & $<$1 min \\
+Ingestion latency (p95)   & $<$20 s & schedule-bounded & $<$1 min & $<$1 min \\
 Schema evolution           & \cmark (Iceberg) & \xmark & \xmark & Partial \\
 Time-travel queries        & \cmark (Nessie)  & \cmark & \xmark & \xmark \\
 Dual-signal detection      & \cmark & \xmark & \xmark & \xmark \\

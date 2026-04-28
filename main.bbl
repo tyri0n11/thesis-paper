@@ -44,17 +44,8 @@ B.~P. Welford, ``{Note on a Method for Calculating Corrected Sums of Squares and
 {Project Nessie}, ``{Project Nessie: Transactional Catalog for Data Lakes with Git-like semantics}.'' \url{https://projectnessie.org/}, 2025.
 \newblock Accessed: 2025-11-01.
 
-\bibitem{cyclical_encoding}
-D.~S. Phatak and I.~Koren, ``{Cyclic Encodings for Temporal Features in Machine Learning}.'' \url{https://towardsdatascience.com/cyclical-features-encoding-its-actually-norm-unit-circle-c6dc1b92b3d0}, 2021.
-\newblock Accessed: 2025-10-01.
-
-\bibitem{hcmc_transport_report}
-{Ho Chi Minh City Department of Transport}, ``{Annual Transport Infrastructure Report: Ho Chi Minh City}.'' \url{https://www.sogtvt.hochiminhcity.gov.vn/}, 2024.
-\newblock Accessed: 2025-11-01.
-
 \bibitem{batch_latency_survey}
-A.~Katsifodimos and S.~Schelter, ``{Apache Flink: Stream and Batch Processing in a Single Engine}.'' \url{https://flink.apache.org/}, 2016.
-\newblock Survey on batch vs streaming latency trade-offs.
+W.~Li, M.~Batty, and M.~F. Goodchild, ``Real-time {GIS} for smart cities,'' {\em International Journal of Geographical Information Science}, vol.~34, no.~2, pp.~311--324, 2020.
 
 \bibitem{redpanda_whitepaper}
 {Redpanda Data}, ``{Redpanda: The Streaming Data Platform Built for Developers}.'' \url{https://redpanda.com/resources/}, 2024.
@@ -115,8 +106,7 @@ P.~Carbone, A.~Katsifodimos, S.~Ewen, V.~Markl, S.~Haridi, and K.~Tzoumas, ``{Ap
 F.~T. Liu, K.~M. Ting, and Z.-H. Zhou, ``{Isolation Forest},'' in {\em 2008 Eighth IEEE International Conference on Data Mining}, pp.~413--422, 2008.
 
 \bibitem{mlflow_paper}
-M.~Zaharia, A.~Chen, A.~Davidson, A.~Ghodsi, S.~A. Hong, A.~Konwinski, S.~Murching, T.~Nykodym, P.~Ogilvie, M.~Parkhe, F.~Xie, and C.~Zumar, ``{Accelerating the Machine Learning Lifecycle with MLflow}.'' \url{https://mlflow.org/}, 2018.
-\newblock IEEE Data Engineering Bulletin, 41(4).
+M.~Zaharia, A.~Chen, A.~Davidson, A.~Ghodsi, S.~A. Hong, A.~Konwinski, S.~Murching, T.~Nykodym, P.~Ogilvie, M.~Parkhe, F.~Xie, and C.~Zumar, ``{Accelerating the Machine Learning Lifecycle with MLflow},'' in {\em Proceedings of the 8th Biennial Conference on Innovative Data Systems Research (CIDR)}, 2018.
 
 \bibitem{mlflow_docs}
 {Databricks}, ``{MLflow Documentation}.'' \url{https://mlflow.org/docs/latest/index.html}, 2025.

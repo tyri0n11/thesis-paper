@@ -45,7 +45,7 @@ UrbanPulse utilizes a dual-signal framework to identify traffic incidents. The s
     Z = \frac{r - \mu}{\sigma}
 \end{equation}
 
-Simultaneously, an \textbf{Isolation Forest}~\cite{isolation-forest} model operates on a \textbf{7-dimensional feature vector} — four cyclical temporal encodings ($\sin$/$\cos$ of hour of day and day of week~\cite{cyclical_encoding}) combined with three traffic ratio features — to identify non-recurrent patterns that simple statistics might miss. The model is formalized as:
+Simultaneously, an \textbf{Isolation Forest}~\cite{isolation-forest} model operates on a \textbf{7-dimensional feature vector} — four cyclical temporal encodings ($\sin$/$\cos$ of hour of day and day of week) combined with three traffic ratio features — to identify non-recurrent patterns that simple statistics might miss. The model is formalized as:
 
 \begin{align}
 	f &: \mathbb{R}^7 \rightarrow \mathbb{R} \\
