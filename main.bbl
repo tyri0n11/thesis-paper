@@ -44,6 +44,10 @@ B.~P. Welford, ``{Note on a Method for Calculating Corrected Sums of Squares and
 {Project Nessie}, ``{Project Nessie: Transactional Catalog for Data Lakes with Git-like semantics}.'' \url{https://projectnessie.org/}, 2025.
 \newblock Accessed: 2025-11-01.
 
+\bibitem{hcmc_transport_report}
+{ScienceDirect}, ``{Ho Chi Minh City --- ScienceDirect Topics}.'' \url{https://www.sciencedirect.com/topics/earth-and-planetary-sciences/ho-chi-minh-city}, 2025.
+\newblock Accessed: 2026-04-28.
+
 \bibitem{batch_latency_survey}
 W.~Li, M.~Batty, and M.~F. Goodchild, ``Real-time {GIS} for smart cities,'' {\em International Journal of Geographical Information Science}, vol.~34, no.~2, pp.~311--324, 2020.
 
@@ -129,5 +133,8 @@ P.~Lewis, E.~Perez, A.~Piktus, F.~Petroni, V.~Karpukhin, N.~Goyal, H.~K{\"u}ttle
 
 \bibitem{rlhf_paper}
 L.~Ouyang, J.~Wu, X.~Jiang, D.~Almeida, C.~Wainwright, P.~Mishkin, C.~Zhang, S.~Agarwal, K.~Slama, A.~Ray, J.~Schulman, J.~Hilton, F.~Kelton, L.~Miller, M.~Simens, A.~Askell, P.~Welinder, P.~Christiano, J.~Leike, and R.~Lowe, ``{Training Language Models to Follow Instructions with Human Feedback},'' in {\em Advances in Neural Information Processing Systems}, vol.~35, 2022.
+
+\bibitem{tan2011hst}
+S.~C. Tan, K.~M. Ting, and T.~F. Liu, ``{Fast Anomaly Detection for Streaming Data},'' in {\em Proceedings of the Twenty-Second International Joint Conference on Artificial Intelligence (IJCAI)}, pp.~1511--1516, 2011.
 
 \end{thebibliography}

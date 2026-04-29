@@ -9,8 +9,11 @@ delivers results to the frontend.
 % ============================================================
 
 The \textbf{Ingestion Service} is a long-running Python process that polls the
-\textbf{VietMap Directions API} every \textbf{5 minutes} for 20 predefined
-inter-zone routes across Ho Chi Minh City. Each route is defined by an origin
+\textbf{VietMap Directions API} for 20 predefined inter-zone routes across
+Ho Chi Minh City. The service initiates a new crawl cycle every \textbf{30 seconds}
+after the previous cycle completes, polling all routes sequentially with a
+10-second inter-request delay; each route therefore receives approximately one
+observation every four to five minutes. Each route is defined by an origin
 and destination anchor point (WGS-84 latitude/longitude pair) together with
 a human-readable zone label.
 
@@ -43,26 +46,25 @@ JSON and published to the Redpanda topic \texttt{traffic-route-bronze} with a
 Kafka header \texttt{ingest\_ts} (Unix milliseconds) attached for downstream
 lag measurement.
 
-Figure~\ref{fig:redpanda-topic} shows the Redpanda Console confirming
-\textbf{67,428 messages} accumulated in the \texttt{traffic-route-bronze}
-topic (34.3~MiB) across the 40-day deployment, corresponding to the expected
-$20 \text{ routes} \times 288 \text{ polls/day} \times 40 \text{ days} =
-230{,}400$ raw messages before compaction.
-
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{redpanda-topic.png}
   \caption{Redpanda Console: \texttt{traffic-route-bronze} topic with 67,428
            messages (34.3~MiB) confirming continuous ingestion over the
-           40-day observation window.}
+           54-day observation period.}
   \label{fig:redpanda-topic}
 \end{figure}
+
+\noindent The Redpanda Console confirms \textbf{67,428 messages} (34.3~MiB)
+accumulated in the \texttt{traffic-route-bronze} topic across the retained
+window of the 54-day deployment
+(Figure~\ref{fig:redpanda-topic}).
 
 \subsection{Concurrent Route Polling}
 
 The \texttt{orchestrator.py} module spawns one coroutine per route using
 \texttt{asyncio.gather}, so all 20 API calls proceed concurrently within the
-5-minute window. Failed requests raise \texttt{HTTPError} and are logged
+30-second polling window. Failed requests raise \texttt{HTTPError} and are logged
 without crashing the process; the next polling cycle attempts the route again
 automatically.
 
@@ -72,8 +74,8 @@ automatically.
 % ============================================================
 
 The \textbf{Streaming Service} subscribes to \texttt{traffic\allowbreak-route\allowbreak-bronze}
-(consumer group \texttt{streaming\allowbreak-group}) and writes each message as a
-Parquet file to MinIO under the time-partitioned path:
+(consumer group \texttt{streaming\allowbreak-group}) and writes buffered records as
+Parquet files to MinIO under the time-partitioned path:
 
 \begin{center}
 \ttfamily\small
@@ -81,12 +83,14 @@ s3://urban-pulse/bronze/traffic-route-bronze/\\
 \hspace*{2em}year=\{Y\}/month=\{M\}/day=\{D\}/hour=\{H\}/\{uuid\}.parquet
 \end{center}
 
-The processor (\texttt{processors/traffic.py}) deserialises the JSON payload
-into a \texttt{TrafficRouteObservation}, converts it to a single-row
-\texttt{PyArrow} RecordBatch, and flushes it to MinIO via
-\texttt{sinks/minio.py}. This write-once-per-message approach (micro-file
-pattern) intentionally creates many small Parquet files; the Batch Service
-later compacts them during the Bronze-to-Silver promotion step.
+The processor (\texttt{processors/traffic.py}) deserialises each JSON payload
+into a \texttt{TrafficRouteObservation} and appends it to an in-memory buffer.
+The buffer is flushed to MinIO as a multi-row \texttt{PyArrow} RecordBatch via
+\texttt{sinks/minio.py} using a \textbf{dual-trigger flush policy}: a flush
+occurs when the buffer reaches \textbf{500 records} or when \textbf{30 seconds}
+have elapsed since the last flush, whichever comes first. This policy bounds
+both the number of small files written to MinIO and the maximum duration for
+which ingested data remains unarchived in memory.
 
 % ============================================================
 \section{Online Service}
@@ -204,8 +208,6 @@ Figure~\ref{fig:batch-flows}.
 \label{fig:batch-flows}
 \end{figure}
 
-Figure~\ref{fig:prefect-deployments} shows the Prefect UI confirming all
-seven production deployments are active: \texttt{alert\allowbreak-check} and
 \texttt{traffic\allowbreak-microbatch} run every 5 minutes,
 \texttt{hourly\allowbreak-gold\allowbreak-run} runs hourly,
 \texttt{traffic\allowbreak-retrain} and \texttt{rag\allowbreak-index\allowbreak-rebuild}
@@ -395,13 +397,6 @@ base model: the LLM reasons over injected facts rather than memorising
 traffic patterns, ensuring that explanations remain accurate even as
 city traffic evolves week to week.
 
-Figure~\ref{fig:ai-explanation} shows a production anomaly explanation for
-\texttt{zone6\_southern\_coastal $\to$ zone5\_western\_periurban} rendered in
-Vietnamese. The Qwen2.5:3b model references specific road conditions and
-contextualises the anomaly with weather data retrieved from the Open-Meteo
-API, demonstrating the RAG pipeline's ability to produce operator-ready,
-language-specific explanations.
-
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.85\textwidth]{ai-explanation.png}
@@ -411,12 +406,10 @@ language-specific explanations.
   \label{fig:ai-explanation}
 \end{figure}
 
-Figure~\ref{fig:ai-chat} shows the conversational \texttt{/chat} SSE
-endpoint in action. The user asks about current traffic conditions in
-Vietnamese and receives a structured response listing congestion levels for
-multiple routes (e.g., Southern Port $\to$ Western 10.9\%, Southern Port
-$\to$ Eastern 7.9\%), all generated by the Qwen2.5:3b model over
-ChromaDB-retrieved context.
+\noindent For the \texttt{zone6\_southern\_coastal $\to$ zone5\_western\_periurban}
+route, the Qwen2.5:3b model generates operator-ready explanations in Vietnamese,
+referencing specific road conditions and weather data retrieved from the Open-Meteo
+API via the RAG pipeline (Figure~\ref{fig:ai-explanation}).
 
 \begin{figure}[htbp]
   \centering
@@ -427,13 +420,12 @@ ChromaDB-retrieved context.
   \label{fig:ai-chat}
 \end{figure}
 
-Figure~\ref{fig:ai-chat-en} demonstrates the same chat endpoint in English.
-The model surfaces live weather context alongside congestion data --- here
-reporting partly cloudy conditions at 26.8\textdegree C alongside the
-Southern Port $\to$ Western Periurban route at 10.9\% heavy ratio ---
-confirming that the RAG pipeline correctly retrieves and synthesises both
-the Open-Meteo weather feed and the PostgreSQL feature store in a single
-response regardless of query language.
+\noindent The conversational \texttt{/chat} SSE endpoint responds in the
+language of the query. A Vietnamese question about current traffic conditions
+receives a structured response listing congestion levels for multiple routes
+(e.g., Southern Port $\to$ Western 10.9\%, Southern Port $\to$ Eastern 7.9\%),
+generated by Qwen2.5:3b over ChromaDB-retrieved context
+(Figure~\ref{fig:ai-chat}).
 
 \begin{figure}[htbp]
   \centering
@@ -443,6 +435,14 @@ response regardless of query language.
            in a single natural-language response, demonstrating bilingual RAG capability.}
   \label{fig:ai-chat-en}
 \end{figure}
+
+\noindent The same endpoint in English surfaces live weather context alongside
+congestion data --- here reporting partly cloudy conditions at
+26.8\textdegree C alongside the Southern Port $\to$ Western Periurban route
+at 10.9\% heavy ratio --- confirming that the RAG pipeline correctly retrieves
+and synthesises both the Open-Meteo weather feed and the PostgreSQL feature
+store in a single response regardless of query language
+(Figure~\ref{fig:ai-chat-en}).
 
 \subsection{Dual-Signal Fusion in Serving}
 

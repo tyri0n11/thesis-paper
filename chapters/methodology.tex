@@ -22,9 +22,11 @@
    
   The requirements of UrbanPulse are derived from the operational needs of                                                                                
   municipal traffic management in a large Southeast Asian metropolitan area.
-  Ho Chi Minh City presents a particularly demanding environment, with
-  peak-hour congestion patterns that shift substantially across zones,
-  time of day, and meteorological conditions.                                                                  
+  Ho Chi Minh City presents a particularly demanding environment: a
+  metropolitan population of approximately 8~million, with motorbikes
+  serving up to 85\% of daily travel needs and peak-hour congestion
+  patterns that shift substantially across zones, time of day, and
+  meteorological conditions \cite{hcmc_transport_report}.                                                                  
   Existing monitoring approaches rely on periodic batch reporting, introducing                                                                            
   temporal gaps of up to several hours between event occurrence and situational                                                                           
   awareness \cite{batch_latency_survey}. UrbanPulse is designed to close this                                                                             
@@ -787,14 +789,13 @@
   artefact retained for schema continuity; the stored value is the
   heavy\_ratio Z-score as defined in Equation~\ref{eq:zscore}.
 
-  Figure~\ref{fig:zscore_timeseries} illustrates the Z-score detector
-  operating across all 20 monitored routes over a 24-hour window.
   The majority of routes remain within $|z| < 2$, whilst two
   routes (\textit{Urban Core~$\to$~Northern Industrial} and
   \textit{Southern Port~$\to$~Western Peri-urban}) produce
   pronounced spikes exceeding $z = 3$ during the 06:00 and
-  16:00--17:00 peak-hour windows — periods consistent with
-  Ho Chi Minh City's morning and evening commute patterns.
+  16:00--17:00 peak-hour windows --- periods consistent with
+  Ho Chi Minh City's morning and evening commute patterns
+  (Figure~\ref{fig:zscore_timeseries}).
 
   \begin{figure}[htbp]
       \centering
@@ -965,11 +966,10 @@
   would be ephemeral per request and unavailable for historical
   queries and RAG indexing.
 
-  Figure~\ref{fig:mlflow_experiments} shows the MLflow experiment
-  view after a full retraining cycle, with one registered run per
-  directed route. Each run records the hyperparameters, training
-  data time range, and evaluation metrics, and is promoted to the
-  \texttt{@champion} alias upon completion.
+  After a full retraining cycle, one run per directed route is registered
+  in MLflow, recording hyperparameters, training data time range, and
+  evaluation metrics before being promoted to the \texttt{@champion} alias
+  (Figure~\ref{fig:mlflow_experiments}).
 
   \begin{figure}[htbp]
       \centering
@@ -981,14 +981,13 @@
       \label{fig:mlflow_experiments}
   \end{figure}
 
-  Figure~\ref{fig:mlflow_metrics} shows the model metrics logged
-  for a representative route
-  (\textit{Southern Coastal~$\to$~Western Peri-urban}).
-  The \texttt{iforest\_anomaly\_rate} of $0.05$ confirms that the
-  contamination prior is honoured exactly by the decision threshold.
-  The \texttt{model\_agreement} of $0.98$ indicates that the Z-score
-  and IForest signals agree on 98\% of observations, with divergence
-  concentrated in the edge cases each signal is designed to capture.
+  For a representative route (\textit{Southern Coastal~$\to$~Western
+  Peri-urban}), the \texttt{iforest\_anomaly\_rate} of $0.05$ confirms
+  that the contamination prior is honoured exactly by the decision threshold.
+  The \texttt{model\_agreement} of $0.98$ indicates that the Z-score and
+  IForest signals agree on 98\% of observations, with divergence concentrated
+  in the edge cases each signal is designed to capture
+  (Figure~\ref{fig:mlflow_metrics}).
 
   \begin{figure}[htbp]
       \centering

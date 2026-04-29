@@ -22,8 +22,8 @@ streaming workload.
 
 \textbf{Low-Latency Propagation.}
 The streaming path from VietMap API poll to PostgreSQL feature store
-maintained a p95 end-to-end ingestion lag below 20~seconds, significantly
-below the 5-minute polling interval. The Server-Sent Events delivery
+maintained a p95 end-to-end ingestion lag below 20~seconds, well
+within the 30-second polling interval. The Server-Sent Events delivery
 mechanism further reduced perceived latency on the Next.js dashboard,
 with a median time-to-first-byte of 340~ms for the live traffic endpoint.
 
@@ -43,7 +43,7 @@ from PostgreSQL on restart --- and the 6-hour baseline refresh cycle
 ensure that the online Z-score signal remains semantically aligned with
 the historical Gold-layer statistics. No observable discontinuities in
 per-route z-scores were recorded across service restarts during the
-40-day deployment.
+54-day deployment.
 
 \textbf{Operational Observability.}
 The Grafana/Loki/Promtail stack provided continuous visibility into

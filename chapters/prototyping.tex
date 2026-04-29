@@ -3,6 +3,17 @@ the technology selection rationale, containerised infrastructure design, core da
 schema decisions, and the incremental validation strategy used before full
 implementation began.
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{system-architecture}
+\caption{UrbanPulse complete system architecture: data ingestion from VietMap and
+         Open-Meteo via Redpanda, medallion lakehouse (Bronze/Silver/Gold) on
+         MinIO with Iceberg and Nessie, Online Service writing to PostgreSQL,
+         Batch and ML Services tracked by MLflow, RAG pipeline via ChromaDB and
+         Ollama, and Next.js frontend served through Traefik.}
+\label{fig:system-architecture}
+\end{figure}
+
 % ============================================================
 \section{Technology Stack Selection}
 \label{sec:tech-selection}
@@ -28,14 +39,14 @@ Message Broker     & Redpanda            & v25.3.10 & Kafka-compatible; no ZooKe
 Object Storage     & MinIO               & latest   & S3-compatible API; local deployment \\
 Table Format       & Apache Iceberg      & 0.9.x    & Schema evolution; time-travel; partition pruning \\
 Catalog            & Project Nessie      & 0.99.0   & Git-like branching; REST API \\
-Online Store       & PostgreSQL          & 15       & UPSERT semantics; asyncpg for async serving \\
-Vector Store       & ChromaDB            & 0.4.x    & Embedded; nomic-embed compatible \\
+Online Store       & PostgreSQL          & 16       & UPSERT semantics; asyncpg for async serving \\
+Vector Store       & ChromaDB            & latest   & Embedded; nomic-embed compatible \\
 Orchestration      & Prefect             & 3.x      & Task retries; flow scheduling; UI dashboard \\
 ML Tracking        & MLflow              & 2.21.3   & Experiment logging; model registry \\
 LLM Runtime        & Ollama              & latest   & Local GPU inference; Qwen2.5:3b \\
 Serving            & FastAPI             & 0.115.x  & Async; SSE support; Pydantic v2 \\
-Reverse Proxy      & Traefik             & v3       & Automatic TLS; label-based routing \\
-Monitoring         & Grafana + Loki      & latest   & Log aggregation; dashboard \\
+Reverse Proxy      & Traefik             & v2.11    & Automatic TLS; label-based routing \\
+Monitoring         & Grafana + Loki      & 11.6.0 + 3.4.2 & Log aggregation; dashboard \\
 Frontend           & Next.js 15 + TypeScript & 15   & App Router; real-time SSE client \\
 \hline
 \end{tabular}%
@@ -77,7 +88,7 @@ events would be prohibitively expensive on the available hardware.
 \label{sec:topology}
 % ============================================================
 
-The platform is decomposed into \textbf{six microservices}, each running as an
+The platform is decomposed into \textbf{seven microservices}, each running as an
 independent Docker container. Services communicate exclusively through two
 channels: the \textbf{Redpanda broker} (event streams) and
 \textbf{PostgreSQL} (materialised feature store). No direct service-to-service
@@ -137,6 +148,19 @@ Three Iceberg tables are provisioned in MinIO via Nessie catalog:
         Online Service Z-score computation.
 \end{enumerate}
 
+\subsection{Weather Schema}
+
+The \texttt{WeatherObservation} Pydantic model carries hourly meteorological
+readings per zone: \texttt{temperature\_c}, \texttt{precipitation\_mm},
+\texttt{wind\_speed\_kmh}, \texttt{cloud\_cover\_pct}, and \texttt{wmo\_code}.
+These are published by the \texttt{weather-ingestion} service to a separate
+Kafka topic and consumed exclusively by the Batch Service, which persists a
+city-level hourly average to the \texttt{gold.weather\_hourly} Iceberg table
+and indexes the trailing 7 days into the \texttt{external\_context} ChromaDB
+collection for RAG retrieval. Weather data is \textbf{not} an input to either
+anomaly detector; its role is limited to contextual enrichment of LLM-generated
+root-cause explanations (Section~\ref{sec:rag}).
+
 \subsection{PostgreSQL Online Store}
 
 The table \texttt{online\_route\_features} persists the current hourly window
@@ -174,7 +198,7 @@ Silver & Iceberg table (Nessie) & Dedup, type-coerce, partition by day &
 Gold   & Iceberg table (Nessie) & Hourly aggregation (avg, p95) per route &
   Batch Service (hourly) & $\leq$1 h \\
 Baseline & Iceberg table (Nessie) & Per-route/hour/dow mean+stddev for Z-score &
-  Batch Service (hourly) & $\leq$1 h \\
+  Batch Service (retrain) & $\leq$6 h \\
 Online & PostgreSQL & Welford rolling window, live Z-score signal &
   Online Service & $\leq$20 s \\
 \hline

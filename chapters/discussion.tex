@@ -27,8 +27,8 @@ Iceberg~\cite{iceberg_paper}.
 
 The Welford online algorithm~\cite{welford1962} proved essential for the
 real-time Z-score computation. Its $O(1)$ memory footprint ensured that the
-Online Service remained stable over the 40-day observation period without
-memory growth, even at 5-minute polling intervals across 20 concurrent routes.
+Online Service remained stable over the 54-day observation period without
+memory growth, even at 30-second polling intervals across 20 concurrent routes.
 The crash-recovery mechanism --- reconstructing the Welford accumulator from
 stored PostgreSQL statistics --- was validated during two service restarts
 without observable discontinuities in the per-route rolling statistics.
@@ -98,8 +98,9 @@ mitigated by the Z-score signal, which continues to compare against a more
 slowly updated baseline.
 
 \textbf{Cold-start and low-variance routes.}
-Four suburban routes (zone4 outbound, zone4-to-zone2, zone5 outbound) showed
-zero Z-score anomaly events over the 40-day collection period. In low-variance
+Two suburban routes (zone4-to-zone2 and zone4-to-zone5) recorded a Z-score
+anomaly rate of exactly 0.000 over the 54-day collection period, and
+zone5-to-zone1 recorded a near-zero rate of 0.010. In low-variance
 traffic conditions, the baseline standard deviation approaches zero, making
 the Z-score numerically unstable. The implementation applies a minimum stddev
 floor of \texttt{mean * 0.1} in these cases, but this is a heuristic that
@@ -169,7 +170,7 @@ limitations:
         topics to improve incident classification.
   \item \textbf{Online learning for IsolationForest}: Replace the 6-hour
         batch retrain with an incremental Half-Space Trees (HST)
-        detector~\cite{chandola2009anomaly} to reduce concept drift exposure.
+        detector~\cite{tan2011hst} to reduce concept drift exposure.
   \item \textbf{Multi-node deployment}: Evaluate Kubernetes-based deployment
         with horizontal pod autoscaling for the Serving API to support
         thousands of concurrent SSE clients.
