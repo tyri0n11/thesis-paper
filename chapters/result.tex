@@ -88,8 +88,7 @@ genuine differences in the temporal stability of traffic on each corridor.
 \caption{Per-route anomaly detection metrics (IsolationForest vs.\ Z-Score),
          Optuna-tuned params (\texttt{contamination=0.01}, \texttt{n\_estimators=450},
          \texttt{max\_samples=0.76}, \texttt{max\_features=0.73}).
-         IF~Rate is deterministic from \texttt{contamination=0.01};
-         Agreement and Jaccard to be refreshed after production retrain.}
+         Metrics sourced from production MLflow run \texttt{per-route-train-20260429-0831}.}
 \label{tab:anomaly-metrics}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lrcccc}
@@ -98,29 +97,29 @@ genuine differences in the temporal stability of traffic on each corridor.
 \textbf{Z-Rate} & \textbf{IF Rate} &
 \textbf{Agreement} & \textbf{Jaccard} \\
 \hline
-zone1\_urban\_core $\to$ zone2\_eastern\_innovation       & 1616 & 0.059 & 0.010 & 0.922 & 0.166 \\
-zone1\_urban\_core $\to$ zone3\_northern\_industrial      & 1614 & 0.061 & 0.010 & 0.902 & 0.060 \\
-zone1\_urban\_core $\to$ zone4\_southern\_port            & 1616 & 0.040 & 0.010 & 0.960 & 0.391 \\
-zone1\_urban\_core $\to$ zone6\_southern\_coastal         & 1614 & 0.035 & 0.010 & 0.941 & 0.180 \\
-zone2\_eastern\_innov. $\to$ zone3\_northern\_industrial  & 1616 & 0.042 & 0.010 & 0.969 & 0.495 \\
-zone2\_eastern\_innov. $\to$ zone4\_southern\_port        & 1617 & 0.022 & 0.010 & 0.935 & 0.054 \\
-zone2\_eastern\_innov. $\to$ zone5\_western\_periurban    & 1616 & 0.033 & 0.010 & 0.947 & 0.218 \\
-zone3\_northern\_ind. $\to$ zone4\_southern\_port         & 1616 & 0.053 & 0.010 & 0.910 & 0.071 \\
-zone3\_northern\_ind. $\to$ zone5\_western\_periurban     & 1615 & 0.051 & 0.010 & 0.950 & 0.336 \\
-zone3\_northern\_ind. $\to$ zone6\_southern\_coastal      & 1617 & 0.067 & 0.010 & 0.938 & 0.303 \\
-zone4\_southern\_port $\to$ zone1\_urban\_core            & 1614 & 0.034 & 0.010 & 0.929 & 0.080 \\
-zone4\_southern\_port $\to$ zone2\_eastern\_innov.        & 1616 & 0.000 & 0.010 & 0.950 & 0.000 \\
-zone4\_southern\_port $\to$ zone3\_northern\_ind.         & 1617 & 0.024 & 0.010 & 0.947 & 0.165 \\
-zone4\_southern\_port $\to$ zone5\_western\_periurban     & 1615 & 0.000 & 0.010 & 0.950 & 0.000 \\
-zone5\_western\_periurban $\to$ zone1\_urban\_core        & 1614 & 0.010 & 0.010 & 0.940 & 0.000 \\
-zone5\_western\_periurban $\to$ zone6\_southern\_coastal  & 1613 & 0.035 & 0.010 & 0.934 & 0.131 \\
-zone6\_southern\_coastal $\to$ zone1\_urban\_core         & 1615 & 0.051 & 0.010 & 0.915 & 0.087 \\
-zone6\_southern\_coastal $\to$ zone2\_eastern\_innov.     & 1613 & 0.040 & 0.010 & 0.924 & 0.090 \\
-zone6\_southern\_coastal $\to$ zone4\_southern\_port      & 1613 & 0.014 & 0.010 & 0.944 & 0.062 \\
-zone6\_southern\_coastal $\to$ zone5\_western\_periurban  & 1615 & 0.047 & 0.010 & 0.956 & 0.377 \\
+zone1\_urban\_core $\to$ zone2\_eastern\_innovation       & 1517 & 0.058 & 0.011 & 0.934 & 0.020 \\
+zone1\_urban\_core $\to$ zone3\_northern\_industrial      & 1515 & 0.053 & 0.011 & 0.941 & 0.032 \\
+zone1\_urban\_core $\to$ zone4\_southern\_port            & 1517 & 0.041 & 0.011 & 0.962 & 0.147 \\
+zone1\_urban\_core $\to$ zone6\_southern\_coastal         & 1515 & 0.037 & 0.011 & 0.960 & 0.091 \\
+zone2\_eastern\_innov. $\to$ zone3\_northern\_industrial  & 1517 & 0.042 & 0.011 & 0.965 & 0.197 \\
+zone2\_eastern\_innov. $\to$ zone4\_southern\_port        & 1518 & 0.029 & 0.011 & 0.971 & 0.154 \\
+zone2\_eastern\_innov. $\to$ zone5\_western\_periurban    & 1517 & 0.040 & 0.011 & 0.963 & 0.152 \\
+zone3\_northern\_ind. $\to$ zone4\_southern\_port         & 1517 & 0.055 & 0.011 & 0.949 & 0.124 \\
+zone3\_northern\_ind. $\to$ zone5\_western\_periurban     & 1516 & 0.052 & 0.011 & 0.955 & 0.161 \\
+zone3\_northern\_ind. $\to$ zone6\_southern\_coastal      & 1518 & 0.061 & 0.011 & 0.943 & 0.112 \\
+zone4\_southern\_port $\to$ zone1\_urban\_core            & 1515 & 0.036 & 0.011 & 0.959 & 0.061 \\
+zone4\_southern\_port $\to$ zone2\_eastern\_innov.        & 1517 & 0.000 & 0.011 & 0.990 & 0.000 \\
+zone4\_southern\_port $\to$ zone3\_northern\_ind.         & 1518 & 0.026 & 0.011 & 0.976 & 0.196 \\
+zone4\_southern\_port $\to$ zone5\_western\_periurban     & 1517 & 0.000 & 0.011 & 0.990 & 0.000 \\
+zone5\_western\_periurban $\to$ zone1\_urban\_core        & 1516 & 0.011 & 0.011 & 0.982 & 0.067 \\
+zone5\_western\_periurban $\to$ zone6\_southern\_coastal  & 1515 & 0.037 & 0.011 & 0.967 & 0.180 \\
+zone6\_southern\_coastal $\to$ zone1\_urban\_core         & 1517 & 0.044 & 0.011 & 0.953 & 0.065 \\
+zone6\_southern\_coastal $\to$ zone2\_eastern\_innov.     & 1515 & 0.036 & 0.011 & 0.964 & 0.129 \\
+zone6\_southern\_coastal $\to$ zone4\_southern\_port      & 1515 & 0.024 & 0.011 & 0.984 & 0.368 \\
+zone6\_southern\_coastal $\to$ zone5\_western\_periurban  & 1517 & 0.048 & 0.011 & 0.958 & 0.158 \\
 \hline
-\textbf{Mean (all routes)} & 32{,}302 & \textbf{0.036} & \textbf{0.010} &
-\textbf{0.938} & \textbf{0.163} \\
+\textbf{Mean (all routes)} & 30{,}329 & \textbf{0.036} & \textbf{0.011} &
+\textbf{0.963} & \textbf{0.121} \\
 \hline
 \end{tabular}%
 }
@@ -131,11 +130,11 @@ confirming all 20 per-route child runs completed successfully (status:
 \texttt{FINISHED}) in approximately 3.5 seconds each.
 Figure~\ref{fig:mlflow-route-metrics} drills into the metrics for
 \texttt{zone6\_southern\_coastal $\to$ zone5\_western\_periurban}, which
-recorded \texttt{model\_agreement = 0.96}, \texttt{anomaly\_jaccard = 0.36},
+recorded \texttt{model\_agreement = 0.96}, \texttt{anomaly\_jaccard = 0.16},
 \texttt{iforest\_anomaly\_rate = 0.01} (tuned contamination), and
-\texttt{total\_samples = 1615}.
+\texttt{total\_samples = 1517}.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{mlflow-experiments.png}
   \caption{MLflow experiment \texttt{traffic-anomaly-detection}: 20 per-route
@@ -144,12 +143,12 @@ recorded \texttt{model\_agreement = 0.96}, \texttt{anomaly\_jaccard = 0.36},
   \label{fig:mlflow-experiments}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{mlflow-route-metrics.png}
   \caption{MLflow per-route metric charts for
-           \texttt{zone6 $\to$ zone5}: agreement = 0.96, Jaccard = 0.36,
-           IForest rate = 0.01 (tuned contamination), 43 joint anomaly hours from 1,615 samples.}
+           \texttt{zone6 $\to$ zone5}: agreement = 0.96, Jaccard = 0.16,
+           IForest rate = 0.01 (tuned contamination), 12 joint anomaly hours from 1,517 samples.}
   \label{fig:mlflow-route-metrics}
 \end{figure}
 
@@ -166,13 +165,13 @@ Table~\ref{tab:agg-metrics} and visualised in Figure~\ref{fig:metric-bars}.
 \hline
 \textbf{Metric}      & \textbf{Mean} & \textbf{Std} & \textbf{Min} & \textbf{Max} \\
 \hline
-Z-Score anomaly rate  & 0.036 & 0.020 & 0.000 & 0.067 \\
-IForest anomaly rate  & 0.010 & 0.000 & 0.010 & 0.010 \\
-Model agreement       & 0.938 & 0.017 & 0.902 & 0.969 \\
-Jaccard similarity    & 0.163 & 0.145 & 0.000 & 0.495 \\
+Z-Score anomaly rate  & 0.036 & 0.018 & 0.000 & 0.061 \\
+IForest anomaly rate  & 0.011 & 0.000 & 0.011 & 0.011 \\
+Model agreement       & 0.963 & 0.016 & 0.934 & 0.990 \\
+Jaccard similarity    & 0.121 & 0.086 & 0.000 & 0.368 \\
 \hline
-Both flagged (total)  & \multicolumn{4}{c}{389 hours across all routes} \\
-IForest flagged (total) & \multicolumn{4}{c}{1,620 hours across all routes} \\
+Both flagged (total)  & \multicolumn{4}{c}{152 hours across all routes} \\
+IForest flagged (total) & \multicolumn{4}{c}{320 hours across all routes} \\
 \hline
 \end{tabular}
 \end{table}
@@ -184,8 +183,8 @@ IForest flagged (total) & \multicolumn{4}{c}{1,620 hours across all routes} \\
 \begin{scope}
   %% Simple grouped bar chart: Agreement vs Jaccard per 5 representative routes
   \def\routes{{"z1-z4","z1-z3","z3-z5","z3-z6","z6-z5"}}
-  \def\agree{{0.963,0.946,0.967,0.956,0.951}}
-  \def\jacc{{0.449,0.222,0.424,0.420,0.360}}
+  \def\agree{{0.962,0.965,0.955,0.943,0.958}}
+  \def\jacc{{0.147,0.197,0.161,0.112,0.158}}
 
   \draw[->] (0,0) -- (12.5,0) node[right]{\scriptsize Route};
   \draw[->] (0,0) -- (0,6.5)  node[above]{\scriptsize Score};
@@ -199,11 +198,11 @@ IForest flagged (total) & \multicolumn{4}{c}{1,620 hours across all routes} \\
   %% Bars: agreement (blue) + jaccard (orange), grouped by route
   %% Route spacing: 2.2cm per group, bar width 0.7
   \foreach \i/\rid/\ag/\jc in {
-    0/{z1$\to$z4}/4.80/1.955,
-    1/{z2$\to$z3}/4.845/2.475,
-    2/{z3$\to$z5}/4.75/1.68,
-    3/{z3$\to$z6}/4.69/1.515,
-    4/{z6$\to$z5}/4.78/1.885
+    0/{z1$\to$z4}/4.809/0.736,
+    1/{z2$\to$z3}/4.826/0.985,
+    2/{z3$\to$z5}/4.776/0.803,
+    3/{z3$\to$z6}/4.714/0.561,
+    4/{z6$\to$z5}/4.789/0.790
   }{
     \pgfmathsetmacro\x{1.8+\i*2.2}
     \fill[blue!50]   (\x-0.38, 0) rectangle (\x+0.02, \ag);
@@ -238,7 +237,7 @@ detector, confirming the complementarity documented in
 Table~\ref{tab:anomaly-metrics}: the two signals capture different aspects
 of the traffic distribution. The \textit{Both agree} (red) bars, which
 trigger Telegram alerts, are substantially fewer --- aligning with the
-mean Jaccard of 0.163 from the MLflow evaluation.
+mean Jaccard of 0.121 from the MLflow evaluation.
 
 \begin{figure}[htbp]
   \centering
@@ -253,16 +252,16 @@ mean Jaccard of 0.163 from the MLflow evaluation.
 
 Three observations stand out from the results.
 
-\textbf{(1) High agreement, moderate Jaccard.}
-The mean model agreement of 0.938 indicates that both detectors
-\textit{agree on the label} for 93.8\% of hourly observations. The
-mean Jaccard of 0.163 reveals that approximately 16.3\% of the individual
+\textbf{(1) High agreement, low Jaccard.}
+The mean model agreement of 0.963 indicates that both detectors
+\textit{agree on the label} for 96.3\% of hourly observations. The
+mean Jaccard of 0.121 reveals that approximately 12.1\% of the individual
 anomaly events detected by \textit{either} model are jointly detected by
 \textit{both}. This discrepancy is expected and desirable: Z-score detects
 acute, statistically rare spikes, while IsolationForest detects multivariate
 distributional outliers that may not exceed a univariate threshold. The
 conjunction rule (\texttt{both\_anomaly}) thus serves as a high-precision
-filter, yielding 389 joint-alert hours from 32,302 total observations (1.2\%).
+filter, yielding 152 joint-alert hours from 30,329 total observations (0.5\%).
 
 \textbf{(2) Route-specific Z-score rates.}
 Three routes (zone4-to-zone2, zone4-to-zone5, and zone5-to-zone1) exhibit
@@ -278,11 +277,12 @@ an appropriate outcome given the low incident likelihood on these corridors.
 
 \textbf{(3) Zone-3 northern industrial corridor anomaly concentration.}
 Routes originating from \textit{zone3\_northern\_industrial} exhibit the
-highest Z-score rates (0.051--0.067) and among the highest Jaccard scores
-(0.071--0.495), suggesting recurrent non-recurrent congestion patterns
+highest Z-score rates (0.052--0.061) and moderate Jaccard scores
+(0.112--0.161), suggesting recurrent non-recurrent congestion patterns
 in the industrial freight corridor consistent with shift-change heavy
-vehicle movements. The zone2$\to$zone3 route records the highest Jaccard
-of 0.495, indicating the strongest alignment between both detectors.
+vehicle movements. The highest system-wide Jaccard of 0.368 belongs to
+the zone6$\to$zone4 route, indicating the strongest alignment between
+both detectors on the southern coastal port corridor.
 
 % ============================================================
 \section{System Performance}

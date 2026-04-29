@@ -521,3 +521,23 @@ Figure~\ref{fig:heatmap-both} shows the Coastal $\to$ Western route at
            ($Z = 2.02$), Apr 12--15, 2026.}
   \label{fig:heatmap-both}
 \end{figure}
+
+Clicking the \textbf{Phân tích} button triggers a full-heatmap RAG query that
+aggregates all active anomaly signals and returns a structured four-part
+analysis (Figure~\ref{fig:ai-heatmap-analysis}): \textit{(1)} multi-signal
+anomaly patterns confirmed by both IF and Z-score (e.g., Zone~3~$\to$~Zone~4
+at 16:00 with $z{=}3.4$ and 18:00 with $z{=}2.5$); \textit{(2)} root-cause
+hypotheses referencing industrial corridors, port logistics, flood-prone
+intersections, and weather conditions; \textit{(3)} single-signal indicators
+for routes whose Z-score falls below the alert threshold but shows developing
+congestion; and \textit{(4)} operator recommendations per route.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{ai-heatmap-analysis.png}
+  \caption{AI Heatmap Analysis panel (Vietnamese): Qwen2.5:3b synthesises
+           all active anomaly signals across routes and hours into a
+           structured report covering dual-signal patterns, root causes,
+           single-signal indicators, and per-route recommendations.}
+  \label{fig:ai-heatmap-analysis}
+\end{figure}

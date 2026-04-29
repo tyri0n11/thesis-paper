@@ -7,19 +7,19 @@
 \contentsline {table}{\numberline {3.2}{\ignorespaces Zone-specific Open-Meteo query coordinates.}}{11}{}%
 \contentsline {table}{\numberline {3.3}{\ignorespaces Cyclical vs.\ raw-integer encoding for selected hours.}}{17}{}%
 \contentsline {table}{\numberline {3.4}{\ignorespaces IsolationForest hyperparameters selected by Optuna TPE (50 trials $\times $ 20 routes; median aggregation).}}{18}{}%
-\contentsline {table}{\numberline {3.5}{\ignorespaces ChromaDB collections and their update schedules}}{20}{}%
-\contentsline {table}{\numberline {3.6}{\ignorespaces Key performance indicators and measurement boundaries}}{23}{}%
+\contentsline {table}{\numberline {3.5}{\ignorespaces ChromaDB collections and their update schedules}}{21}{}%
+\contentsline {table}{\numberline {3.6}{\ignorespaces Key performance indicators and measurement boundaries}}{24}{}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces UrbanPulse technology stack and selection rationale.}}{25}{}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces Medallion data flow: transformation, ownership, and latency per layer.}}{27}{}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces UrbanPulse technology stack and selection rationale.}}{26}{}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Medallion data flow: transformation, ownership, and latency per layer.}}{28}{}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {5.1}{\ignorespaces Serving API endpoint summary.}}{34}{}%
+\contentsline {table}{\numberline {5.1}{\ignorespaces Serving API endpoint summary.}}{35}{}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {6.1}{\ignorespaces Dataset summary for the MLflow training run \texttt {per-route-train-20260419}.}}{40}{}%
-\contentsline {table}{\numberline {6.2}{\ignorespaces Per-route anomaly detection metrics (IsolationForest vs.\ Z-Score), Optuna-tuned params (\texttt {contamination=0.01}, \texttt {n\_estimators=450}, \texttt {max\_samples=0.76}, \texttt {max\_features=0.73}). IF~Rate is deterministic from \texttt {contamination=0.01}; Agreement and Jaccard to be refreshed after production retrain.}}{41}{}%
-\contentsline {table}{\numberline {6.3}{\ignorespaces Aggregate dual-signal metrics across 20 routes.}}{42}{}%
-\contentsline {table}{\numberline {6.4}{\ignorespaces Measured performance vs.\ non-functional requirements.}}{47}{}%
+\contentsline {table}{\numberline {6.1}{\ignorespaces Dataset summary for the MLflow training run \texttt {per-route-train-20260419}.}}{42}{}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces Per-route anomaly detection metrics (IsolationForest vs.\ Z-Score), Optuna-tuned params (\texttt {contamination=0.01}, \texttt {n\_estimators=450}, \texttt {max\_samples=0.76}, \texttt {max\_features=0.73}). Metrics sourced from production MLflow run \texttt {per-route-train-20260429-0831}.}}{43}{}%
+\contentsline {table}{\numberline {6.3}{\ignorespaces Aggregate dual-signal metrics across 20 routes.}}{44}{}%
+\contentsline {table}{\numberline {6.4}{\ignorespaces Measured performance vs.\ non-functional requirements.}}{49}{}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {7.1}{\ignorespaces Comparison of UrbanPulse against reference architectures.}}{50}{}%
+\contentsline {table}{\numberline {7.1}{\ignorespaces Comparison of UrbanPulse against reference architectures.}}{52}{}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
