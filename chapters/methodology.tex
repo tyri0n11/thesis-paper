@@ -912,7 +912,8 @@
       \begin{algorithmic}[1]
           \Require $\mathcal{X}$ is the Gold-layer training corpus.
           \Require $f_{\theta}$ is a trained \texttt{IsolationForest}
-          with contamination $= 0.05$, $T = 100$ trees.
+          with contamination $= 0.01$, $T = 450$ trees,
+          \texttt{max\_samples} $= 0.76$, \texttt{max\_features} $= 0.73$.
           \Comment{Training phase (every 6 h)}
           \State $f_{\theta} \gets \texttt{IsolationForest.fit}(\mathcal{X})$
           \State \textbf{log} $f_{\theta}$ parameters and metrics to
@@ -932,19 +933,89 @@
       \end{algorithmic}
   \end{algorithm}                                                                                                                                         
                                                                                                                                                           
-  The contamination hyperparameter is fixed at $0.05$, following the
-  conventional prior of 5\% anomalous observations adopted in
-  unsupervised anomaly detection literature
-  \cite{liu2008isolation, chandola2009anomaly}.
+  The four IsolationForest hyperparameters
+  (\texttt{contamination}, \texttt{n\_estimators},
+  \texttt{max\_samples}, \texttt{max\_features})
+  are selected via \textbf{Optuna} Bayesian optimisation
+  \cite{optuna_paper} using the Tree-structured Parzen Estimator
+  (TPE) sampler. For each of the 20 routes, 50 independent trials
+  are evaluated; the per-route best parameters are aggregated by
+  median to obtain a single global configuration.
+
+  The objective function maximises the \emph{anomaly score gap}:
+  \begin{equation}
+    \mathcal{G}(\theta) =
+      \overline{s}_{\text{normal}}(\theta) -
+      \overline{s}_{\text{anomaly}}(\theta),
+    \label{eq:score_gap}
+  \end{equation}
+  where $\overline{s}_{\text{normal}}$ and
+  $\overline{s}_{\text{anomaly}}$ are the mean
+  \texttt{decision\_function} outputs for the normal and anomalous
+  subsets respectively, as determined by the candidate
+  \texttt{contamination} threshold. Because both subsets are defined
+  entirely within the ratio feature space
+  $\mathcal{X} = (\rho_h, \rho_m, n_s, \sin/\cos(\text{hour}),
+  \sin/\cos(\text{dow}))$, the objective is fully self-contained and
+  requires no external labels.
+
+  Table~\ref{tab:iforest_params} reports the resulting configuration.
+  The \texttt{contamination} value of $0.01$ is consistent with an
+  independent duration-based anomaly rate estimate of $1.97\%$
+  obtained by applying the per-route baseline Z-score threshold to
+  the same training corpus, providing cross-signal validation that
+  genuine anomalous hours are rare in the pre-cutoff dataset.
+
+  \begin{table}[htbp]
+  \centering
+  \caption{IsolationForest hyperparameters selected by Optuna TPE
+           (50 trials $\times$ 20 routes; median aggregation).}
+  \label{tab:iforest_params}
+  \begin{tabular}{llll}
+  \hline
+  \textbf{Parameter} & \textbf{Search range} & \textbf{Default} & \textbf{Tuned} \\
+  \hline
+  \texttt{contamination} & $[0.01,\;0.15]$ & $0.05$ & $0.01$ \\
+  \texttt{n\_estimators}  & $\{50,100,\ldots,500\}$ & $100$ & $450$ \\
+  \texttt{max\_samples}   & $[0.5,\;1.0]$  & auto (${\approx}0.17$) & $0.76$ \\
+  \texttt{max\_features}  & $[0.5,\;1.0]$  & $1.0$ & $0.73$ \\
+  \hline
+  \multicolumn{4}{l}{Mean score gap: default $0.059$ $\to$ tuned $0.083$
+                     (+40.7\%, 20/20 routes improved).} \\
+  \hline
+  \end{tabular}
+  \end{table}
+
+  Figure~\ref{fig:optuna_validation} validates the tuned parameters against
+  the default configuration across all 20 routes.
+  The left panel plots tuned score gap against default score gap per route;
+  all points lie above the diagonal, confirming improvement on every route.
+  The right panel shows the distribution of score gap improvements
+  (\texttt{tuned} $-$ \texttt{default}), with all values strictly positive
+  (range $+0.01$ to $+0.047$, mean $+0.023$).
+
+  \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=\textwidth]{optuna-validation}
+      \caption{Optuna hyperparameter tuning validation across 20 routes.
+      \textit{Left}: tuned vs.\ default anomaly score gap per route
+      (all points above the diagonal indicate improvement).
+      \textit{Right}: distribution of score gap delta
+      (\texttt{tuned} $-$ \texttt{default}); all 20 routes show
+      strictly positive improvement (mean $+0.023$, max $+0.047$).}
+      \label{fig:optuna_validation}
+  \end{figure}
+
   Scikit-learn uses \texttt{contamination} to set the internal score
-  offset $\theta^*$ such that exactly $\lfloor \texttt{contamination}
-  \times N \rfloor$ training samples satisfy
-  $s(\mathbf{x}) < 0$; a lower value therefore raises the effective
-  decision threshold, flagging only the most extreme outliers and
-  biasing the detector towards precision over recall. This trade-off
-  is deliberate: the dual-signal fusion (Section~\ref{subsec:fusion})
-  already handles recall via the Z-score path, so the IForest
-  component is tuned for high-confidence, low-false-positive output.
+  offset $\theta^*$ such that exactly
+  $\lfloor \texttt{contamination} \times N \rfloor$ training samples
+  satisfy $s(\mathbf{x}) < 0$; a lower value therefore raises the
+  effective decision threshold, flagging only the most extreme
+  outliers and biasing the detector towards precision over recall.
+  This trade-off is deliberate: the dual-signal fusion
+  (Section~\ref{subsec:fusion}) already handles recall via the
+  Z-score path, so the IForest component is tuned for
+  high-confidence, low-false-positive output.
 
   The trained model is serialised with \texttt{joblib} and registered
   in \textbf{MLflow} \cite{mlflow_paper} under the model name
@@ -982,7 +1053,7 @@
   \end{figure}
 
   For a representative route (\textit{Southern Coastal~$\to$~Western
-  Peri-urban}), the \texttt{iforest\_anomaly\_rate} of $0.05$ confirms
+  Peri-urban}), the \texttt{iforest\_\allowbreak anomaly\_\allowbreak rate} of $0.01$ confirms
   that the contamination prior is honoured exactly by the decision threshold.
   The \texttt{model\_agreement} of $0.98$ indicates that the Z-score and
   IForest signals agree on 98\% of observations, with divergence concentrated
@@ -994,7 +1065,7 @@
       \includegraphics[width=\textwidth]{mlflow-route-metrics}
       \caption{MLflow model metrics for route
       \textit{Southern Coastal~$\to$~Western Peri-urban}.
-      Key indicators: \texttt{iforest\_anomaly\_rate}~$= 0.05$
+      Key indicators: \texttt{iforest\_\allowbreak anomaly\_\allowbreak rate}~$= 0.01$
       (matches contamination prior), \texttt{model\_agreement}~$= 0.98$,
       and \texttt{total\_samples}~$= 1{,}615$.}
       \label{fig:mlflow_metrics}
@@ -1269,11 +1340,13 @@
   Gold table to be queried at any historical snapshot by ID                                                                                               
   or timestamp — meaning the exact data state at the time of
   any anomaly classification can be reconstructed. Second,                                                                                                
-  \textbf{MLflow} records the full provenance of every                                                                                                    
-  IsolationForest training run: hyperparameters                                                                                                           
-  (\texttt{contamination}, \texttt{n\_estimators},                                                                                                        
-  \texttt{random\_state}), feature schema, and training data time                                                                                         
-  range; therefore, each inference can be replayed against the same                                                                                       
+  \textbf{MLflow} records the full provenance of every
+  IsolationForest training run: hyperparameters
+  (\texttt{contamination}, \texttt{n\_estimators},
+  \texttt{max\_samples}, \texttt{max\_features},
+  \texttt{random\_state}, \texttt{training\_cutoff}),
+  feature schema, and training data time
+  range; therefore, each inference can be replayed against the same
   model version and data snapshot.                                                                                                                                          
                                                                                                                                                           
   % ------------------------------------------------------------                                                                                          

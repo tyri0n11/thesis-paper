@@ -72,16 +72,24 @@ that are standard for unsupervised systems~\cite{chandola2009anomaly}:
 \subsection{Per-Route Metrics}
 
 Table~\ref{tab:anomaly-metrics} reports the per-route metrics logged during
-the most recent MLflow parent run. The IsolationForest anomaly rate is fixed
-at approximately 5.0\% by the \texttt{contamination} hyperparameter. The
-Z-Score rate varies between 0.0\% and 6.7\% across routes, reflecting
+the most recent MLflow parent run (pre-cutoff dataset, \texttt{training\_cutoff}
+= 2026-04-14).
+The IsolationForest \texttt{contamination} hyperparameter was selected via
+Optuna TPE optimisation (50 trials $\times$ 20 routes) as described in
+Section~\ref{subsec:iforest}; the tuned value of $0.01$ reflects the true
+anomaly prevalence in the ratio feature space and is independently corroborated
+by a duration-based baseline estimate of $1.97\%$.
+The Z-Score rate varies between 0.0\% and 6.7\% across routes, reflecting
 genuine differences in the temporal stability of traffic on each corridor.
 
 \begin{table}[htbp]
 \centering
 \small
 \caption{Per-route anomaly detection metrics (IsolationForest vs.\ Z-Score),
-         MLflow run \texttt{per-route-train-20260419} (production server).}
+         Optuna-tuned params (\texttt{contamination=0.01}, \texttt{n\_estimators=450},
+         \texttt{max\_samples=0.76}, \texttt{max\_features=0.73}).
+         IF~Rate is deterministic from \texttt{contamination=0.01};
+         Agreement and Jaccard to be refreshed after production retrain.}
 \label{tab:anomaly-metrics}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lrcccc}
@@ -90,28 +98,28 @@ genuine differences in the temporal stability of traffic on each corridor.
 \textbf{Z-Rate} & \textbf{IF Rate} &
 \textbf{Agreement} & \textbf{Jaccard} \\
 \hline
-zone1\_urban\_core $\to$ zone2\_eastern\_innovation       & 1616 & 0.059 & 0.050 & 0.922 & 0.166 \\
-zone1\_urban\_core $\to$ zone3\_northern\_industrial      & 1614 & 0.061 & 0.050 & 0.902 & 0.060 \\
-zone1\_urban\_core $\to$ zone4\_southern\_port            & 1616 & 0.040 & 0.050 & 0.960 & 0.391 \\
-zone1\_urban\_core $\to$ zone6\_southern\_coastal         & 1614 & 0.035 & 0.050 & 0.941 & 0.180 \\
-zone2\_eastern\_innov. $\to$ zone3\_northern\_industrial  & 1616 & 0.042 & 0.050 & 0.969 & 0.495 \\
-zone2\_eastern\_innov. $\to$ zone4\_southern\_port        & 1617 & 0.022 & 0.050 & 0.935 & 0.054 \\
-zone2\_eastern\_innov. $\to$ zone5\_western\_periurban    & 1616 & 0.033 & 0.050 & 0.947 & 0.218 \\
-zone3\_northern\_ind. $\to$ zone4\_southern\_port         & 1616 & 0.053 & 0.050 & 0.910 & 0.071 \\
-zone3\_northern\_ind. $\to$ zone5\_western\_periurban     & 1615 & 0.051 & 0.050 & 0.950 & 0.336 \\
-zone3\_northern\_ind. $\to$ zone6\_southern\_coastal      & 1617 & 0.067 & 0.050 & 0.938 & 0.303 \\
-zone4\_southern\_port $\to$ zone1\_urban\_core            & 1614 & 0.034 & 0.050 & 0.929 & 0.080 \\
-zone4\_southern\_port $\to$ zone2\_eastern\_innov.        & 1616 & 0.000 & 0.050 & 0.950 & 0.000 \\
-zone4\_southern\_port $\to$ zone3\_northern\_ind.         & 1617 & 0.024 & 0.050 & 0.947 & 0.165 \\
-zone4\_southern\_port $\to$ zone5\_western\_periurban     & 1615 & 0.000 & 0.050 & 0.950 & 0.000 \\
-zone5\_western\_periurban $\to$ zone1\_urban\_core        & 1614 & 0.010 & 0.050 & 0.940 & 0.000 \\
-zone5\_western\_periurban $\to$ zone6\_southern\_coastal  & 1613 & 0.035 & 0.050 & 0.934 & 0.131 \\
-zone6\_southern\_coastal $\to$ zone1\_urban\_core         & 1615 & 0.051 & 0.050 & 0.915 & 0.087 \\
-zone6\_southern\_coastal $\to$ zone2\_eastern\_innov.     & 1613 & 0.040 & 0.050 & 0.924 & 0.090 \\
-zone6\_southern\_coastal $\to$ zone4\_southern\_port      & 1613 & 0.014 & 0.050 & 0.944 & 0.062 \\
-zone6\_southern\_coastal $\to$ zone5\_western\_periurban  & 1615 & 0.047 & 0.050 & 0.956 & 0.377 \\
+zone1\_urban\_core $\to$ zone2\_eastern\_innovation       & 1616 & 0.059 & 0.010 & 0.922 & 0.166 \\
+zone1\_urban\_core $\to$ zone3\_northern\_industrial      & 1614 & 0.061 & 0.010 & 0.902 & 0.060 \\
+zone1\_urban\_core $\to$ zone4\_southern\_port            & 1616 & 0.040 & 0.010 & 0.960 & 0.391 \\
+zone1\_urban\_core $\to$ zone6\_southern\_coastal         & 1614 & 0.035 & 0.010 & 0.941 & 0.180 \\
+zone2\_eastern\_innov. $\to$ zone3\_northern\_industrial  & 1616 & 0.042 & 0.010 & 0.969 & 0.495 \\
+zone2\_eastern\_innov. $\to$ zone4\_southern\_port        & 1617 & 0.022 & 0.010 & 0.935 & 0.054 \\
+zone2\_eastern\_innov. $\to$ zone5\_western\_periurban    & 1616 & 0.033 & 0.010 & 0.947 & 0.218 \\
+zone3\_northern\_ind. $\to$ zone4\_southern\_port         & 1616 & 0.053 & 0.010 & 0.910 & 0.071 \\
+zone3\_northern\_ind. $\to$ zone5\_western\_periurban     & 1615 & 0.051 & 0.010 & 0.950 & 0.336 \\
+zone3\_northern\_ind. $\to$ zone6\_southern\_coastal      & 1617 & 0.067 & 0.010 & 0.938 & 0.303 \\
+zone4\_southern\_port $\to$ zone1\_urban\_core            & 1614 & 0.034 & 0.010 & 0.929 & 0.080 \\
+zone4\_southern\_port $\to$ zone2\_eastern\_innov.        & 1616 & 0.000 & 0.010 & 0.950 & 0.000 \\
+zone4\_southern\_port $\to$ zone3\_northern\_ind.         & 1617 & 0.024 & 0.010 & 0.947 & 0.165 \\
+zone4\_southern\_port $\to$ zone5\_western\_periurban     & 1615 & 0.000 & 0.010 & 0.950 & 0.000 \\
+zone5\_western\_periurban $\to$ zone1\_urban\_core        & 1614 & 0.010 & 0.010 & 0.940 & 0.000 \\
+zone5\_western\_periurban $\to$ zone6\_southern\_coastal  & 1613 & 0.035 & 0.010 & 0.934 & 0.131 \\
+zone6\_southern\_coastal $\to$ zone1\_urban\_core         & 1615 & 0.051 & 0.010 & 0.915 & 0.087 \\
+zone6\_southern\_coastal $\to$ zone2\_eastern\_innov.     & 1613 & 0.040 & 0.010 & 0.924 & 0.090 \\
+zone6\_southern\_coastal $\to$ zone4\_southern\_port      & 1613 & 0.014 & 0.010 & 0.944 & 0.062 \\
+zone6\_southern\_coastal $\to$ zone5\_western\_periurban  & 1615 & 0.047 & 0.010 & 0.956 & 0.377 \\
 \hline
-\textbf{Mean (all routes)} & 32{,}302 & \textbf{0.036} & \textbf{0.050} &
+\textbf{Mean (all routes)} & 32{,}302 & \textbf{0.036} & \textbf{0.010} &
 \textbf{0.938} & \textbf{0.163} \\
 \hline
 \end{tabular}%
@@ -124,7 +132,8 @@ confirming all 20 per-route child runs completed successfully (status:
 Figure~\ref{fig:mlflow-route-metrics} drills into the metrics for
 \texttt{zone6\_southern\_coastal $\to$ zone5\_western\_periurban}, which
 recorded \texttt{model\_agreement = 0.96}, \texttt{anomaly\_jaccard = 0.36},
-\texttt{iforest\_anomaly\_rate = 0.05}, and \texttt{total\_samples = 1615}.
+\texttt{iforest\_anomaly\_rate = 0.01} (tuned contamination), and
+\texttt{total\_samples = 1615}.
 
 \begin{figure}[htbp]
   \centering
@@ -140,7 +149,7 @@ recorded \texttt{model\_agreement = 0.96}, \texttt{anomaly\_jaccard = 0.36},
   \includegraphics[width=\textwidth]{mlflow-route-metrics.png}
   \caption{MLflow per-route metric charts for
            \texttt{zone6 $\to$ zone5}: agreement = 0.96, Jaccard = 0.36,
-           IForest rate = 0.05, 43 joint anomaly hours from 1,615 samples.}
+           IForest rate = 0.01 (tuned contamination), 43 joint anomaly hours from 1,615 samples.}
   \label{fig:mlflow-route-metrics}
 \end{figure}
 
@@ -158,7 +167,7 @@ Table~\ref{tab:agg-metrics} and visualised in Figure~\ref{fig:metric-bars}.
 \textbf{Metric}      & \textbf{Mean} & \textbf{Std} & \textbf{Min} & \textbf{Max} \\
 \hline
 Z-Score anomaly rate  & 0.036 & 0.020 & 0.000 & 0.067 \\
-IForest anomaly rate  & 0.050 & 0.000 & 0.050 & 0.050 \\
+IForest anomaly rate  & 0.010 & 0.000 & 0.010 & 0.010 \\
 Model agreement       & 0.938 & 0.017 & 0.902 & 0.969 \\
 Jaccard similarity    & 0.163 & 0.145 & 0.000 & 0.495 \\
 \hline

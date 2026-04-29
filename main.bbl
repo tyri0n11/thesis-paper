@@ -109,6 +109,9 @@ P.~Carbone, A.~Katsifodimos, S.~Ewen, V.~Markl, S.~Haridi, and K.~Tzoumas, ``{Ap
 \bibitem{liu2008isolation}
 F.~T. Liu, K.~M. Ting, and Z.-H. Zhou, ``{Isolation Forest},'' in {\em 2008 Eighth IEEE International Conference on Data Mining}, pp.~413--422, 2008.
 
+\bibitem{optuna_paper}
+T.~Akiba, S.~Sano, T.~Yanase, T.~Ohta, and M.~Koyama, ``Optuna: A next-generation hyperparameter optimization framework,'' in {\em Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery \& Data Mining}, pp.~2623--2631, ACM, 2019.
+
 \bibitem{mlflow_paper}
 M.~Zaharia, A.~Chen, A.~Davidson, A.~Ghodsi, S.~A. Hong, A.~Konwinski, S.~Murching, T.~Nykodym, P.~Ogilvie, M.~Parkhe, F.~Xie, and C.~Zumar, ``{Accelerating the Machine Learning Lifecycle with MLflow},'' in {\em Proceedings of the 8th Biennial Conference on Innovative Data Systems Research (CIDR)}, 2018.
 

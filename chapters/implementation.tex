@@ -156,55 +156,84 @@ Figure~\ref{fig:batch-flows}.
 
 \begin{figure}[htbp]
 \centering
-\resizebox{0.88\textwidth}{!}{%
-\begin{tikzpicture}[
-  >=stealth, font=\small,
-  box/.style={draw, rounded corners=3pt, fill=white,
-              minimum width=3.8cm, minimum height=0.8cm,
-              align=center, font=\footnotesize, inner sep=5pt},
-  sched/.style={font=\scriptsize\itshape, gray!60!black},
-  arr/.style={->, thick}
-]
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[>=stealth, font=\small]
 
-%% Timeline axis
-\draw[thick, ->] (-0.5,0) -- (14.5,0) node[right]{\scriptsize time};
+  % --- styles ---
+  \tikzset{
+    rowlabel/.style={anchor=east, font=\footnotesize\bfseries,
+                     minimum width=3.6cm, align=right},
+    schedlabel/.style={anchor=west, font=\scriptsize\itshape, gray!50!black},
+    timelabel/.style={font=\scriptsize, gray!60!black, anchor=north},
+  }
 
-%% Microbatch (every 5 min)
-\foreach \x in {0, 1.4, 2.8, 4.2, 5.6, 7.0, 8.4, 9.8, 11.2, 12.6}{
-  \fill[blue!25] (\x,-0.15) rectangle (\x+1.0,0.15);
-}
-\node[sched] at (6.2, 0.55) {every 5 min};
-\node[box, fill=blue!12] at (1.7, 1.6) {Bronze → Silver\\(microbatch)};
-\draw[arr, blue!60] (1.7,1.15) -- (1.7,0.2);
+  % Row y-centres
+  % row1=microbatch  row2=hourly-gold  row3=retrain  row4=alerter
+  \def\ya{3.0}
+  \def\yb{2.0}
+  \def\yc{1.0}
+  \def\yd{0.0}
+  \def\bh{0.45}   % bar half-height
+  \def\W{13.0}    % total timeline width
 
-%% Hourly gold
-\foreach \x in {0, 4.2, 8.4, 12.6}{
-  \fill[yellow!40] (\x,-0.3) rectangle (\x+4.0,-0.15);
-}
-\node[sched] at (6.2, -0.65) {every 60 min};
-\node[box, fill=yellow!20] at (5.5, -1.6) {Silver → Gold\\+ Baseline learning};
-\draw[arr, yellow!60!black] (5.5,-1.15) -- (5.5,-0.35);
+  % --- background rows (alternating) ---
+  \fill[gray!6]  (-3.8,\yd-\bh-0.2) rectangle (\W+0.4,\yd+\bh+0.2);
+  \fill[gray!6]  (-3.8,\yb-\bh-0.2) rectangle (\W+0.4,\yb+\bh+0.2);
 
-%% Retrain (every 6 h)
-\foreach \x in {0, 8.4}{
-  \fill[red!20] (\x,-0.5) rectangle (\x+8.0,-0.35);
-}
-\node[sched] at (8.4, -2.45) {every 6 h};
-\node[box, fill=red!10] at (9.5, -2.8) {ML Retrain\\+ RAG indexing};
-\draw[arr, red!60] (9.5,-2.45) -- (9.5,-0.5);
+  % --- row labels ---
+  \node[rowlabel] at (-0.2,\ya) {Bronze $\to$ Silver\\[-2pt]\scriptsize(microbatch)};
+  \node[rowlabel] at (-0.2,\yb) {Silver $\to$ Gold\\[-2pt]\scriptsize+ Baseline};
+  \node[rowlabel] at (-0.2,\yc) {ML Retrain\\[-2pt]\scriptsize+ RAG index};
+  \node[rowlabel] at (-0.2,\yd) {Anomaly Alerter\\[-2pt]\scriptsize(Telegram)};
 
-%% Alerter (every 5 min)
-\foreach \x in {0, 1.4, 2.8, 4.2, 5.6, 7.0, 8.4, 9.8, 11.2, 12.6}{
-  \fill[green!25] (\x,-0.65) rectangle (\x+1.0,-0.5);
-}
-\node[sched] at (12.0, 0.55) {every 5 min};
-\node[box, fill=green!10] at (12.5, 1.6) {Anomaly Alerter\\(Telegram)};
-\draw[arr, green!60!black] (12.5,1.15) -- (12.5,0.2);
+  % --- schedule badges ---
+  \node[schedlabel] at (\W+0.5,\ya) {every 5 min};
+  \node[schedlabel] at (\W+0.5,\yb) {every 1 h};
+  \node[schedlabel] at (\W+0.5,\yc) {every 6 h};
+  \node[schedlabel] at (\W+0.5,\yd) {every 5 min};
+
+  % --- timeline axes ---
+  \foreach \y in {\ya,\yb,\yc,\yd}{
+    \draw[gray!40, thin] (0,\y) -- (\W,\y);
+  }
+
+  % --- microbatch bars (every 5 min → step 1.04 over 13 units) ---
+  \foreach \x in {0, 1.04, 2.08, 3.12, 4.16, 5.20, 6.24, 7.28, 8.32, 9.36, 10.40, 11.44, 12.48}{
+    \filldraw[fill=blue!35, draw=blue!60, rounded corners=1pt]
+      (\x,\ya-\bh) rectangle (\x+0.78,\ya+\bh);
+  }
+
+  % --- hourly-gold bars (every 1 h → step 4.0) ---
+  \foreach \x in {0, 4.0, 8.0, 12.0}{
+    \filldraw[fill=orange!40, draw=orange!70, rounded corners=1pt]
+      (\x,\yb-\bh) rectangle (\x+3.6,\yb+\bh);
+  }
+
+  % --- retrain bars (every 6 h → step 8.0) ---
+  \foreach \x in {0, 8.0}{
+    \filldraw[fill=red!30, draw=red!55, rounded corners=1pt]
+      (\x,\yc-\bh) rectangle (\x+7.6,\yc+\bh);
+  }
+
+  % --- alerter bars (every 5 min, same grid as microbatch) ---
+  \foreach \x in {0, 1.04, 2.08, 3.12, 4.16, 5.20, 6.24, 7.28, 8.32, 9.36, 10.40, 11.44, 12.48}{
+    \filldraw[fill=green!35, draw=green!60!black, rounded corners=1pt]
+      (\x,\yd-\bh) rectangle (\x+0.78,\yd+\bh);
+  }
+
+  % --- time axis ---
+  \draw[thick, ->] (0,-0.8) -- (\W+0.3,-0.8) node[right]{\scriptsize time};
+  \foreach \x/\lbl in {0/0h, 4.0/1h, 8.0/2h, 12.0/3h}{
+    \draw[gray!50] (\x,-0.72) -- (\x,-0.88);
+    \node[timelabel] at (\x,-0.9) {\lbl};
+  }
 
 \end{tikzpicture}%
 }
-\caption{Prefect flow schedules: microbatch and alerter run every 5 minutes;
-         gold aggregation runs hourly; ML retrain runs every 6 hours.}
+\caption{Prefect flow schedules visualised as a Gantt-style timeline.
+         Each row is one flow; bar width is proportional to schedule interval.
+         Microbatch and Alerter fire every 5 minutes; Gold aggregation runs
+         hourly; ML Retrain with RAG indexing runs every 6 hours.}
 \label{fig:batch-flows}
 \end{figure}
 
@@ -296,9 +325,12 @@ distant, misrepresenting the weekly traffic rhythm.
 
 \subsection{IsolationForest Configuration}
 
-Each per-route model is trained with \texttt{contamination=0.05}
-(5\% of training hours assumed anomalous), \texttt{n\_estimators=100}, and
-\texttt{random\_state=42}~\cite{liu2008isolation}.
+Each per-route model is trained with hyperparameters selected by
+\textbf{Optuna} TPE Bayesian optimisation (50 trials per route,
+objective: anomaly score gap — see Section~\ref{subsec:iforest}):
+\texttt{contamination=0.01}, \texttt{n\_estimators=450},
+\texttt{max\_samples=0.76}, \texttt{max\_features=0.73}, and
+\texttt{random\_state=42}~\cite{liu2008isolation, optuna_paper}.
 The model is registered in MLflow under the name
 \texttt{iforest-\{route\_id\}} with alias \texttt{champion}, enabling
 the Serving API to load the latest production-ready model via
