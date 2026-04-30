@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.28)  29 APR 2026 19:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.28)  30 APR 2026 10:03
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1095,52 +1095,64 @@ Overfull \hbox (24.94162pt too wide) in paragraph at lines 277--284
  []
 
 [33 <./images/prefect-deployments.png>]
-Overfull \hbox (53.66139pt too wide) in paragraph at lines 328--339
+Overfull \hbox (53.66139pt too wide) in paragraph at lines 340--351
 \T5/cmr/m/n/12 tion 3.4.2[]): \T5/cmtt/m/n/12 contamination=0.01\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 n_estimators=450\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 max_samples=0.76\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 max_features=0.73\T5/cmr/m/n/12 ,
  []
 
+
+Overfull \hbox (43.5643pt too wide) in paragraph at lines 366--386
+ [][] 
+ []
+
 [34]
-Overfull \hbox (21.04123pt too wide) in paragraph at lines 402--408
+Overfull \hbox (21.04123pt too wide) in paragraph at lines 411--418
 \T5/cmr/m/n/12 rea-son-ing that a duty man-ager can act on with-out con-sult-ing raw data. The \T5/cmtt/m/n/12 /rca/feedback
  []
 
-<images/ai-explanation.png, id=204, 671.50874pt x 269.005pt>
+
+Overfull \hbox (1.33954pt too wide) in paragraph at lines 411--418
+\T5/cmr/m/n/12 end-point (POST, \T5/cmtt/m/n/12 {log_id, feedback}\T5/cmr/m/n/12 ) records op-er-a-tor thumbs-up/down judge-ments
+ []
+
+[35]
+<images/ai-explanation.png, id=207, 671.50874pt x 269.005pt>
 File: images/ai-explanation.png Graphic file (type png)
 <use images/ai-explanation.png>
-Package pdftex.def Info: images/ai-explanation.png  used on input line 434.
+Package pdftex.def Info: images/ai-explanation.png  used on input line 444.
 (pdftex.def)             Requested size: 374.86777pt x 150.16972pt.
-[35]
-Overfull \hbox (13.945pt too wide) in paragraph at lines 441--445
+
+Overfull \hbox (13.945pt too wide) in paragraph at lines 451--455
 \T5/cmr/m/n/12 For the \T5/cmtt/m/n/12 zone6_southern_coastal $\OMS/cmsy/m/n/12 !$ \T5/cmtt/m/n/12 zone5_western_periurban \T5/cmr/m/n/12 route, the Qwen2.5:3b
  []
 
 <images/ai-chat.png, id=208, 327.2225pt x 454.69875pt>
 File: images/ai-chat.png Graphic file (type png)
 <use images/ai-chat.png>
-Package pdftex.def Info: images/ai-chat.png  used on input line 448.
+Package pdftex.def Info: images/ai-chat.png  used on input line 458.
 (pdftex.def)             Requested size: 374.86777pt x 520.90825pt.
 <images/ai-chat-english.png, id=209, 421.575pt x 591.20876pt>
 File: images/ai-chat-english.png Graphic file (type png)
 <use images/ai-chat-english.png>
-Package pdftex.def Info: images/ai-chat-english.png  used on input line 464.
+Package pdftex.def Info: images/ai-chat-english.png  used on input line 474.
 (pdftex.def)             Requested size: 317.53331pt x 445.30893pt.
 [36 <./images/ai-explanation.png>] [37 <./images/ai-chat.png>] [38 <./images/ai-chat-english.png>]
 <images/dashboard-heatmap-zscore.png, id=224, 2007.5pt x 896.34875pt>
 File: images/dashboard-heatmap-zscore.png Graphic file (type png)
 <use images/dashboard-heatmap-zscore.png>
-Package pdftex.def Info: images/dashboard-heatmap-zscore.png  used on input line 509.
+Package pdftex.def Info: images/dashboard-heatmap-zscore.png  used on input line 519.
 (pdftex.def)             Requested size: 441.01775pt x 196.91011pt.
 <images/dashboard-heatmap-both.png, id=225, 2007.5pt x 791.95876pt>
 File: images/dashboard-heatmap-both.png Graphic file (type png)
 <use images/dashboard-heatmap-both.png>
-Package pdftex.def Info: images/dashboard-heatmap-both.png  used on input line 518.
+Package pdftex.def Info: images/dashboard-heatmap-both.png  used on input line 528.
 (pdftex.def)             Requested size: 441.01775pt x 173.97769pt.
-<images/ai-heatmap-analysis.png, id=226, 2007.5pt x 1380.15625pt>
+ [39 <./images/dashboard-heatmap-zscore.png> <./images/dashboard-heatmap-both.png>]
+<images/ai-heatmap-analysis.png, id=231, 2007.5pt x 1380.15625pt>
 File: images/ai-heatmap-analysis.png Graphic file (type png)
 <use images/ai-heatmap-analysis.png>
-Package pdftex.def Info: images/ai-heatmap-analysis.png  used on input line 537.
+Package pdftex.def Info: images/ai-heatmap-analysis.png  used on input line 551.
 (pdftex.def)             Requested size: 441.01775pt x 303.19307pt.
-) [39 <./images/dashboard-heatmap-zscore.png> <./images/dashboard-heatmap-both.png>] [40 <./images/ai-heatmap-analysis.png>]
+) [40 <./images/ai-heatmap-analysis.png>]
 Chapter 6.
 (./chapters/result.tex
 <images/dremio-eda.png, id=236, 2007.5pt x 1012.78375pt>
@@ -1281,7 +1293,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  84i,14n,104p,1765b,1317s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/zapfding/uzdr.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbxti10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vncsc10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vntt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vntt12.pfb>
-Output written on main.pdf (71 pages, 9878148 bytes).
+Output written on main.pdf (71 pages, 9873772 bytes).
 PDF statistics:
  428 PDF objects out of 1000 (max. 8388607)
  250 compressed objects within 3 object streams

@@ -282,6 +282,18 @@ distribution. These statistics are written to
 \texttt{gold.traffic\_baseline} and subsequently loaded by the Online Service
 every 6~hours.
 
+\noindent The Z-score signal is intentionally \textbf{univariate}: it targets
+\texttt{avg\_heavy\_ratio} because severe-congestion fraction is the most
+operationally interpretable single indicator and has a well-defined
+historical distribution per \texttt{(route, day\_of\_week, hour\_of\_day)}.
+The IsolationForest (Section~\ref{sec:impl-ml}) operates on a
+7-dimensional feature vector that additionally includes
+\texttt{avg\_moderate\_ratio}, \texttt{max\_severe\_segments}, and cyclical
+time encodings, capturing multivariate distributional outliers that a
+univariate threshold cannot detect. The two signals are therefore
+\textit{complementary by design}: Z-score catches acute univariate spikes;
+IsolationForest catches subtle multivariate anomalies.
+
 \subsection{Anomaly Alerter}
 
 The \texttt{alerter.run()} function queries the PostgreSQL
@@ -355,15 +367,20 @@ REST and SSE endpoints consumed by the Next.js frontend.
 \hline
 \textbf{Endpoint} & \textbf{Method} & \textbf{Description} \\
 \hline
-\texttt{/online}                   & GET  & Latest PostgreSQL snapshot per route \\
-\texttt{/anomalies}                & GET  & Active anomaly list with history \\
-\texttt{/predict}                  & GET  & IsolationForest scores (all routes) \\
-\texttt{/anomalies/\{id\}/explain} & GET  & SSE: LLM explanation stream \\
-\texttt{/rca}                      & GET  & SSE: root-cause analysis stream \\
-\texttt{/chat}                     & POST & SSE: conversational RAG interface \\
-\texttt{/events/traffic}           & GET  & SSE: 15-second heartbeat stream \\
-\texttt{/metrics}                  & GET  & Heatmaps, zone aggregates \\
-\texttt{/telegram/webhook}         & POST & Telegram bot webhook receiver \\
+\texttt{/online/routes}              & GET  & Merged snapshot: online features + coordinates \\
+\texttt{/online/features}           & GET  & Current Welford state per route \\
+\texttt{/anomalies/current}         & GET  & Active anomaly list (Z-score + IForest) \\
+\texttt{/anomalies/summary}         & GET  & Anomaly summary over configurable window \\
+\texttt{/anomalies/\{id\}/explain}  & GET  & SSE: per-route LLM explanation (15-min cache) \\
+\texttt{/predict/anomalies}         & GET  & IsolationForest scores for all routes \\
+\texttt{/metrics/heatmap}           & GET  & Z-score heatmap (hours or date range) \\
+\texttt{/metrics/zones}             & GET  & Congestion metrics aggregated by zone \\
+\texttt{/metrics/analyze}           & POST & SSE: LLM heatmap analysis with RAG + weather \\
+\texttt{/rca}                       & POST & SSE: free-form RAG query (optional route\_id) \\
+\texttt{/rca/feedback}              & POST & Thumbs-up/down feedback on RCA responses \\
+\texttt{/chat}                      & POST & SSE: multi-turn conversational RAG interface \\
+\texttt{/events/traffic}            & GET  & SSE: 15-second live traffic heartbeat \\
+\texttt{/telegram/webhook}          & POST & Telegram bot webhook receiver \\
 \hline
 \end{tabular}
 \end{table}
@@ -374,10 +391,10 @@ The \texttt{/events/traffic} endpoint loops every 15 seconds, querying
 PostgreSQL and the MLflow model cache, then yielding a JSON payload as an SSE
 \texttt{data:} frame. This \textit{push} model means the frontend never needs
 to poll; a single \texttt{EventSource} connection receives all updates. Token
-latency for the LLM explanation endpoints (\texttt{/explain}, \texttt{/rca})
-is further minimised by streaming each Ollama token as a separate SSE chunk,
-so the user sees the first word within one second regardless of total response
-length.
+latency for the LLM endpoints (\texttt{/anomalies/\{id\}/explain},
+\texttt{/metrics/analyze}, \texttt{/rca}, \texttt{/chat}) is minimised by
+streaming each Ollama token as a separate SSE chunk, so the user sees the
+first word within one second regardless of total response length.
 
 \subsection{RAG-Enriched Inference}
 
@@ -388,23 +405,16 @@ behaving anomalously, nor does it suggest a remediation action. The RAG
 pipeline bridges this \textit{semantic gap} by grounding LLM inference in
 three layers of contextual evidence --- historical traffic patterns,
 recent anomaly windows, and live meteorological data --- enabling the
-model to produce operator-ready, natural-language explanations such as:
-
-\begin{quote}
-\textit{``The Southern Coastal $\to$ Western Periurban route is showing
-abnormal heavy congestion (10.9\%) at 15:00, significantly above the
-historical average of 4.2\% for Friday afternoons. Current weather data
-indicates 12.4~mm rainfall, which typically correlates with a 1.8$\times$
-surge in heavy vehicle ratios on Quốc lộ 50. This is consistent with
-three similar events indexed in the last 7 days.''}
-\end{quote}
+model to produce operator-ready, natural-language explanations
+(Figure~\ref{fig:ai-explanation}).
 
 This represents a \textbf{human-in-the-loop} design: automated detectors
 classify events at machine speed, whilst the LLM layer translates
 classifications into domain-specific reasoning that a duty manager can act
 on without consulting raw data. The \texttt{/rca/feedback} endpoint
-(thumbs-up / thumbs-down) further closes the loop by collecting
-operator judgements for future retrieval ranking improvement.
+(POST, \texttt{\{log\_id, feedback\}}) records operator thumbs-up/down
+judgements against the logged interaction, enabling future retrieval
+ranking improvement.
 
 The \texttt{/anomalies/\{route\_id\}/explain} endpoint constructs a
 three-part context before calling Ollama:
@@ -522,9 +532,13 @@ Figure~\ref{fig:heatmap-both} shows the Coastal $\to$ Western route at
   \label{fig:heatmap-both}
 \end{figure}
 
-Clicking the \textbf{Phân tích} button triggers a full-heatmap RAG query that
-aggregates all active anomaly signals and returns a structured four-part
-analysis (Figure~\ref{fig:ai-heatmap-analysis}): \textit{(1)} multi-signal
+The \texttt{/metrics/analyze} endpoint accepts a
+\texttt{HeatmapAnalyzeRequest} (\texttt{context}, \texttt{lang},
+\texttt{route\_ids}) and streams a system-wide LLM analysis enriched with
+live weather and RAG-retrieved traffic patterns. Clicking the \textbf{Phân
+tích} button in the dashboard posts the full heatmap anomaly snapshot to
+\texttt{/metrics/analyze}, which returns a structured four-part analysis
+(Figure~\ref{fig:ai-heatmap-analysis}): \textit{(1)} multi-signal
 anomaly patterns confirmed by both IF and Z-score (e.g., Zone~3~$\to$~Zone~4
 at 16:00 with $z{=}3.4$ and 18:00 with $z{=}2.5$); \textit{(2)} root-cause
 hypotheses referencing industrial corridors, port logistics, flood-prone
