@@ -1,28 +1,139 @@
-\begin{lstlisting}[language=JavaScript, caption={$\texttt{Sample}$ procedure.}, label={lst:1}]
-function calculateSumAndProduct(input) {
-  const pattern = /^X(\d{2})Y(\d{2})$/;
-  const match = input.match(pattern);
+This appendix records the concrete configuration and reproducibility artifacts
+used by the UrbanPulse implementation. The goal is to make the route sampling,
+runtime schemas, and experiment procedure auditable without duplicating the full
+source repository.
 
-  if (!match) {
-    throw new Error("Invalid format! Expected format: X[XX]Y[YY]");
+\section{Route and Zone Configuration}
+
+UrbanPulse monitors 20 directed inter-zone routes generated from six functional
+zones. Each route is directional and follows a stable route identifier
+convention. Table~\ref{tab:appendix-zones} summarises the zone anchors used
+by \texttt{routes\_generator.py}.
+
+\begin{table}[htbp]
+\centering
+\caption{UrbanPulse zone anchors used for route generation.}
+\label{tab:appendix-zones}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llll}
+\hline
+\textbf{Zone ID} & \textbf{Name} & \textbf{Anchor (lat, lon)} & \textbf{Outgoing routes} \\
+\hline
+\texttt{zone1\_urban\_core} & Urban Core & (10.7755334, 106.6989747) & 4 \\
+\texttt{zone2\_eastern\_innovation} & Eastern Innovation & (10.8666897, 106.7793007) & 3 \\
+\texttt{zone3\_northern\_industrial} & Northern Industrial & (11.1031199, 106.5495773) & 3 \\
+\texttt{zone4\_southern\_port} & Southern Port & (10.7629962, 106.7722453) & 4 \\
+\texttt{zone5\_western\_periurban} & Western Peri-urban & (10.6866869, 106.5773591) & 2 \\
+\texttt{zone6\_southern\_coastal} & Southern Coastal & (10.5842275, 107.0367637) & 4 \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\begin{lstlisting}[language=JavaScript, caption={Excerpt from the route configuration file.}, label={lst:route-config}]
+[
+  {
+    "route_id": "zone1_urban_core_to_zone2_eastern_innovation",
+    "origin": "Urban Core",
+    "destination": "Eastern Innovation",
+    "origin_anchor": [10.7755334, 106.6989747],
+    "destination_anchor": [10.8666897, 106.7793007]
+  },
+  ...,
+  {
+    "route_id": "zone6_southern_coastal_to_zone5_western_periurban",
+    "origin": "Southern Coastal",
+    "destination": "Western Peri-urban",
+    "origin_anchor": [10.5842275, 107.0367637],
+    "destination_anchor": [10.6866869, 106.5773591]
   }
-
-  const firstNumber = parseInt(match[1], 10);
-  const secondNumber = parseInt(match[2], 10);
-
-  const sum = firstNumber + secondNumber;
-  const product = firstNumber * secondNumber;
-
-  console.log(`Input: ${input}`);
-  console.log(`Sum: ${firstNumber} + ${secondNumber} = ${sum}`);
-}
-
-// Example usage
-try {
-  calculateSumAndProduct("X12Y34"); // Valid case
-  calculateSumAndProduct("X05Y07"); // Valid case
-  calculateSumAndProduct("A12B34"); // Invalid case
-} catch (error) {
-  console.error(error.message);
-}
+]
 \end{lstlisting}
+
+\section{Runtime Data Artifacts}
+
+Table~\ref{tab:appendix-artifacts} lists the primary persisted artifacts used to
+reconstruct an anomaly decision. The column \texttt{duration\_zscore} is retained
+for schema continuity; in the current implementation it stores the heavy-ratio
+Z-score, not a duration Z-score.
+
+\begin{table}[htbp]
+\centering
+\caption{Primary persisted artifacts for reproducible anomaly decisions.}
+\label{tab:appendix-artifacts}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lll}
+\hline
+\textbf{Artifact} & \textbf{Storage} & \textbf{Key fields} \\
+\hline
+Traffic observations & Redpanda / Bronze Parquet & \texttt{route\_id}, \texttt{duration\_minutes}, congestion ratios, \texttt{timestamp\_utc} \\
+Hourly features & \texttt{gold.traffic\_hourly} & \texttt{avg\_heavy\_ratio}, \texttt{avg\_moderate\_ratio}, \texttt{max\_severe\_segments}, \texttt{hour\_utc} \\
+Baseline statistics & \texttt{gold.traffic\_baseline} & heavy-ratio mean/stddev, \texttt{zscore\_p95}, \texttt{zscore\_p99} \\
+Online feature store & \texttt{online\_route\_features} & Welford state, \texttt{mean\_heavy\_ratio}, \texttt{duration\_zscore}, \texttt{is\_anomaly} \\
+IForest scores & \texttt{route\_iforest\_scores} & \texttt{iforest\_score}, \texttt{iforest\_anomaly}, \texttt{both\_anomaly} \\
+Experiment metadata & MLflow & route model parameters, anomaly rates, agreement, Jaccard \\
+RAG context & ChromaDB & \texttt{anomaly\_events}, \texttt{traffic\_patterns}, \texttt{external\_context} \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\section{Serving API Surface}
+
+The Serving API exposes both query endpoints and streaming endpoints. The most
+important endpoints used by the dashboard and Telegram alerting workflow are
+listed in Table~\ref{tab:appendix-api}.
+
+\begin{table}[htbp]
+\centering
+\caption{Serving API endpoints used by the evaluation workflow.}
+\label{tab:appendix-api}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lll}
+\hline
+\textbf{Endpoint} & \textbf{Method} & \textbf{Purpose} \\
+\hline
+\texttt{/online/features} & GET & Current Welford state and online Z-score per route \\
+\texttt{/anomalies/current} & GET & Active Z-score and IsolationForest anomaly list \\
+\texttt{/predict/anomalies} & GET & Per-route IsolationForest scores for active windows \\
+\texttt{/metrics/heatmap} & GET & Route-by-hour Z-score heatmap data \\
+\texttt{/metrics/analyze} & POST & SSE heatmap interpretation using LLM + RAG context \\
+\texttt{/anomalies/\{id\}/explain} & GET & SSE explanation for a single anomalous route \\
+\texttt{/events/traffic} & GET & 15-second live traffic heartbeat for the dashboard \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\section{Reproducibility Commands}
+
+Listing~\ref{lst:repro-commands} shows the Makefile entry points used during
+local validation. Production equivalents use the \texttt{prod-*} targets with
+\texttt{.env.prod} and the production Docker Compose overlay.
+
+\begin{lstlisting}[caption={Local reproducibility commands.}, label={lst:repro-commands}]
+make dev              # start local Docker Compose stack
+make bootstrap        # create topics, buckets, Iceberg tables, Prefect flows
+make train            # trigger per-route IsolationForest training via ML API
+make lint             # ruff check across the workspace
+make typecheck        # mypy over apps/ and packages/
+make test-unit        # unit tests
+make test-integration # integration tests against running services
+make status           # inspect service health
+make logs             # stream container logs
+\end{lstlisting}
+
+\section{Evaluation Artifacts}
+
+The figures in the methodology, implementation, and results chapters are
+generated from the following captured artifacts:
+
+\begin{itemize}
+  \item Dremio query screenshots validating Gold table coverage and route count.
+  \item MLflow screenshots for the Optuna-tuned per-route IsolationForest
+        training run shown in Chapter~6.
+  \item Grafana dashboards for online feature latency, anomaly signals,
+        ingestion cadence, and batch pipeline throughput.
+  \item Dashboard screenshots for Z-score-only, IForest-only, and dual-signal
+        anomaly distributions.
+\end{itemize}

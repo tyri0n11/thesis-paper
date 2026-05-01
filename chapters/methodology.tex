@@ -753,8 +753,11 @@
   with historically low variance from generating continuous false-positive
   alerts: without it, a route whose heavy\_ratio rarely fluctuates would
   produce a very small $p_{99,r}$, making even minor deviations appear
-  anomalous. The fallback of $2.0$ applies when no baseline exists yet
-  (e.g.\ a newly added route). The threshold is \textbf{one-sided}:
+  anomalous. The fallback of $2.0$ applies when the baseline row exists but
+  \texttt{zscore\_p99} is unavailable (for example, sparse history). If no
+  baseline entry exists for the current route/time slot, the Online Service
+  returns \texttt{None} and does not emit a Z-score anomaly. The threshold is
+  \textbf{one-sided}:
   only positive deviations are flagged, as a lower-than-baseline
   heavy ratio indicates free-flowing traffic, which does not constitute
   an anomalous condition. Algorithm~\ref{alg:zscore} formalises the
@@ -792,8 +795,8 @@
   The majority of routes remain within $|z| < 2$, whilst two
   routes (\textit{Urban Core~$\to$~Northern Industrial} and
   \textit{Southern Port~$\to$~Western Peri-urban}) produce
-  pronounced spikes exceeding $z = 3$ during the 06:00 and
-  16:00--17:00 peak-hour windows --- periods consistent with
+  pronounced spikes that exceed their dynamic route thresholds during the
+  06:00 and 16:00--17:00 peak-hour windows --- periods consistent with
   Ho Chi Minh City's morning and evening commute patterns
   (Figure~\ref{fig:zscore_timeseries}).
 
@@ -804,8 +807,8 @@
       (Grafana). Each line represents one directed inter-zone route.
       Spikes above the dashed threshold $\theta_r$ trigger the Z-score
       anomaly signal; the reference line shown at $\theta_r = 2.0$
-      corresponds to the fallback default applied when no per-route
-      baseline is available.}
+      corresponds to the fallback default applied when the baseline row
+      lacks a route-specific \texttt{zscore\_p99} value.}
       \label{fig:zscore_timeseries}
   \end{figure}
 
@@ -961,9 +964,9 @@
 
   Table~\ref{tab:iforest_params} reports the resulting configuration.
   The \texttt{contamination} value of $0.01$ is consistent with an
-  independent duration-based anomaly rate estimate of $1.97\%$
-  obtained by applying the per-route baseline Z-score threshold to
-  the same training corpus, providing cross-signal validation that
+  independent heavy-ratio Z-score anomaly rate estimate of $1.97\%$
+  obtained by applying the statistical baseline rule to the same training
+  corpus, providing cross-signal validation that
   genuine anomalous hours are rare in the pre-cutoff dataset.
 
   \begin{table}[htbp]
@@ -1377,17 +1380,6 @@
                               duration (15\,s interval)
                             & $< 5\,\text{s}$
                             & Serving API logs \\                                                                                                         
-  RAG time-to-first-token   & \texttt{/rca} request $\to$                                                                                                 
-                              first SSE chunk                                                                                                             
-                            & $< 3\,\text{s}$                                                                                                             
-                            & Client-side measurement \\                                                                                                  
-  Streaming throughput      & Messages processed per minute                                                                                               
-                            & Stable under 2$\times$ normal load
-                            & Prometheus container metrics \\                                                                                             
-  Alert precision           & \texttt{both\_anomaly} alerts                                                                                               
-                              matching real congestion                                                                                                    
-                            & $> 80\%$                                                                                                                    
-                            & Manual review of alert log \\
   \hline                                                                                                                                                  
   \end{tabular}
   }%

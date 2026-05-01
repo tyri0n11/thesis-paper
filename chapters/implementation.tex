@@ -131,9 +131,11 @@ compared against the route's baseline statistics loaded from the
                           {\sigma_\text{baseline}}
 \end{equation}
 
-A one-sided threshold $Z > \theta$ (default $\theta = 2.0$, overridden per
-route from the baseline's \texttt{zscore\_threshold} column) marks the window
-as \texttt{is\_anomaly = TRUE}. The one-sided formulation is intentional:
+A one-sided threshold $Z > \theta_r$ marks the window as
+\texttt{is\_anomaly = TRUE}. The threshold is resolved per route from
+\texttt{gold.traffic\_baseline.zscore\_p99}; if that value is absent, the
+Online Service falls back to $2.0$, with a minimum floor of $1.5$ to avoid
+over-sensitive low-variance routes. The one-sided formulation is intentional:
 \textit{low} heavy traffic is never an incident; only elevated congestion
 warrants an alert.
 
@@ -425,11 +427,18 @@ three-part context before calling Ollama:
         and HCMC landmark references injected into the system prompt.
   \item \textbf{Live weather} (Open-Meteo API, 15-minute cache): temperature,
         precipitation, wind speed, and WMO weather code for HCMC.
-  \item \textbf{RAG context} (ChromaDB): top-$k$ chunks retrieved from two
-        collections --- \texttt{anomaly\_events} (indexed hourly by the
-        batch pipeline) and \texttt{traffic\_patterns} (indexed every 6
-        hours). Retrieval uses \textbf{nomic-embed-text}~\cite{nomic_embed}
-        embeddings with cosine similarity.
+  \item \textbf{RAG context} (ChromaDB): top-$k$ chunks retrieved from all
+        three collections --- \texttt{anomaly\_events} (past anomaly windows
+        for this route, $n{=}3$, filtered by \texttt{route\_id}, indexed
+        hourly), \texttt{traffic\_patterns} (typical patterns at this
+        hour/day-of-week, $n{=}2$, indexed every 6 hours), and
+        \texttt{external\_context} (7-day rolling HCMC hourly weather
+        history, $n{=}3$, preferring records within the last 24 hours).
+        Retrieval uses \textbf{nomic-embed-text}~\cite{nomic_embed}
+        embeddings with cosine similarity. The \texttt{external\_context}
+        collection complements item~2 above: live weather captures the
+        current snapshot whilst the RAG weather chunks supply the
+        historical pattern context for the same hour-of-day.
 \end{enumerate}
 
 \noindent The assembled prompt is then streamed to the

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.28)  30 APR 2026 10:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.28)  1 MAY 2026 13:08
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -591,24 +591,45 @@ File: pgfmodulematrix.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ))) (/usr/local/texlive/2026/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex
 File: tikzlibrarycalc.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-) (/usr/local/texlive/2026/texmf-dist/tex/latex/geometry/geometry.sty
+) (/usr/local/texlive/2026/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.code.tex
+File: pgflibraryarrows.meta.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfarrowinset=\dimen268
+\pgfarrowlength=\dimen269
+\pgfarrowwidth=\dimen270
+\pgfarrowlinewidth=\dimen271
+) (/usr/local/texlive/2026/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+) (/usr/local/texlive/2026/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfit.code.tex
+File: tikzlibraryfit.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+) (/usr/local/texlive/2026/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing.code.tex (/usr/local/texlive/2026/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex (/usr/local/texlive/2026/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.tex
+\pgfdecoratedcompleteddistance=\dimen272
+\pgfdecoratedremainingdistance=\dimen273
+\pgfdecoratedinputsegmentcompleteddistance=\dimen274
+\pgfdecoratedinputsegmentremainingdistance=\dimen275
+\pgf@decorate@distancetomove=\dimen276
+\pgf@decorate@repeatstate=\count320
+\pgfdecorationsegmentamplitude=\dimen277
+\pgfdecorationsegmentlength=\dimen278
+)
+\tikz@lib@dec@box=\box66
+) (/usr/local/texlive/2026/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.tex)) (/usr/local/texlive/2026/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2026/03/07 v6.0 Page Geometry
  (/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
  (/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 ))
-\Gm@cnth=\count320
-\Gm@cntv=\count321
-\c@Gm@tempcnt=\count322
-\Gm@bindingoffset=\dimen268
-\Gm@wd@mp=\dimen269
-\Gm@odd@mp=\dimen270
-\Gm@even@mp=\dimen271
-\Gm@layoutwidth=\dimen272
-\Gm@layoutheight=\dimen273
-\Gm@layouthoffset=\dimen274
-\Gm@layoutvoffset=\dimen275
+\Gm@cnth=\count321
+\Gm@cntv=\count322
+\c@Gm@tempcnt=\count323
+\Gm@bindingoffset=\dimen279
+\Gm@wd@mp=\dimen280
+\Gm@odd@mp=\dimen281
+\Gm@even@mp=\dimen282
+\Gm@layoutwidth=\dimen283
+\Gm@layoutheight=\dimen284
+\Gm@layouthoffset=\dimen285
+\Gm@layoutvoffset=\dimen286
 \Gm@dimlist=\toks37
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
 Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
@@ -629,44 +650,44 @@ Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 \@temptokenb=\toks38
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/titlesec/titlesec.sty
 Package: titlesec 2025/01/04 v2.17 Sectioning titles
-\ttl@box=\box66
+\ttl@box=\box67
 \beforetitleunit=\skip70
 \aftertitleunit=\skip71
-\ttl@plus=\dimen276
-\ttl@minus=\dimen277
+\ttl@plus=\dimen287
+\ttl@minus=\dimen288
 \ttl@toksa=\toks39
-\titlewidth=\dimen278
-\titlewidthlast=\dimen279
-\titlewidthfirst=\dimen280
+\titlewidth=\dimen289
+\titlewidthlast=\dimen290
+\titlewidthfirst=\dimen291
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/algorithms/algorithm.sty
 Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
  (/usr/local/texlive/2026/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count323
+\c@float@type=\count324
 \float@exts=\toks40
-\float@box=\box67
+\float@box=\box68
 \@float@everytoks=\toks41
-\@floatcapt=\box68
+\@floatcapt=\box69
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
 )
 \@float@every@algorithm=\toks42
-\c@algorithm=\count324
+\c@algorithm=\count325
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
 Package: algpseudocode 
  (/usr/local/texlive/2026/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count325
-\c@ALG@rem=\count326
-\c@ALG@nested=\count327
+\c@ALG@line=\count326
+\c@ALG@rem=\count327
+\c@ALG@nested=\count328
 \ALG@tlm=\skip72
 \ALG@thistlm=\skip73
-\c@ALG@Lnr=\count328
-\c@ALG@blocknr=\count329
-\c@ALG@storecount=\count330
-\c@ALG@tmpcounter=\count331
+\c@ALG@Lnr=\count329
+\c@ALG@blocknr=\count330
+\c@ALG@storecount=\count331
+\c@ALG@tmpcounter=\count332
 \ALG@tmplength=\skip74
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
@@ -674,25 +695,25 @@ Document Style - pseudocode environments for use with the `algorithmicx' style
 \Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count332
-\lst@gtempboxa=\box69
+\lst@mode=\count333
+\lst@gtempboxa=\box70
 \lst@token=\toks43
-\lst@length=\count333
-\lst@currlwidth=\dimen281
-\lst@column=\count334
-\lst@pos=\count335
-\lst@lostspace=\dimen282
-\lst@width=\dimen283
-\lst@newlines=\count336
-\lst@lineno=\count337
-\lst@maxwidth=\dimen284
+\lst@length=\count334
+\lst@currlwidth=\dimen292
+\lst@column=\count335
+\lst@pos=\count336
+\lst@lostspace=\dimen293
+\lst@width=\dimen294
+\lst@newlines=\count337
+\lst@lineno=\count338
+\lst@maxwidth=\dimen295
  (/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstpatch.sty
 File: lstpatch.sty 2025/11/14 1.11b (Carsten Heinz)
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
-\c@lstnumber=\count338
-\lst@skipnumbers=\count339
-\lst@framebox=\box70
+\c@lstnumber=\count339
+\lst@skipnumbers=\count340
+\lst@framebox=\box71
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.cfg
 File: listings.cfg 2025/11/14 1.11b listings configuration
 ))
@@ -706,7 +727,7 @@ Package: listings 2025/11/14 1.11b (Carsten Heinz)
     so I'm assuming it got fixed.
 (/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count340
+\l__color_backend_stack_int=\count341
 ) (./main.aux)
 \openout1 = `main.aux'.
 
@@ -728,16 +749,16 @@ LaTeX Font Info:    Checking defaults for T5/cmr/m/n on input line 97.
 LaTeX Font Info:    ... okay on input line 97.
  (/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count341
-\scratchdimen=\dimen285
-\scratchbox=\box71
-\nofMPsegments=\count342
-\nofMParguments=\count343
+\scratchcounter=\count342
+\scratchdimen=\dimen296
+\scratchbox=\box72
+\nofMPsegments=\count343
+\nofMParguments=\count344
 \everyMPshowfont=\toks44
-\MPscratchCnt=\count344
-\MPscratchDim=\dimen286
-\MPnumerator=\count345
-\makeMPintoPDFobject=\count346
+\MPscratchCnt=\count345
+\MPscratchDim=\dimen297
+\MPnumerator=\count346
+\makeMPintoPDFobject=\count347
 \everyMPtoPDFconversion=\toks45
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -780,7 +801,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\c@lstlisting=\count347
+\c@lstlisting=\count348
 *geometry* verbose mode - [ newgeometry ] result:
 * driver: pdftex
 * paper: a4paper
@@ -838,32 +859,17 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
- [7] (./main.lot
-LaTeX Font Info:    Trying to load font information for T5+cmtt on input line 18.
- (/usr/local/texlive/2026/texmf-dist/tex/latex/vntex/t5cmtt.fd
-File: t5cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-Overfull \hbox (6.03706pt too wide) in paragraph at lines 18--18
- [][] []\T5/cmr/m/n/12 Dataset sum-mary for the MLflow train-ing run \T5/cmtt/m/n/12 per-route-train-20260419\T5/cmr/m/n/12 . [][]  
- []
-
-
-Overfull \hbox (11.63002pt too wide) in paragraph at lines 19--19
- [][] []\T5/cmr/m/n/12 Per-route anomaly de-tec-tion met-rics (Iso-la-tion-For-est vs. Z-Score), Optuna- 
- []
-
-
-Overfull \hbox (34.20517pt too wide) in paragraph at lines 19--19
- \T5/cmr/m/n/12 tuned params (\T5/cmtt/m/n/12 contamination=0.01\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 n_estimators=450\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 max_samples=0.76\T5/cmr/m/n/12 , 
- []
-
-)
+ [7] (./main.lot)
 \tf@lot=\write5
 \openout5 = `main.lot'.
 
  [8
 
 ] (./main.lof
+LaTeX Font Info:    Trying to load font information for T5+cmtt on input line 9.
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/vntex/t5cmtt.fd
+File: t5cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
 Overfull \hbox (10.86221pt too wide) in paragraph at lines 14--14
  \T5/cmr/m/n/12 and Open-Meteo via Red-panda, medal-lion lake-house (Bronze/Silver/Gold) 
  []
@@ -955,27 +961,28 @@ Overfull \hbox (47.32425pt too wide) in paragraph at lines 587--597
  []
 
 [13] [14]
-Overfull \hbox (13.26585pt too wide) in paragraph at lines 787--791
+Overfull \hbox (13.26585pt too wide) in paragraph at lines 790--794
 []\T5/cmr/m/n/12 The re-sult is stored in the \T5/cmtt/m/n/12 online_route_features \T5/cmr/m/n/12 ta-ble un-der the col-umn \T5/cmtt/m/n/12 duration_
  []
 
 
-Overfull \hbox (8.52655pt too wide) in paragraph at lines 792--799
+Overfull \hbox (8.52655pt too wide) in paragraph at lines 795--802
 []\T5/cmr/m/n/12 The ma-jor-ity of routes re-main within $\OMS/cmsy/m/n/12 j\OML/cmm/m/it/12 z\OMS/cmsy/m/n/12 j \OML/cmm/m/it/12 < \OT1/cmr/m/n/12 2$\T5/cmr/m/n/12 , whilst two routes (\T5/cmr/m/it/12 Ur-ban Core $\OMS/cmsy/m/n/12 !$ \T5/cmr/m/it/12 North-
  []
 
-<images/grafana-zscore-timeseries.png, id=120, 2007.5pt x 919.435pt>
+[15]
+<images/grafana-zscore-timeseries.png, id=124, 2007.5pt x 919.435pt>
 File: images/grafana-zscore-timeseries.png Graphic file (type png)
 <use images/grafana-zscore-timeseries.png>
-Package pdftex.def Info: images/grafana-zscore-timeseries.png  used on input line 802.
+Package pdftex.def Info: images/grafana-zscore-timeseries.png  used on input line 805.
 (pdftex.def)             Requested size: 441.01775pt x 201.9817pt.
-[15]
-Overfull \hbox (50.53036pt too wide) in paragraph at lines 842--848
+
+Overfull \hbox (50.53036pt too wide) in paragraph at lines 845--851
 []\T5/cmr/m/n/12 where $\OML/cmm/m/it/12 h[]$ \T5/cmr/m/n/12 is \T5/cmtt/m/n/12 avg_heavy_ratio\T5/cmr/m/n/12 , $\OML/cmm/m/it/12 m[]$ \T5/cmr/m/n/12 is \T5/cmtt/m/n/12 avg_moderate_ratio\T5/cmr/m/n/12 , $\OML/cmm/m/it/12 s[]$ \T5/cmr/m/n/12 is \T5/cmtt/m/n/12 max_severe_segments\T5/cmr/m/n/12 ,
  []
 
 [16 <./images/grafana-zscore-timeseries.png>]
-Overfull \hbox (31.73341pt too wide) in paragraph at lines 936--944
+Overfull \hbox (31.73341pt too wide) in paragraph at lines 939--947
 []\T5/cmr/m/n/12 The four Iso-la-tion-For-est hy-per-pa-ram-e-ters (\T5/cmtt/m/n/12 contamination\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 n_estimators\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 max_samples\T5/cmr/m/n/12 ,
  []
 
@@ -983,31 +990,33 @@ Overfull \hbox (31.73341pt too wide) in paragraph at lines 936--944
 <images/optuna-validation.png, id=133, 1389.19pt x 385.44pt>
 File: images/optuna-validation.png Graphic file (type png)
 <use images/optuna-validation.png>
-Package pdftex.def Info: images/optuna-validation.png  used on input line 999.
+Package pdftex.def Info: images/optuna-validation.png  used on input line 1002.
 (pdftex.def)             Requested size: 441.01775pt x 122.36113pt.
  [18 <./images/optuna-validation.png>]
 <images/mlflow-experiments.png, id=139, 2007.5pt x 1121.18875pt>
 File: images/mlflow-experiments.png Graphic file (type png)
 <use images/mlflow-experiments.png>
-Package pdftex.def Info: images/mlflow-experiments.png  used on input line 1047.
+Package pdftex.def Info: images/mlflow-experiments.png  used on input line 1050.
 (pdftex.def)             Requested size: 441.01775pt x 246.30302pt.
 <images/mlflow-route-metrics.png, id=140, 2002.48125pt x 2007.5pt>
 File: images/mlflow-route-metrics.png Graphic file (type png)
 <use images/mlflow-route-metrics.png>
-Package pdftex.def Info: images/mlflow-route-metrics.png  used on input line 1065.
+Package pdftex.def Info: images/mlflow-route-metrics.png  used on input line 1068.
 (pdftex.def)             Requested size: 441.01775pt x 442.11086pt.
- [19 <./images/mlflow-experiments.png>] [20 <./images/mlflow-route-metrics.png>] [21] [22]
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[23]) [24]
+ [19 <./images/mlflow-experiments.png>] [20 <./images/mlflow-route-metrics.png>]
+Underfull \vbox (badness 1377) has occurred while \output is active []
+
+ [21] [22] [23]) [24]
 Chapter 4.
 (./chapters/prototyping.tex
-<images/system-architecture.png, id=163, 2007.5pt x 1434.35875pt>
+<images/system-architecture.png, id=163, 12470.59pt x 7579.31625pt>
 File: images/system-architecture.png Graphic file (type png)
 <use images/system-architecture.png>
 Package pdftex.def Info: images/system-architecture.png  used on input line 8.
-(pdftex.def)             Requested size: 441.01775pt x 315.10028pt.
+(pdftex.def)             Requested size: 441.01775pt x 267.96315pt.
  [25
 
  <./images/system-architecture.png>]
@@ -1016,6 +1025,9 @@ File: images/service-topology.png Graphic file (type png)
 <use images/service-topology.png>
 Package pdftex.def Info: images/service-topology.png  used on input line 99.
 (pdftex.def)             Requested size: 441.01775pt x 221.74478pt.
+
+Underfull \vbox (badness 4229) has occurred while \output is active []
+
  [26]
 LaTeX Font Info:    Font shape `T5/cmtt/bx/n' in size <12> not available
 (Font)              Font shape `T5/cmtt/m/n' tried instead on input line 115.
@@ -1083,76 +1095,79 @@ Overfull \hbox (4.64862pt too wide) in paragraph at lines 76--79
 \T5/cmtt/m/n/12 -group\T5/cmr/m/n/12 ) and writes buffered records as Par-quet files to MinIO un-der the time-partitioned
  []
 
-[31 <./images/redpanda-topic.png>]
-<images/prefect-deployments.png, id=192, 2007.5pt x 560.0925pt>
+[31 <./images/redpanda-topic.png>] [32]
+<images/prefect-deployments.png, id=196, 2007.5pt x 560.0925pt>
 File: images/prefect-deployments.png Graphic file (type png)
 <use images/prefect-deployments.png>
-Package pdftex.def Info: images/prefect-deployments.png  used on input line 248.
+Package pdftex.def Info: images/prefect-deployments.png  used on input line 250.
 (pdftex.def)             Requested size: 441.01775pt x 123.04124pt.
- [32]
-Overfull \hbox (24.94162pt too wide) in paragraph at lines 277--284
+
+Overfull \hbox (24.94162pt too wide) in paragraph at lines 279--286
 \T5/cmr/m/n/12 centile of the per-route dis-tri-bu-tion. These statis-tics are writ-ten to \T5/cmtt/m/n/12 gold.traffic_baseline
  []
 
 [33 <./images/prefect-deployments.png>]
-Overfull \hbox (53.66139pt too wide) in paragraph at lines 340--351
+Overfull \hbox (53.66139pt too wide) in paragraph at lines 342--353
 \T5/cmr/m/n/12 tion 3.4.2[]): \T5/cmtt/m/n/12 contamination=0.01\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 n_estimators=450\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 max_samples=0.76\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 max_features=0.73\T5/cmr/m/n/12 ,
  []
 
 
-Overfull \hbox (43.5643pt too wide) in paragraph at lines 366--386
+Overfull \hbox (43.5643pt too wide) in paragraph at lines 368--388
  [][] 
  []
 
 [34]
-Overfull \hbox (21.04123pt too wide) in paragraph at lines 411--418
+Overfull \hbox (21.04123pt too wide) in paragraph at lines 413--420
 \T5/cmr/m/n/12 rea-son-ing that a duty man-ager can act on with-out con-sult-ing raw data. The \T5/cmtt/m/n/12 /rca/feedback
  []
 
 
-Overfull \hbox (1.33954pt too wide) in paragraph at lines 411--418
+Overfull \hbox (1.33954pt too wide) in paragraph at lines 413--420
 \T5/cmr/m/n/12 end-point (POST, \T5/cmtt/m/n/12 {log_id, feedback}\T5/cmr/m/n/12 ) records op-er-a-tor thumbs-up/down judge-ments
  []
 
 [35]
+Overfull \hbox (4.09427pt too wide) in paragraph at lines 430--442
+\T5/cmtt/m/n/12 route_id\T5/cmr/m/n/12 , in-dexed hourly), \T5/cmtt/m/n/12 traffic_patterns \T5/cmr/m/n/12 (typ-i-cal pat-terns at this hour/day-
+ []
+
 <images/ai-explanation.png, id=207, 671.50874pt x 269.005pt>
 File: images/ai-explanation.png Graphic file (type png)
 <use images/ai-explanation.png>
-Package pdftex.def Info: images/ai-explanation.png  used on input line 444.
+Package pdftex.def Info: images/ai-explanation.png  used on input line 453.
 (pdftex.def)             Requested size: 374.86777pt x 150.16972pt.
 
-Overfull \hbox (13.945pt too wide) in paragraph at lines 451--455
+Overfull \hbox (13.945pt too wide) in paragraph at lines 460--464
 \T5/cmr/m/n/12 For the \T5/cmtt/m/n/12 zone6_southern_coastal $\OMS/cmsy/m/n/12 !$ \T5/cmtt/m/n/12 zone5_western_periurban \T5/cmr/m/n/12 route, the Qwen2.5:3b
  []
 
 <images/ai-chat.png, id=208, 327.2225pt x 454.69875pt>
 File: images/ai-chat.png Graphic file (type png)
 <use images/ai-chat.png>
-Package pdftex.def Info: images/ai-chat.png  used on input line 458.
+Package pdftex.def Info: images/ai-chat.png  used on input line 467.
 (pdftex.def)             Requested size: 374.86777pt x 520.90825pt.
 <images/ai-chat-english.png, id=209, 421.575pt x 591.20876pt>
 File: images/ai-chat-english.png Graphic file (type png)
 <use images/ai-chat-english.png>
-Package pdftex.def Info: images/ai-chat-english.png  used on input line 474.
+Package pdftex.def Info: images/ai-chat-english.png  used on input line 483.
 (pdftex.def)             Requested size: 317.53331pt x 445.30893pt.
 [36 <./images/ai-explanation.png>] [37 <./images/ai-chat.png>] [38 <./images/ai-chat-english.png>]
 <images/dashboard-heatmap-zscore.png, id=224, 2007.5pt x 896.34875pt>
 File: images/dashboard-heatmap-zscore.png Graphic file (type png)
 <use images/dashboard-heatmap-zscore.png>
-Package pdftex.def Info: images/dashboard-heatmap-zscore.png  used on input line 519.
+Package pdftex.def Info: images/dashboard-heatmap-zscore.png  used on input line 528.
 (pdftex.def)             Requested size: 441.01775pt x 196.91011pt.
 <images/dashboard-heatmap-both.png, id=225, 2007.5pt x 791.95876pt>
 File: images/dashboard-heatmap-both.png Graphic file (type png)
 <use images/dashboard-heatmap-both.png>
-Package pdftex.def Info: images/dashboard-heatmap-both.png  used on input line 528.
+Package pdftex.def Info: images/dashboard-heatmap-both.png  used on input line 537.
 (pdftex.def)             Requested size: 441.01775pt x 173.97769pt.
- [39 <./images/dashboard-heatmap-zscore.png> <./images/dashboard-heatmap-both.png>]
-<images/ai-heatmap-analysis.png, id=231, 2007.5pt x 1380.15625pt>
+<images/ai-heatmap-analysis.png, id=226, 2007.5pt x 1380.15625pt>
 File: images/ai-heatmap-analysis.png Graphic file (type png)
 <use images/ai-heatmap-analysis.png>
-Package pdftex.def Info: images/ai-heatmap-analysis.png  used on input line 551.
+Package pdftex.def Info: images/ai-heatmap-analysis.png  used on input line 560.
 (pdftex.def)             Requested size: 441.01775pt x 303.19307pt.
-) [40 <./images/ai-heatmap-analysis.png>]
+) [39 <./images/dashboard-heatmap-zscore.png>] [40 <./images/dashboard-heatmap-both.png> <./images/ai-heatmap-analysis.png>]
 Chapter 6.
 (./chapters/result.tex
 <images/dremio-eda.png, id=236, 2007.5pt x 1012.78375pt>
@@ -1163,28 +1178,13 @@ Package pdftex.def Info: images/dremio-eda.png  used on input line 26.
  [41
 
  <./images/dremio-eda.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 91--91
-[]\T5/cmr/m/n/12 Table 6.2: Per-route anomaly de-tec-tion met-rics (Iso-la-tion-For-est vs. Z-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 91--91
-\T5/cmr/m/n/12 Score), Optuna-tuned params (\T5/cmtt/m/n/12 contamination=0.01\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 n_estimators=450\T5/cmr/m/n/12 ,
- []
-
-
-Overfull \hbox (27.03203pt too wide) in paragraph at lines 128--136
-\T5/cmr/m/n/12 ure 6.3[] drills into the met-rics for \T5/cmtt/m/n/12 zone6_southern_coastal $\OMS/cmsy/m/n/12 !$ \T5/cmtt/m/n/12 zone5_western_periurban\T5/cmr/m/n/12 ,
- []
-
-
-Overfull \hbox (44.99553pt too wide) in paragraph at lines 128--136
-\T5/cmr/m/n/12 which recorded \T5/cmtt/m/n/12 model_agreement = 0.96\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 anomaly_jaccard = 0.16\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 iforest_anomaly_rate
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
+[]\T5/cmr/m/n/12 Table 6.2: Per-route anomaly de-tec-tion met-rics from MLflow run
  []
 
 File: images/mlflow-experiments.png Graphic file (type png)
 <use images/mlflow-experiments.png>
-Package pdftex.def Info: images/mlflow-experiments.png  used on input line 139.
+Package pdftex.def Info: images/mlflow-experiments.png  used on input line 136.
 (pdftex.def)             Requested size: 441.01775pt x 246.30302pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1192,7 +1192,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [42]
 File: images/mlflow-route-metrics.png Graphic file (type png)
 <use images/mlflow-route-metrics.png>
-Package pdftex.def Info: images/mlflow-route-metrics.png  used on input line 148.
+Package pdftex.def Info: images/mlflow-route-metrics.png  used on input line 145.
 (pdftex.def)             Requested size: 441.01775pt x 442.11086pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1203,41 +1203,52 @@ File: images/dashboard-anomaly-bar.png Graphic file (type png)
 <use images/dashboard-anomaly-bar.png>
 Package pdftex.def Info: images/dashboard-anomaly-bar.png  used on input line 244.
 (pdftex.def)             Requested size: 441.01775pt x 209.69934pt.
- [45 <./images/dashboard-anomaly-bar.png>]
-Overfull \hbox (13.83618pt too wide) in paragraph at lines 278--286
+ [45]
+Overfull \hbox (13.83618pt too wide) in paragraph at lines 280--288
 \T5/cmr/m/n/12 ve-hi-cle move-ments. The high-est system-wide Jac-card of 0.368 be-longs to the zone6$\OMS/cmsy/m/n/12 !$\T5/cmr/m/n/12 zone4
  []
 
-<images/grafana-online-features.png, id=256, 2007.5pt x 1000.73875pt>
+<images/grafana-online-features.png, id=255, 2007.5pt x 1000.73875pt>
 File: images/grafana-online-features.png Graphic file (type png)
 <use images/grafana-online-features.png>
-Package pdftex.def Info: images/grafana-online-features.png  used on input line 310.
+Package pdftex.def Info: images/grafana-online-features.png  used on input line 312.
 (pdftex.def)             Requested size: 441.01775pt x 219.84253pt.
-<images/grafana-anomaly-signals.png, id=257, 2007.5pt x 1006.76125pt>
+<images/grafana-anomaly-signals.png, id=256, 2007.5pt x 1006.76125pt>
 File: images/grafana-anomaly-signals.png Graphic file (type png)
 <use images/grafana-anomaly-signals.png>
-Package pdftex.def Info: images/grafana-anomaly-signals.png  used on input line 319.
+Package pdftex.def Info: images/grafana-anomaly-signals.png  used on input line 321.
 (pdftex.def)             Requested size: 441.01775pt x 221.16556pt.
-<images/grafana-ingestion.png, id=258, 2007.5pt x 804.00375pt>
+<images/grafana-ingestion.png, id=257, 2007.5pt x 804.00375pt>
 File: images/grafana-ingestion.png Graphic file (type png)
 <use images/grafana-ingestion.png>
-Package pdftex.def Info: images/grafana-ingestion.png  used on input line 329.
+Package pdftex.def Info: images/grafana-ingestion.png  used on input line 331.
 (pdftex.def)             Requested size: 441.01775pt x 176.62373pt.
-[46] [47 <./images/grafana-online-features.png> <./images/grafana-anomaly-signals.png>]
-<images/grafana-batch-pipeline.png, id=267, 2007.5pt x 1019.81pt>
+
+Underfull \vbox (badness 1859) has occurred while \output is active []
+
+ [46 <./images/dashboard-anomaly-bar.png>] [47 <./images/grafana-online-features.png> <./images/grafana-anomaly-signals.png>]
+LaTeX Font Info:    Font shape `T5/cmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `T5/cmtt/m/n' tried instead on input line 387.
+
+Overfull \hbox (3.73499pt too wide) in paragraph at lines 389--394
+ [][] 
+ []
+
+[48 <./images/grafana-ingestion.png>]
+<images/grafana-batch-pipeline.png, id=274, 2007.5pt x 1019.81pt>
 File: images/grafana-batch-pipeline.png Graphic file (type png)
 <use images/grafana-batch-pipeline.png>
-Package pdftex.def Info: images/grafana-batch-pipeline.png  used on input line 361.
+Package pdftex.def Info: images/grafana-batch-pipeline.png  used on input line 420.
 (pdftex.def)             Requested size: 441.01775pt x 224.0321pt.
- [48 <./images/grafana-ingestion.png>]) [49 <./images/grafana-batch-pipeline.png>]
+) [49 <./images/grafana-batch-pipeline.png>] [50]
 Chapter 7.
-(./chapters/discussion.tex [50
+(./chapters/discussion.tex [51
 
-] [51]) [52]
+] [52]) [53]
 Chapter 8.
-(./chapters/conclusion.tex) [53
+(./chapters/conclusion.tex) [54
 
-] (./main.bbl [54]
+] (./main.bbl [55]
 Underfull \hbox (badness 1038) in paragraph at lines 19--21
 \T5/cmr/m/n/12 a-lyt-ics.'' $\T5/cmtt/m/n/12 https : / / www . cidrdb . org / cidr2021 / papers / cidr2021 _ paper17 . pdf$\T5/cmr/m/n/12 ,
  []
@@ -1252,7 +1263,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 48--50
 \T5/cmtt/m/n/12 / / www . sciencedirect . com / topics / earth-[]and-[]planetary-[]sciences /
  []
 
-[55
+[56
 
 ]
 Underfull \hbox (badness 4872) in paragraph at lines 79--81
@@ -1274,29 +1285,29 @@ Underfull \hbox (badness 5533) in paragraph at lines 119--121
 []\T5/cmr/m/n/12 Databricks, ``MLflow Doc-u-men-ta-tion.'' $\T5/cmtt/m/n/12 https : / / mlflow . org / docs / latest /
  []
 
-[56]) [57]
+[57]) [58]
 Appendix A.
-(./chapters/appendix.tex) [58
+(./chapters/appendix.tex [59
 
-] (./main.aux)
+] [60]) [61] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 20019 strings out of 467525
- 375558 string characters out of 5418982
- 1111784 words of memory out of 5000000
- 48531 multiletter control sequences out of 15000+600000
- 659433 words of font info for 108 fonts, out of 8000000 for 9000
+ 20937 strings out of 467525
+ 402972 string characters out of 5418982
+ 1107772 words of memory out of 5000000
+ 49423 multiletter control sequences out of 15000+600000
+ 662875 words of font info for 114 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,14n,104p,1765b,1317s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/zapfding/uzdr.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbxti10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vncsc10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vntt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vntt12.pfb>
-Output written on main.pdf (71 pages, 9873772 bytes).
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/zapfding/uzdr.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbxti10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vncsc10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnitt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vntt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vntt12.pfb>
+Output written on main.pdf (74 pages, 14184848 bytes).
 PDF statistics:
- 428 PDF objects out of 1000 (max. 8388607)
- 250 compressed objects within 3 object streams
+ 449 PDF objects out of 1000 (max. 8388607)
+ 264 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
  123 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -7,7 +7,7 @@ The experimental results validate the core hypothesis of this thesis: that a
 \textbf{dual-signal anomaly detection framework} combining a statistical
 Z-score detector with a machine learning IsolationForest model produces more
 reliable incident signals than either detector in isolation. The key evidence
-is the 93.8\% model agreement rate combined with a 16.3\% mean Jaccard
+is the 96.3\% model agreement rate combined with a 12.1\% mean Jaccard
 similarity. This pattern is consistent with the theoretical complementarity of
 the two signals: Z-score operates on a single dimension (\texttt{heavy\_ratio}
 deviation from a per-route, per-time-slot baseline), whereas IsolationForest
@@ -101,10 +101,12 @@ slowly updated baseline.
 Two suburban routes (zone4-to-zone2 and zone4-to-zone5) recorded a Z-score
 anomaly rate of exactly 0.000 over the 54-day collection period, and
 zone5-to-zone1 recorded a near-zero rate of 0.010. In low-variance
-traffic conditions, the baseline standard deviation approaches zero, making
-the Z-score numerically unstable. The implementation applies a minimum stddev
-floor of \texttt{mean * 0.1} in these cases, but this is a heuristic that
-may generate spurious signals immediately after the baseline is first computed.
+traffic conditions, the heavy-ratio baseline standard deviation may approach
+zero, making the Z-score overly sensitive. The implementation applies a
+minimum heavy-ratio stddev floor of \texttt{0.01} (with a \texttt{mean * 0.2}
+fallback when only sparse history is available), but this is still a heuristic
+that may generate spurious signals immediately after the baseline is first
+computed.
 
 \textbf{Hardware constraints.}
 The platform is deployed on a single-node homelab (Intel Core i5-8500,

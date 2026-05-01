@@ -28,9 +28,10 @@ mechanism further reduced perceived latency on the Next.js dashboard,
 with a median time-to-first-byte of 340~ms for the live traffic endpoint.
 
 \textbf{Unified Detection Framework.}
-The dual-signal detector combining an online Z-score over Welford running
-statistics with a per-route IsolationForest model achieved a mean model
-agreement of 93.8\% and a mean Jaccard similarity of 16.3\% across all
+The dual-signal detector combining an online heavy-ratio Z-score over
+Welford-maintained route windows with a per-route IsolationForest model
+achieved a mean model
+agreement of 96.3\% and a mean Jaccard similarity of 12.1\% across all
 20 routes. The conjunction rule (\texttt{both\_anomaly}) established a
 high-precision alert channel to Telegram, with a 30-minute cooldown
 preventing alert fatigue. The results confirm that neither detector alone
@@ -57,7 +58,8 @@ an auditable history of model performance.
 platform built on commodity components (Redpanda, Iceberg, IsolationForest,
 Ollama) can deliver near-real-time urban traffic anomaly detection with
 natural-language explainability at city scale, processing 32,302 real-world
-observations across 20 routes with 93.8\% dual-signal model agreement. The primary avenue for future
+observations across 20 routes, with 96.3\% dual-signal model agreement on
+the 30,329-observation pre-cutoff training set. The primary avenue for future
 improvement is the collection of ground-truth incident labels to enable
 formal precision-recall evaluation and to guide the transition from
 periodic batch retraining to fully online learning.

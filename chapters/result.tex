@@ -32,7 +32,7 @@ over 76 days of data, with 54 days (71.1\%) fully populated.
 
 \begin{table}[htbp]
 \centering
-\caption{Dataset summary for the MLflow training run \texttt{per-route-train-20260419}.}
+\caption[Dataset summary for the MLflow training run]{Dataset summary for the MLflow training run \texttt{per-route-train-20260419}.}
 \label{tab:dataset}
 \begin{tabular}{lr}
 \hline
@@ -78,17 +78,15 @@ The IsolationForest \texttt{contamination} hyperparameter was selected via
 Optuna TPE optimisation (50 trials $\times$ 20 routes) as described in
 Section~\ref{subsec:iforest}; the tuned value of $0.01$ reflects the true
 anomaly prevalence in the ratio feature space and is independently corroborated
-by a duration-based baseline estimate of $1.97\%$.
+by a heavy-ratio Z-score baseline estimate of $1.97\%$.
 The Z-Score rate varies between 0.0\% and 6.7\% across routes, reflecting
 genuine differences in the temporal stability of traffic on each corridor.
 
 \begin{table}[htbp]
 \centering
 \small
-\caption{Per-route anomaly detection metrics (IsolationForest vs.\ Z-Score),
-         Optuna-tuned params (\texttt{contamination=0.01}, \texttt{n\_estimators=450},
-         \texttt{max\_samples=0.76}, \texttt{max\_features=0.73}).
-         Metrics sourced from production MLflow run \texttt{per-route-train-20260429-0831}.}
+\caption[Per-route anomaly detection metrics]{Per-route anomaly detection metrics from MLflow run
+         \texttt{per-route-train-20260419-1250}.}
 \label{tab:anomaly-metrics}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lrcccc}
@@ -128,11 +126,10 @@ zone6\_southern\_coastal $\to$ zone5\_western\_periurban  & 1517 & 0.048 & 0.011
 Figure~\ref{fig:mlflow-experiments} shows the MLflow experiment tracker
 confirming all 20 per-route child runs completed successfully (status:
 \texttt{FINISHED}) in approximately 3.5 seconds each.
-Figure~\ref{fig:mlflow-route-metrics} drills into the metrics for
-\texttt{zone6\_southern\_coastal $\to$ zone5\_western\_periurban}, which
-recorded \texttt{model\_agreement = 0.96}, \texttt{anomaly\_jaccard = 0.16},
-\texttt{iforest\_anomaly\_rate = 0.01} (tuned contamination), and
-\texttt{total\_samples = 1517}.
+Figure~\ref{fig:mlflow-route-metrics} drills into the Coastal $\to$
+Western route, which recorded \texttt{model\_agreement = 0.96},
+\texttt{anomaly\_jaccard = 0.16}, \texttt{iforest\_anomaly\_rate = 0.01}
+(tuned contamination), and \texttt{total\_samples = 1517}.
 
 \begin{figure}[H]
   \centering
@@ -230,10 +227,13 @@ Figure~\ref{fig:anomaly-bar} shows the \textbf{Anomalies Per Hour} histogram
 captured from the live dashboard over the period Apr 12--15, 2026. The
 stacked bars distinguish three categories: \textit{Z-Score only} (yellow),
 \textit{IForest only} (green), and \textit{Both agree} (red). Two
-observations are immediately visible. First, morning peak hours (07:00--10:00)
-consistently produce the highest anomaly counts, reflecting HCMC rush-hour
-congestion patterns. Second, the majority of events are flagged by only one
-detector, confirming the complementarity documented in
+observations are immediately visible. First, morning peak hours (07:00--10:00) repeatedly produce dense
+Z-score and dual-signal clusters, reflecting HCMC rush-hour congestion
+patterns. Second, a large late-evening IForest-only spike appears near 23:00
+on Apr~15, showing that the multivariate detector can surface unusual
+patterns even when the univariate heavy-ratio threshold is not crossed. More
+generally, the majority of events are flagged by only one detector, confirming
+the complementarity documented in
 Table~\ref{tab:anomaly-metrics}: the two signals capture different aspects
 of the traffic distribution. The \textit{Both agree} (red) bars, which
 trigger Telegram alerts, are substantially fewer --- aligning with the
@@ -243,8 +243,9 @@ mean Jaccard of 0.121 from the MLflow evaluation.
   \centering
   \includegraphics[width=\textwidth]{dashboard-anomaly-bar.png}
   \caption{Production Anomalies Per Hour (Apr 12--15, 2026): yellow = Z-Score
-           only, green = IForest only, red = both detectors agree.
-           Morning peak (07:00--10:00) shows the highest anomaly concentration.}
+           only, green = IForest only, red = both detectors agree. Morning
+           rush-hour clusters are visible, alongside a late-evening IForest-only
+           spike near 23:00 on Apr~15.}
   \label{fig:anomaly-bar}
 \end{figure}
 
@@ -272,7 +273,8 @@ $Z>\theta_r$ threshold. Zone5-to-zone1 recorded a Z-score rate of 0.010
 IsolationForest anomaly windows, yielding a Jaccard of 0.000. These three
 routes are low-traffic suburban corridors where the congestion baseline has
 near-zero variance, limiting Z-score sensitivity. IsolationForest still flags
-5\% of those hours via multivariate isolation, but no joint alerts are produced ---
+approximately 1.1\% of those hours via multivariate isolation, but no joint
+alerts are produced ---
 an appropriate outcome given the low incident likelihood on these corridors.
 
 \textbf{(3) Zone-3 northern industrial corridor anomaly concentration.}
@@ -291,16 +293,16 @@ both detectors on the southern coastal port corridor.
 
 \subsection{Grafana Observability Dashboards}
 
-The platform exposes three Grafana dashboards instrumented via Loki log
-aggregation. Figure~\ref{fig:grafana-online} shows the \textbf{Online
+The platform exposes Grafana dashboards backed by PostgreSQL metrics and
+Loki log aggregation. Figure~\ref{fig:grafana-online} shows the \textbf{Online
 Features} dashboard, confirming: 20 active routes, p50 latency of
 \textbf{153~ms}, p95 of \textbf{318~ms}, and p99 of \textbf{336~ms} for the
 raw-to-feature pipeline over a 48-hour window (Apr 13--15, 2026). Occasional
 spikes to $\sim$4~s are visible; these correspond to Postgres reconnection
 events during container restarts. Figure~\ref{fig:grafana-anomaly} shows the
-\textbf{Anomaly Detection} dashboard: the Z-Score intensity peaks at $|Z|
-\approx 8.5$ during Apr 14 afternoon, consistent with the bar chart in
-Figure~\ref{fig:anomaly-bar}. Figure~\ref{fig:grafana-ingestion} shows the
+\textbf{Anomaly Detection} dashboard: the maximum heavy-ratio Z-score reaches
+roughly $|Z| \approx 9$ on Apr~15, with secondary spikes visible on Apr~14,
+consistent with the episodic clusters in Figure~\ref{fig:anomaly-bar}. Figure~\ref{fig:grafana-ingestion} shows the
 \textbf{Ingestion Service} dashboard: the 5-minute burst pattern in log rate
 (0.08--0.12 req/s) confirms that the periodic API poller is firing correctly
 with zero errors or warnings across the observed window.
@@ -318,9 +320,9 @@ with zero errors or warnings across the observed window.
   \centering
   \includegraphics[width=\textwidth]{grafana-anomaly-signals.png}
   \caption{Grafana Anomaly Detection dashboard (Apr 13--15, 2026):
-           anomalous route count over time (top-left), maximum Z-Score
-           intensity reaching 8.5 during afternoon peak (top-right),
-           and per-route Z-Score time series for all 20 routes (bottom-right).}
+           anomalous route count over time (top-left), maximum heavy-ratio
+           Z-Score intensity reaching roughly 9 (top-right), and per-route
+           Z-Score time series for all 20 routes (bottom-right).}
   \label{fig:grafana-anomaly}
 \end{figure}
 
@@ -335,12 +337,69 @@ with zero errors or warnings across the observed window.
 
 \subsection{End-to-End Ingestion Latency}
 
-The Online Service logs the end-to-end ingestion lag (time from API poll
-to PostgreSQL write) via the \texttt{last\_ingest\_lag\_ms} column, derived
-from the \texttt{ingest\_ts} Kafka header. Across a 7-day observability
-window, the system maintained a \textbf{p95 ingestion lag below 20 seconds},
-meeting the low-latency requirement stated in the non-functional requirements
-(Section~\ref{sec:requirements}).
+The Online Service measures end-to-end ingestion lag using a timestamp
+(\texttt{ingest\_ts}) embedded as a Kafka message header by the Ingestion
+Service immediately before the VietMap API call.
+When the Online Consumer receives the message, it computes:
+
+\begin{equation}
+  \texttt{ingest\_lag\_ms} = t_{\text{now}} - t_{\text{ingest\_ts}}
+\end{equation}
+
+\noindent where $t_{\text{now}}$ is the wall-clock time after the PostgreSQL
+UPSERT completes. This single value thus spans five sequential stages, as
+illustrated in Figure~\ref{fig:ingest-lag-breakdown}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  node distance=0pt,
+  box/.style={draw, rounded corners=3pt, minimum height=1cm,
+              text centered, font=\small, inner xsep=6pt},
+  arr/.style={-{Stealth[length=6pt]}, line width=0.8pt},
+  lbl/.style={font=\footnotesize\itshape, text=gray},
+]
+
+% ── Stages ──────────────────────────────────────────────────────────────
+\node[box, fill=blue!10,  minimum width=2.4cm] (api)    {\parbox{2cm}{\centering VietMap\\API call}};
+\node[box, fill=orange!15,minimum width=2.4cm, right=0.55cm of api]   (pub)    {\parbox{2cm}{\centering Kafka\\publish}};
+\node[box, fill=yellow!20,minimum width=2.4cm, right=0.55cm of pub]   (poll)   {\parbox{2cm}{\centering Consumer\\poll}};
+\node[box, fill=green!15, minimum width=2.4cm, right=0.55cm of poll]  (welford){\parbox{2cm}{\centering Welford\\update}};
+\node[box, fill=red!10,   minimum width=2.4cm, right=0.55cm of welford](pg)    {\parbox{2cm}{\centering Postgres\\UPSERT}};
+
+% ── Arrows ──────────────────────────────────────────────────────────────
+\draw[arr] (api.east)     -- (pub.west);
+\draw[arr] (pub.east)     -- (poll.west);
+\draw[arr] (poll.east)    -- (welford.west);
+\draw[arr] (welford.east) -- (pg.west);
+
+% ── Timestamp markers ───────────────────────────────────────────────────
+\draw[dashed, gray] (api.north west) -- ++(0, 0.6)
+  node[above, lbl] {$t_{\texttt{ingest\_ts}}$};
+\draw[dashed, gray] (pg.north east)  -- ++(0, 0.6)
+  node[above, lbl] {$t_{\text{now}}$};
+
+% ── Brace + label ───────────────────────────────────────────────────────
+\draw[decorate, decoration={brace,amplitude=6pt,mirror},
+      line width=0.7pt]
+  ([yshift=-0.15cm]api.south west) -- ([yshift=-0.15cm]pg.south east)
+  node[midway, below=8pt, font=\small\bfseries]
+    {\texttt{ingest\_lag\_ms} \quad (p50 $\approx$ 153 ms,\ p95 $\approx$ 318 ms)};
+
+\end{tikzpicture}
+\caption{Breakdown of \texttt{ingest\_lag\_ms}: the timestamp \texttt{ingest\_ts}
+         is recorded by the Ingestion Service before the VietMap API call and
+         embedded in the Kafka header; the Online Consumer stamps $t_{\text{now}}$
+         after the PostgreSQL UPSERT completes. All five stages run on the same
+         host, keeping network overhead near zero.}
+\label{fig:ingest-lag-breakdown}
+\end{figure}
+
+Across a 7-day observability window, the system maintained a
+\textbf{p95 ingestion lag below 20 seconds}, meeting NFR-1
+(Section~\ref{sec:requirements}). Typical values were substantially lower
+(p50 $\approx$ 153~ms, p95 $\approx$ 318~ms) because all services share the
+same physical host, reducing inter-service network latency to near zero.
 
 \subsection{Batch Pipeline Throughput}
 
@@ -407,7 +466,7 @@ NFR-1 Latency     & LLM time-to-first-token                  & $<$3 s   & 0.8--1
 NFR-2 Reproducibility & Iceberg time-travel + MLflow provenance & Auditable & Full provenance logged          & \cmark \\
 NFR-3 Fault Tolerance & Welford crash-recovery (mid-hour restart) & No data loss & Validated over 2 restarts  & \cmark \\
 NFR-4 Scalability & Micro-batch execution time               & $<$5 min & $<$8 s per cycle                & \cmark \\
-NFR-5 Observability & Grafana/Loki dashboards                & Centralised & 3 dashboards, zero blind spots & \cmark \\
+NFR-5 Observability & Grafana/Loki dashboards                & Centralised & 4 dashboards, zero blind spots & \cmark \\
 \hline
 \end{tabular}%
 }
@@ -418,6 +477,7 @@ particularly noteworthy: they represent the end-to-end time from VietMap API
 poll to a queryable feature in PostgreSQL, inclusive of Kafka publish,
 consumer deserialization, Welford update, and UPSERT confirmation.
 The mean dual-signal model agreement of
-\textbf{93.8\%} across 32,302 observations provides strong evidence that
-the two detectors converge on consistent labels, whilst the low mean Jaccard
-of 16.3\% confirms that they remain complementary rather than redundant.
+\textbf{96.3\%} across 30,329 pre-cutoff training observations provides
+strong evidence that the two detectors converge on consistent labels, whilst
+the low mean Jaccard of 12.1\% confirms that they remain complementary rather
+than redundant.

@@ -120,7 +120,6 @@
 \newlabel{eq:welford_recovery}{{3.2}{14}{Online Feature Store — Real-Time Postgres Path}{equation.3.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.4}Dual-Signal Anomaly Detection Framework}{14}{}\protected@file@percent }
 \newlabel{sec:anomaly}{{3.4}{14}{Dual-Signal Anomaly Detection Framework}{section.3.4}{}}
-\citation{liu2008isolation}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Signal 1 — Z-Score Online Detector}{15}{}\protected@file@percent }
 \newlabel{subsec:zscore}{{3.4.1}{15}{Signal 1 — Z-Score Online Detector}{subsection.3.4.1}{}}
 \@writefile{toc}{\contentsline {subsubsection}{Mathematical Formulation}{15}{}\protected@file@percent }
@@ -129,14 +128,15 @@
 \newlabel{eq:threshold_rule}{{3.5}{15}{Mathematical Formulation}{equation.3.5}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces $(\,z_r,\tmspace  +\thickmuskip {.2777em} \texttt  {is\_anomaly}\,) \gets \texttt  {ZScoreClassify}(r,\tmspace  +\thickmuskip {.2777em} \bar  {h}_r^{(t)},\tmspace  +\thickmuskip {.2777em} \mathcal  {B})$}}{15}{}\protected@file@percent }
 \newlabel{alg:zscore}{{2}{15}{Mathematical Formulation}{algorithm.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Per-route Z-score over a 24-hour observation window (Grafana). Each line represents one directed inter-zone route. Spikes above the dashed threshold $\theta _r$ trigger the Z-score anomaly signal; the reference line shown at $\theta _r = 2.0$ corresponds to the fallback default applied when no per-route baseline is available.}}{16}{}\protected@file@percent }
+\citation{liu2008isolation}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Per-route Z-score over a 24-hour observation window (Grafana). Each line represents one directed inter-zone route. Spikes above the dashed threshold $\theta _r$ trigger the Z-score anomaly signal; the reference line shown at $\theta _r = 2.0$ corresponds to the fallback default applied when the baseline row lacks a route-specific \texttt  {zscore\_p99} value.}}{16}{}\protected@file@percent }
 \newlabel{fig:zscore_timeseries}{{3.4}{16}{Mathematical Formulation}{figure.3.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Signal 2 — Isolation Forest Batch Detector}{16}{}\protected@file@percent }
 \newlabel{subsec:iforest}{{3.4.2}{16}{Signal 2 — Isolation Forest Batch Detector}{subsection.3.4.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{Mathematical Formulation}{16}{}\protected@file@percent }
 \newlabel{eq:feature_vector}{{3.6}{16}{Mathematical Formulation}{equation.3.6}{}}
-\newlabel{eq:cyclical}{{3.7}{16}{Mathematical Formulation}{equation.3.7}{}}
 \citation{optuna_paper}
+\newlabel{eq:cyclical}{{3.7}{17}{Mathematical Formulation}{equation.3.7}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces Cyclical vs.\ raw-integer encoding for selected hours.}}{17}{}\protected@file@percent }
 \newlabel{tab:cyclical_example}{{3.3}{17}{Mathematical Formulation}{table.3.3}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces $(s_r,\tmspace  +\thickmuskip {.2777em} \hat  {y}_r) \gets \texttt  {IForestScore}(\mathbf  {x}_r,\tmspace  +\thickmuskip {.2777em} f_{\theta })$}}{17}{}\protected@file@percent }
@@ -152,43 +152,43 @@
 \newlabel{fig:mlflow_experiments}{{3.6}{19}{Mathematical Formulation}{figure.3.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Dual-Signal Fusion}{19}{}\protected@file@percent }
 \newlabel{subsec:fusion}{{3.4.3}{19}{Dual-Signal Fusion}{subsection.3.4.3}{}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces $\texttt  {tier}_r \gets \texttt  {SignalFusion}(z_r,\tmspace  +\thickmuskip {.2777em} f_r)$}}{19}{}\protected@file@percent }
-\newlabel{alg:fusion}{{4}{19}{Dual-Signal Fusion}{algorithm.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces MLflow model metrics for route \textit  {Southern Coastal~$\to $~Western Peri-urban}. Key indicators: \texttt  {iforest\_\allowbreak  anomaly\_\allowbreak  rate}~$= 0.01$ (matches contamination prior), \texttt  {model\_agreement}~$= 0.96$, and \texttt  {total\_samples}~$= 1{,}517$.}}{20}{}\protected@file@percent }
 \newlabel{fig:mlflow_metrics}{{3.7}{20}{Mathematical Formulation}{figure.3.7}{}}
 \citation{lewis2020rag}
 \citation{lewis2020rag}
 \citation{chromadb_docs}
 \citation{nomic_embed}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces $\texttt  {tier}_r \gets \texttt  {SignalFusion}(z_r,\tmspace  +\thickmuskip {.2777em} f_r)$}}{21}{}\protected@file@percent }
+\newlabel{alg:fusion}{{4}{21}{Dual-Signal Fusion}{algorithm.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.5}Knowledge-Enriched Inference via RAG}{21}{}\protected@file@percent }
 \newlabel{sec:rag}{{3.5}{21}{Knowledge-Enriched Inference via RAG}{section.3.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.5.1}Vector Store Architecture}{21}{}\protected@file@percent }
 \newlabel{subsec:vector_store}{{3.5.1}{21}{Vector Store Architecture}{subsection.3.5.1}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3.5}{\ignorespaces ChromaDB collections and their update schedules}}{21}{}\protected@file@percent }
 \newlabel{tab:chroma_collections}{{3.5}{21}{Vector Store Architecture}{table.3.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.2}Retrieval Strategy and Prompt Construction}{21}{}\protected@file@percent }
-\newlabel{subsec:rag_indexing}{{3.5.2}{21}{Retrieval Strategy and Prompt Construction}{subsection.3.5.2}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Retrieval Procedure}{21}{}\protected@file@percent }
-\newlabel{eq:retrieval}{{3.9}{21}{Retrieval Procedure}{equation.3.9}{}}
 \citation{sse_spec}
 \citation{qwen25_report}
 \citation{ollama_docs}
 \citation{rlhf_paper}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.2}Retrieval Strategy and Prompt Construction}{22}{}\protected@file@percent }
+\newlabel{subsec:rag_indexing}{{3.5.2}{22}{Retrieval Strategy and Prompt Construction}{subsection.3.5.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Retrieval Procedure}{22}{}\protected@file@percent }
+\newlabel{eq:retrieval}{{3.9}{22}{Retrieval Procedure}{equation.3.9}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {5}{\ignorespaces $\texttt  {response} \gets \texttt  {RAGInference}(q,\tmspace  +\thickmuskip {.2777em} r,\tmspace  +\thickmuskip {.2777em} \text  {hr},\tmspace  +\thickmuskip {.2777em} \text  {dow})$}}{22}{}\protected@file@percent }
 \newlabel{alg:rag}{{5}{22}{Retrieval Procedure}{algorithm.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.5.3}Feedback Loop and Fine-Tuning Data Collection}{22}{}\protected@file@percent }
 \newlabel{subsec:feedback}{{3.5.3}{22}{Feedback Loop and Fine-Tuning Data Collection}{subsection.3.5.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.6}Evaluation Framework}{22}{}\protected@file@percent }
-\newlabel{sec:evaluation}{{3.6}{22}{Evaluation Framework}{section.3.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.1}Experimental Protocol}{22}{}\protected@file@percent }
-\newlabel{subsec:experimental_protocol}{{3.6.1}{22}{Experimental Protocol}{subsection.3.6.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.6}Evaluation Framework}{23}{}\protected@file@percent }
+\newlabel{sec:evaluation}{{3.6}{23}{Evaluation Framework}{section.3.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.1}Experimental Protocol}{23}{}\protected@file@percent }
+\newlabel{subsec:experimental_protocol}{{3.6.1}{23}{Experimental Protocol}{subsection.3.6.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.6.2}Temporal Integrity}{23}{}\protected@file@percent }
 \newlabel{subsec:eval_temporal}{{3.6.2}{23}{Temporal Integrity}{subsection.3.6.2}{}}
 \newlabel{eq:lag}{{3.10}{23}{Temporal Integrity}{equation.3.10}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.3}Reproducibility}{23}{}\protected@file@percent }
-\newlabel{subsec:eval_reproducibility}{{3.6.3}{23}{Reproducibility}{subsection.3.6.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.4}Key Performance Indicators}{23}{}\protected@file@percent }
-\newlabel{subsec:kpis}{{3.6.4}{23}{Key Performance Indicators}{subsection.3.6.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.3}Reproducibility}{24}{}\protected@file@percent }
+\newlabel{subsec:eval_reproducibility}{{3.6.3}{24}{Reproducibility}{subsection.3.6.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.4}Key Performance Indicators}{24}{}\protected@file@percent }
+\newlabel{subsec:kpis}{{3.6.4}{24}{Key Performance Indicators}{subsection.3.6.4}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3.6}{\ignorespaces Key performance indicators and measurement boundaries}}{24}{}\protected@file@percent }
 \newlabel{tab:kpis}{{3.6}{24}{Key Performance Indicators}{table.3.6}{}}
 \citation{redpanda_whitepaper}
@@ -199,12 +199,12 @@
 \newlabel{fig:system-architecture}{{4.1}{25}{Key Performance Indicators}{figure.4.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.1}Technology Stack Selection}{25}{}\protected@file@percent }
 \newlabel{sec:tech-selection}{{4.1}{25}{Technology Stack Selection}{section.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Message Broker: Redpanda over Apache Kafka}{25}{}\protected@file@percent }
 \citation{iceberg_paper}
 \citation{nessie_docs}
 \citation{qwen25_report}
 \@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces UrbanPulse technology stack and selection rationale.}}{26}{}\protected@file@percent }
 \newlabel{tab:tech-stack}{{4.1}{26}{Technology Stack Selection}{table.4.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Message Broker: Redpanda over Apache Kafka}{26}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Storage: Iceberg + Nessie + MinIO}{26}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}LLM: Ollama with Qwen2.5:3b}{26}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4.2}Service Topology Design}{26}{}\protected@file@percent }
@@ -272,16 +272,16 @@
 \citation{lewis2020rag}
 \@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces Production AI Explanation modal for the Coastal $\to $ Western route anomaly (Vietnamese output): Qwen2.5:3b generates a contextualised explanation referencing weather conditions and route history via RAG.}}{36}{}\protected@file@percent }
 \newlabel{fig:ai-explanation}{{5.4}{36}{RAG-Enriched Inference}{figure.5.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.4}Dual-Signal Fusion in Serving}{36}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {5.5}{\ignorespaces Urban Pulse AI Chat interface (Vietnamese): conversational RAG endpoint reporting live congestion percentages per route, powered by Qwen2.5:3b and the ChromaDB \texttt  {traffic\_patterns} collection.}}{37}{}\protected@file@percent }
 \newlabel{fig:ai-chat}{{5.5}{37}{RAG-Enriched Inference}{figure.5.5}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5.6}{\ignorespaces Urban Pulse AI Chat (English): Qwen2.5:3b integrates live weather data (26.8\textdegree C, partly cloudy) with congestion metrics in a single natural-language response, demonstrating bilingual RAG capability.}}{38}{}\protected@file@percent }
 \newlabel{fig:ai-chat-en}{{5.6}{38}{RAG-Enriched Inference}{figure.5.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.4}Dual-Signal Fusion in Serving}{39}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.6.5}Frontend Dashboard}{39}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {5.7}{\ignorespaces Traffic Metrics heatmap: tooltip showing a Z-score-only anomaly on the Coastal $\to $ Urban Core route at 08:00 ($Z = 4.22$), Apr 12--15, 2026.}}{39}{}\protected@file@percent }
 \newlabel{fig:heatmap-zscore}{{5.7}{39}{Frontend Dashboard}{figure.5.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.8}{\ignorespaces Traffic Metrics heatmap: tooltip showing a dual-signal anomaly (\texttt  {BOTH}) on the Coastal $\to $ Western route at 15:00 ($Z = 2.02$), Apr 12--15, 2026.}}{39}{}\protected@file@percent }
-\newlabel{fig:heatmap-both}{{5.8}{39}{Frontend Dashboard}{figure.5.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.8}{\ignorespaces Traffic Metrics heatmap: tooltip showing a dual-signal anomaly (\texttt  {BOTH}) on the Coastal $\to $ Western route at 15:00 ($Z = 2.02$), Apr 12--15, 2026.}}{40}{}\protected@file@percent }
+\newlabel{fig:heatmap-both}{{5.8}{40}{Frontend Dashboard}{figure.5.8}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5.9}{\ignorespaces AI Heatmap Analysis panel (Vietnamese): Qwen2.5:3b synthesises all active anomaly signals across routes and hours into a structured report covering dual-signal patterns, root causes, single-signal indicators, and per-route recommendations.}}{40}{}\protected@file@percent }
 \newlabel{fig:ai-heatmap-analysis}{{5.9}{40}{Frontend Dashboard}{figure.5.9}{}}
 \citation{chandola2009anomaly}
@@ -294,12 +294,12 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces Dremio EDA query on \texttt  {nessie.gold.traffic\_hourly}: 20 routes, 76 days covered, confirming the Iceberg Gold table is correctly populated by the batch pipeline.}}{41}{}\protected@file@percent }
 \newlabel{fig:dremio-eda}{{6.1}{41}{Dataset}{figure.6.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}Evaluation Approach}{41}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Dataset summary for the MLflow training run \texttt  {per-route-train-20260419}.}}{42}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Dataset summary for the MLflow training run}}{42}{}\protected@file@percent }
 \newlabel{tab:dataset}{{6.1}{42}{Dataset}{table.6.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {6.2}Dual-Signal Detection Results}{42}{}\protected@file@percent }
 \newlabel{sec:detection-results}{{6.2}{42}{Dual-Signal Detection Results}{section.6.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}Per-Route Metrics}{42}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6.2}{\ignorespaces Per-route anomaly detection metrics (IsolationForest vs.\ Z-Score), Optuna-tuned params (\texttt  {contamination=0.01}, \texttt  {n\_estimators=450}, \texttt  {max\_samples=0.76}, \texttt  {max\_features=0.73}). Metrics sourced from production MLflow run \texttt  {per-route-train-20260429-0831}.}}{43}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.2}{\ignorespaces Per-route anomaly detection metrics}}{43}{}\protected@file@percent }
 \newlabel{tab:anomaly-metrics}{{6.2}{43}{Per-Route Metrics}{table.6.2}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6.2}{\ignorespaces MLflow experiment \texttt  {traffic-anomaly-detection}: 20 per-route runs all completed with status \textsc  {finished} in $\sim $3.5~s each, confirming the ML Service retraining pipeline is stable.}}{43}{}\protected@file@percent }
 \newlabel{fig:mlflow-experiments}{{6.2}{43}{Per-Route Metrics}{figure.6.2}{}}
@@ -311,48 +311,50 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {6.4}{\ignorespaces Model agreement (blue) and Jaccard similarity (orange) for five representative routes. Agreement consistently exceeds 0.90; Jaccard variation reflects route-specific traffic pattern stability.}}{45}{}\protected@file@percent }
 \newlabel{fig:metric-bars}{{6.4}{45}{Aggregate Findings}{figure.6.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2.3}Production Anomaly Distribution}{45}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.5}{\ignorespaces Production Anomalies Per Hour (Apr 12--15, 2026): yellow = Z-Score only, green = IForest only, red = both detectors agree. Morning peak (07:00--10:00) shows the highest anomaly concentration.}}{45}{}\protected@file@percent }
-\newlabel{fig:anomaly-bar}{{6.5}{45}{Production Anomaly Distribution}{figure.6.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.4}Interpretation}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.4}Interpretation}{45}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.5}{\ignorespaces Production Anomalies Per Hour (Apr 12--15, 2026): yellow = Z-Score only, green = IForest only, red = both detectors agree. Morning rush-hour clusters are visible, alongside a late-evening IForest-only spike near 23:00 on Apr~15.}}{46}{}\protected@file@percent }
+\newlabel{fig:anomaly-bar}{{6.5}{46}{Production Anomaly Distribution}{figure.6.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {6.3}System Performance}{46}{}\protected@file@percent }
 \newlabel{sec:sys-perf}{{6.3}{46}{System Performance}{section.6.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3.1}Grafana Observability Dashboards}{46}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.2}End-to-End Ingestion Latency}{46}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {6.6}{\ignorespaces Grafana Online Features dashboard (Apr 13--15, 2026): p50 = 153~ms, p95 = 318~ms, p99 = 336~ms ingestion-to-feature latency. Anomalous routes over time shown in the bottom-right panel.}}{47}{}\protected@file@percent }
 \newlabel{fig:grafana-online}{{6.6}{47}{Grafana Observability Dashboards}{figure.6.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.7}{\ignorespaces Grafana Anomaly Detection dashboard (Apr 13--15, 2026): anomalous route count over time (top-left), maximum Z-Score intensity reaching 8.5 during afternoon peak (top-right), and per-route Z-Score time series for all 20 routes (bottom-right).}}{47}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.7}{\ignorespaces Grafana Anomaly Detection dashboard (Apr 13--15, 2026): anomalous route count over time (top-left), maximum heavy-ratio Z-Score intensity reaching roughly 9 (top-right), and per-route Z-Score time series for all 20 routes (bottom-right).}}{47}{}\protected@file@percent }
 \newlabel{fig:grafana-anomaly}{{6.7}{47}{Grafana Observability Dashboards}{figure.6.7}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6.8}{\ignorespaces Grafana Ingestion Service dashboard: periodic 5-minute burst pattern at 0.08--0.12 req/s confirming correct API polling cadence. Zero errors and zero warnings over the observed window.}}{48}{}\protected@file@percent }
 \newlabel{fig:grafana-ingestion}{{6.8}{48}{Grafana Observability Dashboards}{figure.6.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.2}End-to-End Ingestion Latency}{48}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.9}{\ignorespaces Breakdown of \texttt  {ingest\_lag\_ms}: the timestamp \texttt  {ingest\_ts} is recorded by the Ingestion Service before the VietMap API call and embedded in the Kafka header; the Online Consumer stamps $t_{\text  {now}}$ after the PostgreSQL UPSERT completes. All five stages run on the same host, keeping network overhead near zero.}}{48}{}\protected@file@percent }
+\newlabel{fig:ingest-lag-breakdown}{{6.9}{48}{End-to-End Ingestion Latency}{figure.6.9}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3.3}Batch Pipeline Throughput}{48}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.4}SSE Delivery Latency}{48}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.5}LLM Inference Latency}{48}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.6}Summary of Performance Against Requirements}{48}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.9}{\ignorespaces Grafana Urban Traffic Analytics dashboard: Bronze$\to $Silver 4,850 rows, Silver$\to $Gold 120 rows, Baseline 3,360 records. Batch job completion logs confirm error-free pipeline execution.}}{49}{}\protected@file@percent }
-\newlabel{fig:grafana-batch}{{6.9}{49}{Batch Pipeline Throughput}{figure.6.9}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6.4}{\ignorespaces Measured performance vs.\ non-functional requirements.}}{49}{}\protected@file@percent }
-\newlabel{tab:perf-summary}{{6.4}{49}{Summary of Performance Against Requirements}{table.6.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.10}{\ignorespaces Grafana Urban Traffic Analytics dashboard: Bronze$\to $Silver 4,850 rows, Silver$\to $Gold 120 rows, Baseline 3,360 records. Batch job completion logs confirm error-free pipeline execution.}}{49}{}\protected@file@percent }
+\newlabel{fig:grafana-batch}{{6.10}{49}{Batch Pipeline Throughput}{figure.6.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.4}SSE Delivery Latency}{49}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.5}LLM Inference Latency}{49}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.6}Summary of Performance Against Requirements}{49}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.4}{\ignorespaces Measured performance vs.\ non-functional requirements.}}{50}{}\protected@file@percent }
+\newlabel{tab:perf-summary}{{6.4}{50}{Summary of Performance Against Requirements}{table.6.4}{}}
 \citation{iceberg_paper}
 \citation{welford1962}
 \citation{batch_latency_survey}
-\@writefile{toc}{\contentsline {chapter}{\numberline {7}DISCUSSION}{50}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}DISCUSSION}{51}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {7.1}Analysis of Results}{50}{}\protected@file@percent }
-\newlabel{sec:discussion-analysis}{{7.1}{50}{Analysis of Results}{section.7.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.2}Strengths}{50}{}\protected@file@percent }
-\newlabel{sec:strengths}{{7.2}{50}{Strengths}{section.7.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.1}Analysis of Results}{51}{}\protected@file@percent }
+\newlabel{sec:discussion-analysis}{{7.1}{51}{Analysis of Results}{section.7.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.2}Strengths}{51}{}\protected@file@percent }
+\newlabel{sec:strengths}{{7.2}{51}{Strengths}{section.7.2}{}}
 \citation{chandola2009anomaly}
-\@writefile{toc}{\contentsline {section}{\numberline {7.3}Limitations}{51}{}\protected@file@percent }
-\newlabel{sec:limitations}{{7.3}{51}{Limitations}{section.7.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.4}Comparison with Related Approaches}{51}{}\protected@file@percent }
-\newlabel{sec:comparison}{{7.4}{51}{Comparison with Related Approaches}{section.7.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.3}Limitations}{52}{}\protected@file@percent }
+\newlabel{sec:limitations}{{7.3}{52}{Limitations}{section.7.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.4}Comparison with Related Approaches}{52}{}\protected@file@percent }
+\newlabel{sec:comparison}{{7.4}{52}{Comparison with Related Approaches}{section.7.4}{}}
 \citation{tan2011hst}
-\@writefile{lot}{\contentsline {table}{\numberline {7.1}{\ignorespaces Comparison of UrbanPulse against reference architectures.}}{52}{}\protected@file@percent }
-\newlabel{tab:comparison}{{7.1}{52}{Comparison with Related Approaches}{table.7.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.5}Future Work}{52}{}\protected@file@percent }
-\newlabel{sec:future-work}{{7.5}{52}{Future Work}{section.7.5}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {8}CONCLUSION}{53}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7.1}{\ignorespaces Comparison of UrbanPulse against reference architectures.}}{53}{}\protected@file@percent }
+\newlabel{tab:comparison}{{7.1}{53}{Comparison with Related Approaches}{table.7.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.5}Future Work}{53}{}\protected@file@percent }
+\newlabel{sec:future-work}{{7.5}{53}{Future Work}{section.7.5}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}CONCLUSION}{54}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibstyle{ieeetr}
@@ -395,9 +397,22 @@
 \bibcite{ollama_docs}{36}
 \bibcite{rlhf_paper}{37}
 \bibcite{tan2011hst}{38}
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}LISTINGS}{58}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}SUPPLEMENTARY ARTIFACTS}{59}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{lst:1}{{A.1}{58}{Future Work}{lstlisting.1.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {A.1}$\texttt  {Sample}$ procedure.}{58}{}\protected@file@percent }
-\gdef \@abspage@last{71}
+\@writefile{toc}{\contentsline {section}{\numberline {A.1}Route and Zone Configuration}{59}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces UrbanPulse zone anchors used for route generation.}}{59}{}\protected@file@percent }
+\newlabel{tab:appendix-zones}{{A.1}{59}{Route and Zone Configuration}{table.1.1}{}}
+\newlabel{lst:route-config}{{A.1}{59}{Route and Zone Configuration}{lstlisting.1.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {A.1}Excerpt from the route configuration file.}{59}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.2}Runtime Data Artifacts}{59}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {A.2}{\ignorespaces Primary persisted artifacts for reproducible anomaly decisions.}}{60}{}\protected@file@percent }
+\newlabel{tab:appendix-artifacts}{{A.2}{60}{Runtime Data Artifacts}{table.1.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.3}Serving API Surface}{60}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {A.3}{\ignorespaces Serving API endpoints used by the evaluation workflow.}}{60}{}\protected@file@percent }
+\newlabel{tab:appendix-api}{{A.3}{60}{Serving API Surface}{table.1.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.4}Reproducibility Commands}{60}{}\protected@file@percent }
+\newlabel{lst:repro-commands}{{A.2}{60}{Reproducibility Commands}{lstlisting.1.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {A.2}Local reproducibility commands.}{60}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.5}Evaluation Artifacts}{60}{}\protected@file@percent }
+\gdef \@abspage@last{74}

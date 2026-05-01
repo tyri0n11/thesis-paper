@@ -38,17 +38,17 @@
 \contentsline {subsection}{\numberline {3.4.3}Dual-Signal Fusion}{19}{}%
 \contentsline {section}{\numberline {3.5}Knowledge-Enriched Inference via RAG}{21}{}%
 \contentsline {subsection}{\numberline {3.5.1}Vector Store Architecture}{21}{}%
-\contentsline {subsection}{\numberline {3.5.2}Retrieval Strategy and Prompt Construction}{21}{}%
-\contentsline {subsubsection}{Retrieval Procedure}{21}{}%
+\contentsline {subsection}{\numberline {3.5.2}Retrieval Strategy and Prompt Construction}{22}{}%
+\contentsline {subsubsection}{Retrieval Procedure}{22}{}%
 \contentsline {subsection}{\numberline {3.5.3}Feedback Loop and Fine-Tuning Data Collection}{22}{}%
-\contentsline {section}{\numberline {3.6}Evaluation Framework}{22}{}%
-\contentsline {subsection}{\numberline {3.6.1}Experimental Protocol}{22}{}%
+\contentsline {section}{\numberline {3.6}Evaluation Framework}{23}{}%
+\contentsline {subsection}{\numberline {3.6.1}Experimental Protocol}{23}{}%
 \contentsline {subsection}{\numberline {3.6.2}Temporal Integrity}{23}{}%
-\contentsline {subsection}{\numberline {3.6.3}Reproducibility}{23}{}%
-\contentsline {subsection}{\numberline {3.6.4}Key Performance Indicators}{23}{}%
+\contentsline {subsection}{\numberline {3.6.3}Reproducibility}{24}{}%
+\contentsline {subsection}{\numberline {3.6.4}Key Performance Indicators}{24}{}%
 \contentsline {chapter}{\numberline {4}PROTOTYPING}{25}{}%
 \contentsline {section}{\numberline {4.1}Technology Stack Selection}{25}{}%
-\contentsline {subsection}{\numberline {4.1.1}Message Broker: Redpanda over Apache Kafka}{26}{}%
+\contentsline {subsection}{\numberline {4.1.1}Message Broker: Redpanda over Apache Kafka}{25}{}%
 \contentsline {subsection}{\numberline {4.1.2}Storage: Iceberg + Nessie + MinIO}{26}{}%
 \contentsline {subsection}{\numberline {4.1.3}LLM: Ollama with Qwen2.5:3b}{26}{}%
 \contentsline {section}{\numberline {4.2}Service Topology Design}{26}{}%
@@ -81,7 +81,7 @@
 \contentsline {subsection}{\numberline {5.6.1}Endpoint Overview}{35}{}%
 \contentsline {subsection}{\numberline {5.6.2}SSE Streaming Architecture}{35}{}%
 \contentsline {subsection}{\numberline {5.6.3}RAG-Enriched Inference}{35}{}%
-\contentsline {subsection}{\numberline {5.6.4}Dual-Signal Fusion in Serving}{36}{}%
+\contentsline {subsection}{\numberline {5.6.4}Dual-Signal Fusion in Serving}{39}{}%
 \contentsline {subsection}{\numberline {5.6.5}Frontend Dashboard}{39}{}%
 \contentsline {chapter}{\numberline {6}RESULT}{41}{}%
 \contentsline {section}{\numberline {6.1}Experimental Setup}{41}{}%
@@ -91,19 +91,24 @@
 \contentsline {subsection}{\numberline {6.2.1}Per-Route Metrics}{42}{}%
 \contentsline {subsection}{\numberline {6.2.2}Aggregate Findings}{44}{}%
 \contentsline {subsection}{\numberline {6.2.3}Production Anomaly Distribution}{45}{}%
-\contentsline {subsection}{\numberline {6.2.4}Interpretation}{46}{}%
+\contentsline {subsection}{\numberline {6.2.4}Interpretation}{45}{}%
 \contentsline {section}{\numberline {6.3}System Performance}{46}{}%
 \contentsline {subsection}{\numberline {6.3.1}Grafana Observability Dashboards}{46}{}%
-\contentsline {subsection}{\numberline {6.3.2}End-to-End Ingestion Latency}{46}{}%
+\contentsline {subsection}{\numberline {6.3.2}End-to-End Ingestion Latency}{48}{}%
 \contentsline {subsection}{\numberline {6.3.3}Batch Pipeline Throughput}{48}{}%
-\contentsline {subsection}{\numberline {6.3.4}SSE Delivery Latency}{48}{}%
-\contentsline {subsection}{\numberline {6.3.5}LLM Inference Latency}{48}{}%
-\contentsline {subsection}{\numberline {6.3.6}Summary of Performance Against Requirements}{48}{}%
-\contentsline {chapter}{\numberline {7}DISCUSSION}{50}{}%
-\contentsline {section}{\numberline {7.1}Analysis of Results}{50}{}%
-\contentsline {section}{\numberline {7.2}Strengths}{50}{}%
-\contentsline {section}{\numberline {7.3}Limitations}{51}{}%
-\contentsline {section}{\numberline {7.4}Comparison with Related Approaches}{51}{}%
-\contentsline {section}{\numberline {7.5}Future Work}{52}{}%
-\contentsline {chapter}{\numberline {8}CONCLUSION}{53}{}%
-\contentsline {chapter}{\numberline {A}LISTINGS}{58}{}%
+\contentsline {subsection}{\numberline {6.3.4}SSE Delivery Latency}{49}{}%
+\contentsline {subsection}{\numberline {6.3.5}LLM Inference Latency}{49}{}%
+\contentsline {subsection}{\numberline {6.3.6}Summary of Performance Against Requirements}{49}{}%
+\contentsline {chapter}{\numberline {7}DISCUSSION}{51}{}%
+\contentsline {section}{\numberline {7.1}Analysis of Results}{51}{}%
+\contentsline {section}{\numberline {7.2}Strengths}{51}{}%
+\contentsline {section}{\numberline {7.3}Limitations}{52}{}%
+\contentsline {section}{\numberline {7.4}Comparison with Related Approaches}{52}{}%
+\contentsline {section}{\numberline {7.5}Future Work}{53}{}%
+\contentsline {chapter}{\numberline {8}CONCLUSION}{54}{}%
+\contentsline {chapter}{\numberline {A}SUPPLEMENTARY ARTIFACTS}{59}{}%
+\contentsline {section}{\numberline {A.1}Route and Zone Configuration}{59}{}%
+\contentsline {section}{\numberline {A.2}Runtime Data Artifacts}{59}{}%
+\contentsline {section}{\numberline {A.3}Serving API Surface}{60}{}%
+\contentsline {section}{\numberline {A.4}Reproducibility Commands}{60}{}%
+\contentsline {section}{\numberline {A.5}Evaluation Artifacts}{60}{}%
