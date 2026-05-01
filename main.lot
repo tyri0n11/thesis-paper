@@ -7,7 +7,7 @@
 \contentsline {table}{\numberline {3.2}{\ignorespaces Zone-specific Open-Meteo query coordinates.}}{11}{}%
 \contentsline {table}{\numberline {3.3}{\ignorespaces Cyclical vs.\ raw-integer encoding for selected hours.}}{17}{}%
 \contentsline {table}{\numberline {3.4}{\ignorespaces IsolationForest hyperparameters selected by Optuna TPE (50 trials $\times $ 20 routes; median aggregation).}}{18}{}%
-\contentsline {table}{\numberline {3.5}{\ignorespaces ChromaDB collections and their update schedules}}{21}{}%
+\contentsline {table}{\numberline {3.5}{\ignorespaces ChromaDB collections and their update schedules}}{22}{}%
 \contentsline {table}{\numberline {3.6}{\ignorespaces Key performance indicators and measurement boundaries}}{24}{}%
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {4.1}{\ignorespaces UrbanPulse technology stack and selection rationale.}}{26}{}%
@@ -20,7 +20,7 @@
 \contentsline {table}{\numberline {6.3}{\ignorespaces Aggregate dual-signal metrics across 20 routes.}}{44}{}%
 \contentsline {table}{\numberline {6.4}{\ignorespaces Measured performance vs.\ non-functional requirements.}}{50}{}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {7.1}{\ignorespaces Comparison of UrbanPulse against reference architectures.}}{53}{}%
+\contentsline {table}{\numberline {7.1}{\ignorespaces Architectural comparison of UrbanPulse against reference pipeline patterns (\cmark ~yes, \xmark ~no).}}{53}{}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {A.1}{\ignorespaces UrbanPulse zone anchors used for route generation.}}{59}{}%

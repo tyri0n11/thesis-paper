@@ -128,63 +128,66 @@
 \newlabel{eq:threshold_rule}{{3.5}{15}{Mathematical Formulation}{equation.3.5}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces $(\,z_r,\tmspace  +\thickmuskip {.2777em} \texttt  {is\_anomaly}\,) \gets \texttt  {ZScoreClassify}(r,\tmspace  +\thickmuskip {.2777em} \bar  {h}_r^{(t)},\tmspace  +\thickmuskip {.2777em} \mathcal  {B})$}}{15}{}\protected@file@percent }
 \newlabel{alg:zscore}{{2}{15}{Mathematical Formulation}{algorithm.2}{}}
+\citation{isolation_survey_2025}
+\citation{isolation_survey_2025}
 \citation{liu2008isolation}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Per-route Z-score over a 24-hour observation window (Grafana). Each line represents one directed inter-zone route. Spikes above the dashed threshold $\theta _r$ trigger the Z-score anomaly signal; the reference line shown at $\theta _r = 2.0$ corresponds to the fallback default applied when the baseline row lacks a route-specific \texttt  {zscore\_p99} value.}}{16}{}\protected@file@percent }
 \newlabel{fig:zscore_timeseries}{{3.4}{16}{Mathematical Formulation}{figure.3.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Signal 2 — Isolation Forest Batch Detector}{16}{}\protected@file@percent }
 \newlabel{subsec:iforest}{{3.4.2}{16}{Signal 2 — Isolation Forest Batch Detector}{subsection.3.4.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Model Selection Rationale}{16}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Mathematical Formulation}{16}{}\protected@file@percent }
-\newlabel{eq:feature_vector}{{3.6}{16}{Mathematical Formulation}{equation.3.6}{}}
-\citation{optuna_paper}
+\newlabel{eq:feature_vector}{{3.6}{17}{Mathematical Formulation}{equation.3.6}{}}
 \newlabel{eq:cyclical}{{3.7}{17}{Mathematical Formulation}{equation.3.7}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces Cyclical vs.\ raw-integer encoding for selected hours.}}{17}{}\protected@file@percent }
 \newlabel{tab:cyclical_example}{{3.3}{17}{Mathematical Formulation}{table.3.3}{}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces $(s_r,\tmspace  +\thickmuskip {.2777em} \hat  {y}_r) \gets \texttt  {IForestScore}(\mathbf  {x}_r,\tmspace  +\thickmuskip {.2777em} f_{\theta })$}}{17}{}\protected@file@percent }
-\newlabel{alg:iforest}{{3}{17}{Mathematical Formulation}{algorithm.3}{}}
-\newlabel{eq:score_gap}{{3.8}{17}{Mathematical Formulation}{equation.3.8}{}}
-\citation{mlflow_paper}
-\citation{mlflow_docs}
+\citation{optuna_paper}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces $(s_r,\tmspace  +\thickmuskip {.2777em} \hat  {y}_r) \gets \texttt  {IForestScore}(\mathbf  {x}_r,\tmspace  +\thickmuskip {.2777em} f_{\theta })$}}{18}{}\protected@file@percent }
+\newlabel{alg:iforest}{{3}{18}{Mathematical Formulation}{algorithm.3}{}}
+\newlabel{eq:score_gap}{{3.8}{18}{Mathematical Formulation}{equation.3.8}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces IsolationForest hyperparameters selected by Optuna TPE (50 trials $\times $ 20 routes; median aggregation).}}{18}{}\protected@file@percent }
 \newlabel{tab:iforest_params}{{3.4}{18}{Mathematical Formulation}{table.3.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Optuna hyperparameter tuning validation across 20 routes. \textit  {Left}: tuned vs.\ default anomaly score gap per route (all points above the diagonal indicate improvement). \textit  {Right}: distribution of score gap delta (\texttt  {tuned} $-$ \texttt  {default}); all 20 routes show strictly positive improvement (mean $+0.023$, max $+0.047$).}}{18}{}\protected@file@percent }
-\newlabel{fig:optuna_validation}{{3.5}{18}{Mathematical Formulation}{figure.3.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces MLflow experiment view showing per-route \texttt  {IsolationForest} training runs for the \texttt  {traffic-anomaly-detection} experiment. Each row corresponds to one directed inter-zone route model.}}{19}{}\protected@file@percent }
-\newlabel{fig:mlflow_experiments}{{3.6}{19}{Mathematical Formulation}{figure.3.6}{}}
+\citation{mlflow_paper}
+\citation{mlflow_docs}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Optuna hyperparameter tuning validation across 20 routes. \textit  {Left}: tuned vs.\ default anomaly score gap per route (all points above the diagonal indicate improvement). \textit  {Right}: distribution of score gap delta (\texttt  {tuned} $-$ \texttt  {default}); all 20 routes show strictly positive improvement (mean $+0.023$, max $+0.047$).}}{19}{}\protected@file@percent }
+\newlabel{fig:optuna_validation}{{3.5}{19}{Mathematical Formulation}{figure.3.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Dual-Signal Fusion}{19}{}\protected@file@percent }
 \newlabel{subsec:fusion}{{3.4.3}{19}{Dual-Signal Fusion}{subsection.3.4.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces MLflow model metrics for route \textit  {Southern Coastal~$\to $~Western Peri-urban}. Key indicators: \texttt  {iforest\_\allowbreak  anomaly\_\allowbreak  rate}~$= 0.01$ (matches contamination prior), \texttt  {model\_agreement}~$= 0.96$, and \texttt  {total\_samples}~$= 1{,}517$.}}{20}{}\protected@file@percent }
-\newlabel{fig:mlflow_metrics}{{3.7}{20}{Mathematical Formulation}{figure.3.7}{}}
 \citation{lewis2020rag}
 \citation{lewis2020rag}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces MLflow experiment view showing per-route \texttt  {IsolationForest} training runs for the \texttt  {traffic-anomaly-detection} experiment. Each row corresponds to one directed inter-zone route model.}}{20}{}\protected@file@percent }
+\newlabel{fig:mlflow_experiments}{{3.6}{20}{Mathematical Formulation}{figure.3.6}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces $\texttt  {tier}_r \gets \texttt  {SignalFusion}(z_r,\tmspace  +\thickmuskip {.2777em} f_r)$}}{20}{}\protected@file@percent }
+\newlabel{alg:fusion}{{4}{20}{Dual-Signal Fusion}{algorithm.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Knowledge-Enriched Inference via RAG}{20}{}\protected@file@percent }
+\newlabel{sec:rag}{{3.5}{20}{Knowledge-Enriched Inference via RAG}{section.3.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces MLflow model metrics for route \textit  {Southern Coastal~$\to $~Western Peri-urban}. Key indicators: \texttt  {iforest\_\allowbreak  anomaly\_\allowbreak  rate}~$= 0.01$ (matches contamination prior), \texttt  {model\_agreement}~$= 0.96$, and \texttt  {total\_samples}~$= 1{,}517$.}}{21}{}\protected@file@percent }
+\newlabel{fig:mlflow_metrics}{{3.7}{21}{Mathematical Formulation}{figure.3.7}{}}
 \citation{chromadb_docs}
 \citation{nomic_embed}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces $\texttt  {tier}_r \gets \texttt  {SignalFusion}(z_r,\tmspace  +\thickmuskip {.2777em} f_r)$}}{21}{}\protected@file@percent }
-\newlabel{alg:fusion}{{4}{21}{Dual-Signal Fusion}{algorithm.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.5}Knowledge-Enriched Inference via RAG}{21}{}\protected@file@percent }
-\newlabel{sec:rag}{{3.5}{21}{Knowledge-Enriched Inference via RAG}{section.3.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.1}Vector Store Architecture}{21}{}\protected@file@percent }
-\newlabel{subsec:vector_store}{{3.5.1}{21}{Vector Store Architecture}{subsection.3.5.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.5}{\ignorespaces ChromaDB collections and their update schedules}}{21}{}\protected@file@percent }
-\newlabel{tab:chroma_collections}{{3.5}{21}{Vector Store Architecture}{table.3.5}{}}
-\citation{sse_spec}
-\citation{qwen25_report}
-\citation{ollama_docs}
-\citation{rlhf_paper}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.1}Vector Store Architecture}{22}{}\protected@file@percent }
+\newlabel{subsec:vector_store}{{3.5.1}{22}{Vector Store Architecture}{subsection.3.5.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.5}{\ignorespaces ChromaDB collections and their update schedules}}{22}{}\protected@file@percent }
+\newlabel{tab:chroma_collections}{{3.5}{22}{Vector Store Architecture}{table.3.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.5.2}Retrieval Strategy and Prompt Construction}{22}{}\protected@file@percent }
 \newlabel{subsec:rag_indexing}{{3.5.2}{22}{Retrieval Strategy and Prompt Construction}{subsection.3.5.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{Retrieval Procedure}{22}{}\protected@file@percent }
 \newlabel{eq:retrieval}{{3.9}{22}{Retrieval Procedure}{equation.3.9}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {5}{\ignorespaces $\texttt  {response} \gets \texttt  {RAGInference}(q,\tmspace  +\thickmuskip {.2777em} r,\tmspace  +\thickmuskip {.2777em} \text  {hr},\tmspace  +\thickmuskip {.2777em} \text  {dow})$}}{22}{}\protected@file@percent }
 \newlabel{alg:rag}{{5}{22}{Retrieval Procedure}{algorithm.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.3}Feedback Loop and Fine-Tuning Data Collection}{22}{}\protected@file@percent }
-\newlabel{subsec:feedback}{{3.5.3}{22}{Feedback Loop and Fine-Tuning Data Collection}{subsection.3.5.3}{}}
+\citation{sse_spec}
+\citation{qwen25_report}
+\citation{ollama_docs}
+\citation{rlhf_paper}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.3}Feedback Loop and Fine-Tuning Data Collection}{23}{}\protected@file@percent }
+\newlabel{subsec:feedback}{{3.5.3}{23}{Feedback Loop and Fine-Tuning Data Collection}{subsection.3.5.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.6}Evaluation Framework}{23}{}\protected@file@percent }
 \newlabel{sec:evaluation}{{3.6}{23}{Evaluation Framework}{section.3.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.6.1}Experimental Protocol}{23}{}\protected@file@percent }
 \newlabel{subsec:experimental_protocol}{{3.6.1}{23}{Experimental Protocol}{subsection.3.6.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.2}Temporal Integrity}{23}{}\protected@file@percent }
-\newlabel{subsec:eval_temporal}{{3.6.2}{23}{Temporal Integrity}{subsection.3.6.2}{}}
-\newlabel{eq:lag}{{3.10}{23}{Temporal Integrity}{equation.3.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.2}Temporal Integrity}{24}{}\protected@file@percent }
+\newlabel{subsec:eval_temporal}{{3.6.2}{24}{Temporal Integrity}{subsection.3.6.2}{}}
+\newlabel{eq:lag}{{3.10}{24}{Temporal Integrity}{equation.3.10}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.6.3}Reproducibility}{24}{}\protected@file@percent }
 \newlabel{subsec:eval_reproducibility}{{3.6.3}{24}{Reproducibility}{subsection.3.6.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.6.4}Key Performance Indicators}{24}{}\protected@file@percent }
@@ -345,12 +348,14 @@
 \@writefile{toc}{\contentsline {section}{\numberline {7.2}Strengths}{51}{}\protected@file@percent }
 \newlabel{sec:strengths}{{7.2}{51}{Strengths}{section.7.2}{}}
 \citation{chandola2009anomaly}
+\citation{iceberg-table-format}
+\citation{nessie-catalog}
 \@writefile{toc}{\contentsline {section}{\numberline {7.3}Limitations}{52}{}\protected@file@percent }
 \newlabel{sec:limitations}{{7.3}{52}{Limitations}{section.7.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {7.4}Comparison with Related Approaches}{52}{}\protected@file@percent }
 \newlabel{sec:comparison}{{7.4}{52}{Comparison with Related Approaches}{section.7.4}{}}
 \citation{tan2011hst}
-\@writefile{lot}{\contentsline {table}{\numberline {7.1}{\ignorespaces Comparison of UrbanPulse against reference architectures.}}{53}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7.1}{\ignorespaces Architectural comparison of UrbanPulse against reference pipeline patterns (\cmark ~yes, \xmark ~no).}}{53}{}\protected@file@percent }
 \newlabel{tab:comparison}{{7.1}{53}{Comparison with Related Approaches}{table.7.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {7.5}Future Work}{53}{}\protected@file@percent }
 \newlabel{sec:future-work}{{7.5}{53}{Future Work}{section.7.5}{}}
@@ -387,16 +392,17 @@
 \bibcite{nessie_docs}{26}
 \bibcite{flink_paper}{27}
 \bibcite{pyiceberg_docs}{28}
-\bibcite{liu2008isolation}{29}
-\bibcite{optuna_paper}{30}
-\bibcite{mlflow_paper}{31}
-\bibcite{mlflow_docs}{32}
-\bibcite{lewis2020rag}{33}
-\bibcite{chromadb_docs}{34}
-\bibcite{nomic_embed}{35}
-\bibcite{ollama_docs}{36}
-\bibcite{rlhf_paper}{37}
-\bibcite{tan2011hst}{38}
+\bibcite{isolation_survey_2025}{29}
+\bibcite{liu2008isolation}{30}
+\bibcite{optuna_paper}{31}
+\bibcite{mlflow_paper}{32}
+\bibcite{mlflow_docs}{33}
+\bibcite{lewis2020rag}{34}
+\bibcite{chromadb_docs}{35}
+\bibcite{nomic_embed}{36}
+\bibcite{ollama_docs}{37}
+\bibcite{rlhf_paper}{38}
+\bibcite{tan2011hst}{39}
 \@writefile{toc}{\contentsline {chapter}{\numberline {A}SUPPLEMENTARY ARTIFACTS}{59}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}

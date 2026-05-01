@@ -121,39 +121,44 @@ for fault-tolerant production deployments at city scale.
 \label{sec:comparison}
 % ============================================================
 
-Table~\ref{tab:comparison} compares UrbanPulse against three architectural
-patterns discussed in the Related Work chapter.
+Table~\ref{tab:comparison} reproduces the architectural comparison from
+Table~\ref{tab:1} (Chapter~2) and adds the measured ingestion latency.
+Column labels and baseline capability assessments are consistent with the
+Related Work chapter.
 
 \begin{table}[htbp]
 \centering
-\caption{Comparison of UrbanPulse against reference architectures.}
+\caption{Architectural comparison of UrbanPulse against reference pipeline patterns
+         (\protect\cmark~yes, \protect\xmark~no).}
 \label{tab:comparison}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccc}
 \hline
 \textbf{Feature} &
 \textbf{UrbanPulse} &
-\textbf{Batch-only} &
+\textbf{Traditional Batch} &
 \textbf{Lambda Arch.} &
 \textbf{Kappa Arch.} \\
 \hline
-Ingestion latency (p95)   & $<$20 s & schedule-bounded & $<$1 min & $<$1 min \\
-Schema evolution           & \cmark (Iceberg) & \xmark & \xmark & Partial \\
-Time-travel queries        & \cmark (Nessie)  & \cmark & \xmark & \xmark \\
-Dual-signal detection      & \cmark & \xmark & \xmark & \xmark \\
-Explainability (LLM/RAG)   & \cmark & \xmark & \xmark & \xmark \\
-Single codebase            & \cmark & \cmark & \xmark & \cmark \\
-Ground-truth evaluation    & \xmark & \cmark & Partial & Partial \\
+Event-Driven Speed Layer (per-event)                                      & \cmark & \xmark & \cmark & \cmark \\
+Scheduled Batch Layer (medallion pipeline)                                & \cmark & \cmark & \cmark & \xmark \\
+Schema Evolution \& Time-Travel~\cite{iceberg-table-format}               & \cmark & \xmark & \xmark & \xmark \\
+Versioned Catalog (Git-like semantics)~\cite{nessie-catalog}              & \cmark & \xmark & \xmark & \xmark \\
+Ingestion latency (p95)                                                   & $<$20 s & schedule-bounded & seconds--minutes & seconds--minutes \\
 \hline
 \end{tabular}%
 }
 \end{table}
 
-\noindent UrbanPulse competes favourably on latency and feature richness
-against traditional batch-only and Lambda architectures. Its primary
-disadvantage is the absence of ground-truth evaluation, which is shared with
-most deployed streaming anomaly systems that operate on unlabelled
-real-world data.
+\noindent UrbanPulse is the only pattern that combines both processing layers
+with native schema evolution and versioned cataloguing, at a measured p95
+latency of under 20 seconds. Beyond architectural properties, UrbanPulse
+further contributes a dual-signal anomaly detector (Z-score combined with
+Isolation Forest) and an LLM-based explainability layer --- capabilities
+orthogonal to the choice of pipeline architecture. Its primary limitation
+relative to batch-oriented systems is the absence of ground-truth evaluation,
+a constraint shared by most deployed streaming anomaly detectors that operate
+on unlabelled real-world data.
 
 % ============================================================
 \section{Future Work}

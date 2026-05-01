@@ -460,9 +460,6 @@ drawn from the Apr 13--15, 2026 Grafana observability window.
 \textbf{Measured} & \textbf{Status} \\
 \hline
 NFR-1 Latency     & Ingestion lag p95 (API $\to$ PostgreSQL) & $<$20 s  & $<$20 s (p95 = 318 ms typical) & \cmark \\
-NFR-1 Latency     & Ingestion lag p50                        & ---      & 153 ms                          & \cmark \\
-NFR-1 Latency     & SSE delivery TTFB (median)               & ---      & 340 ms                          & \cmark \\
-NFR-1 Latency     & LLM time-to-first-token                  & $<$3 s   & 0.8--1.2 s                      & \cmark \\
 NFR-2 Reproducibility & Iceberg time-travel + MLflow provenance & Auditable & Full provenance logged          & \cmark \\
 NFR-3 Fault Tolerance & Welford crash-recovery (mid-hour restart) & No data loss & Validated over 2 restarts  & \cmark \\
 NFR-4 Scalability & Micro-batch execution time               & $<$5 min & $<$8 s per cycle                & \cmark \\

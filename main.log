@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.28)  1 MAY 2026 13:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.28)  1 MAY 2026 16:10
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -976,40 +976,39 @@ File: images/grafana-zscore-timeseries.png Graphic file (type png)
 <use images/grafana-zscore-timeseries.png>
 Package pdftex.def Info: images/grafana-zscore-timeseries.png  used on input line 805.
 (pdftex.def)             Requested size: 441.01775pt x 201.9817pt.
-
-Overfull \hbox (50.53036pt too wide) in paragraph at lines 845--851
+ [16 <./images/grafana-zscore-timeseries.png>]
+Overfull \hbox (50.53036pt too wide) in paragraph at lines 868--874
 []\T5/cmr/m/n/12 where $\OML/cmm/m/it/12 h[]$ \T5/cmr/m/n/12 is \T5/cmtt/m/n/12 avg_heavy_ratio\T5/cmr/m/n/12 , $\OML/cmm/m/it/12 m[]$ \T5/cmr/m/n/12 is \T5/cmtt/m/n/12 avg_moderate_ratio\T5/cmr/m/n/12 , $\OML/cmm/m/it/12 s[]$ \T5/cmr/m/n/12 is \T5/cmtt/m/n/12 max_severe_segments\T5/cmr/m/n/12 ,
  []
 
-[16 <./images/grafana-zscore-timeseries.png>]
-Overfull \hbox (31.73341pt too wide) in paragraph at lines 939--947
+
+Underfull \vbox (badness 3803) has occurred while \output is active []
+
+ [17]
+Overfull \hbox (31.73341pt too wide) in paragraph at lines 962--970
 []\T5/cmr/m/n/12 The four Iso-la-tion-For-est hy-per-pa-ram-e-ters (\T5/cmtt/m/n/12 contamination\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 n_estimators\T5/cmr/m/n/12 , \T5/cmtt/m/n/12 max_samples\T5/cmr/m/n/12 ,
  []
 
-[17]
-<images/optuna-validation.png, id=133, 1389.19pt x 385.44pt>
+<images/optuna-validation.png, id=132, 1389.19pt x 385.44pt>
 File: images/optuna-validation.png Graphic file (type png)
 <use images/optuna-validation.png>
-Package pdftex.def Info: images/optuna-validation.png  used on input line 1002.
+Package pdftex.def Info: images/optuna-validation.png  used on input line 1025.
 (pdftex.def)             Requested size: 441.01775pt x 122.36113pt.
- [18 <./images/optuna-validation.png>]
-<images/mlflow-experiments.png, id=139, 2007.5pt x 1121.18875pt>
+[18]
+<images/mlflow-experiments.png, id=138, 2007.5pt x 1121.18875pt>
 File: images/mlflow-experiments.png Graphic file (type png)
 <use images/mlflow-experiments.png>
-Package pdftex.def Info: images/mlflow-experiments.png  used on input line 1050.
+Package pdftex.def Info: images/mlflow-experiments.png  used on input line 1073.
 (pdftex.def)             Requested size: 441.01775pt x 246.30302pt.
-<images/mlflow-route-metrics.png, id=140, 2002.48125pt x 2007.5pt>
+<images/mlflow-route-metrics.png, id=139, 2002.48125pt x 2007.5pt>
 File: images/mlflow-route-metrics.png Graphic file (type png)
 <use images/mlflow-route-metrics.png>
-Package pdftex.def Info: images/mlflow-route-metrics.png  used on input line 1068.
+Package pdftex.def Info: images/mlflow-route-metrics.png  used on input line 1091.
 (pdftex.def)             Requested size: 441.01775pt x 442.11086pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [19 <./images/mlflow-experiments.png>] [20 <./images/mlflow-route-metrics.png>]
-Underfull \vbox (badness 1377) has occurred while \output is active []
-
- [21] [22] [23]) [24]
+ [19 <./images/optuna-validation.png>] [20 <./images/mlflow-experiments.png>] [21 <./images/mlflow-route-metrics.png>] [22] [23]) [24]
 Chapter 4.
 (./chapters/prototyping.tex
 <images/system-architecture.png, id=163, 12470.59pt x 7579.31625pt>
@@ -1280,12 +1279,12 @@ Underfull \hbox (badness 6141) in paragraph at lines 87--89
 []\T5/cmr/m/n/12 Apache Soft-ware Foun-da-tion, ``Apache Flink: Event Time and Wa-
  []
 
-
-Underfull \hbox (badness 5533) in paragraph at lines 119--121
+[57]
+Underfull \hbox (badness 5533) in paragraph at lines 122--124
 []\T5/cmr/m/n/12 Databricks, ``MLflow Doc-u-men-ta-tion.'' $\T5/cmtt/m/n/12 https : / / mlflow . org / docs / latest /
  []
 
-[57]) [58]
+) [58]
 Appendix A.
 (./chapters/appendix.tex [59
 
@@ -1296,15 +1295,15 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 20937 strings out of 467525
- 402972 string characters out of 5418982
- 1107772 words of memory out of 5000000
- 49423 multiletter control sequences out of 15000+600000
+ 20938 strings out of 467525
+ 402995 string characters out of 5418982
+ 1107777 words of memory out of 5000000
+ 49424 multiletter control sequences out of 15000+600000
  662875 words of font info for 114 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,14n,104p,1765b,1317s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/zapfding/uzdr.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbx8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnbxti10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vncsc10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnitt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vnti8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vntt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/vntex/vnr/vntt12.pfb>
-Output written on main.pdf (74 pages, 14184848 bytes).
+Output written on main.pdf (74 pages, 14186477 bytes).
 PDF statistics:
  449 PDF objects out of 1000 (max. 8388607)
  264 compressed objects within 3 object streams

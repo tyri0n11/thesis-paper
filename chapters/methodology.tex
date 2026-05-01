@@ -817,9 +817,32 @@
   \label{subsec:iforest}
   % ------------------------------------------------------------                                                                                          
    
-  \subsubsection{Mathematical Formulation}                                                                                                                             
-                  
-  The \textbf{Isolation Forest} algorithm \cite{liu2008isolation} is an                                                                                   
+  \subsubsection{Model Selection Rationale}
+
+  Isolation Forest was selected over alternative unsupervised detectors ---
+  Local Outlier Factor (LOF), One-Class SVM (OCSVM), and autoencoder-based
+  methods --- on four grounds specific to this deployment context.
+  First, its training and inference complexity is linear in the number of
+  samples ($\mathcal{O}(n \cdot t)$ for $t$ trees), making retraining
+  feasible within the 6-hour Prefect schedule on homelab hardware without
+  dedicated GPU.
+  Second, isolation-based methods are robust to irrelevant features and
+  do not require strong distributional assumptions (e.g.\ Gaussianity),
+  unlike OCSVM whose decision boundary is sensitive to kernel choice and
+  feature scaling \cite{isolation_survey_2025}.
+  Third, the \texttt{contamination} hyperparameter provides a principled
+  lever to encode the prior anomaly rate, which UrbanPulse estimates
+  independently from the Z-score baseline ($\approx 2\%$); this prior
+  was confirmed by Optuna TPE optimisation and set to $0.01$.
+  Fourth, a recent survey of isolation-based anomaly detection methods
+  \cite{isolation_survey_2025} confirms that Isolation Forest consistently
+  achieves high scalability and noise robustness across multivariate
+  time-series benchmarks, properties that directly match the Gold-layer
+  feature space used here ($d = 7$, $n \approx 1{,}600$ records per route).
+
+  \subsubsection{Mathematical Formulation}
+
+  The \textbf{Isolation Forest} algorithm \cite{liu2008isolation} is an
   unsupervised ensemble method that detects anomalies by measuring how
   easily an observation can be \textit{isolated} from the rest of the                                                                                     
   dataset using random recursive partitioning. Anomalous observations,

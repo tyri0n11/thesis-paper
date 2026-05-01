@@ -34,16 +34,17 @@
 \contentsline {subsection}{\numberline {3.4.1}Signal 1 — Z-Score Online Detector}{15}{}%
 \contentsline {subsubsection}{Mathematical Formulation}{15}{}%
 \contentsline {subsection}{\numberline {3.4.2}Signal 2 — Isolation Forest Batch Detector}{16}{}%
+\contentsline {subsubsection}{Model Selection Rationale}{16}{}%
 \contentsline {subsubsection}{Mathematical Formulation}{16}{}%
 \contentsline {subsection}{\numberline {3.4.3}Dual-Signal Fusion}{19}{}%
-\contentsline {section}{\numberline {3.5}Knowledge-Enriched Inference via RAG}{21}{}%
-\contentsline {subsection}{\numberline {3.5.1}Vector Store Architecture}{21}{}%
+\contentsline {section}{\numberline {3.5}Knowledge-Enriched Inference via RAG}{20}{}%
+\contentsline {subsection}{\numberline {3.5.1}Vector Store Architecture}{22}{}%
 \contentsline {subsection}{\numberline {3.5.2}Retrieval Strategy and Prompt Construction}{22}{}%
 \contentsline {subsubsection}{Retrieval Procedure}{22}{}%
-\contentsline {subsection}{\numberline {3.5.3}Feedback Loop and Fine-Tuning Data Collection}{22}{}%
+\contentsline {subsection}{\numberline {3.5.3}Feedback Loop and Fine-Tuning Data Collection}{23}{}%
 \contentsline {section}{\numberline {3.6}Evaluation Framework}{23}{}%
 \contentsline {subsection}{\numberline {3.6.1}Experimental Protocol}{23}{}%
-\contentsline {subsection}{\numberline {3.6.2}Temporal Integrity}{23}{}%
+\contentsline {subsection}{\numberline {3.6.2}Temporal Integrity}{24}{}%
 \contentsline {subsection}{\numberline {3.6.3}Reproducibility}{24}{}%
 \contentsline {subsection}{\numberline {3.6.4}Key Performance Indicators}{24}{}%
 \contentsline {chapter}{\numberline {4}PROTOTYPING}{25}{}%

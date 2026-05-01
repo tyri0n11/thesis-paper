@@ -106,6 +106,9 @@ P.~Carbone, A.~Katsifodimos, S.~Ewen, V.~Markl, S.~Haridi, and K.~Tzoumas, ``{Ap
 {Apache Software Foundation}, ``{PyIceberg: Python Library for Apache Iceberg}.'' \url{https://py.iceberg.apache.org/}, 2024.
 \newblock Accessed: 2025-11-15.
 
+\bibitem{isolation_survey_2025}
+Y.~Cao, H.~Xiang, H.~Zhang, {\em et~al.}, ``{Anomaly Detection Based on Isolation Mechanisms: A Survey},'' {\em Machine Intelligence Research}, vol.~22, pp.~849--865, 2025.
+
 \bibitem{liu2008isolation}
 F.~T. Liu, K.~M. Ting, and Z.-H. Zhou, ``{Isolation Forest},'' in {\em 2008 Eighth IEEE International Conference on Data Mining}, pp.~413--422, 2008.
 
