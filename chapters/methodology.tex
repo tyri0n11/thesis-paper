@@ -23,7 +23,7 @@
   The requirements of UrbanPulse are derived from the operational needs of                                                                                
   municipal traffic management in a large Southeast Asian metropolitan area.
   Ho Chi Minh City presents a particularly demanding environment: a
-  metropolitan population of approximately 8~million, with motorbikes
+  metropolitan population of approximately 8~million, with personal vehicles
   serving up to 85\% of daily travel needs and peak-hour congestion
   patterns that shift substantially across zones, time of day, and
   meteorological conditions \cite{hcmc_transport_report}.                                                                  
@@ -63,7 +63,7 @@
                                                                                                                                                           
       \item \textbf{FR-5 Explainability:} The system shall provide
       human-readable natural-language explanations of detected anomalies,                                                                                 
-      grounded in historical context and current meteorological conditions.                                                                               
+      grounded in historical context and meteorological conditions.                                                                               
                                                                                                                                                           
       \item \textbf{FR-6 Automated Alerting:} The system shall deliver                                                                                    
       push notifications for high-confidence anomaly events with configurable                                                                             
@@ -338,7 +338,7 @@
   Route-level traffic observations are acquired by periodically polling the
   \textbf{VietMap Directions API} \cite{vietmap_api}, a commercial Vietnamese                                                                             
   mapping provider with national road network coverage. The ingestion service                                                                             
-  iterates over 20 predefined inter-zone routes defined in a canonical                                                                                    
+  iterates over the set of inter-zone routes defined in a canonical                                                                                      
   \texttt{routes.json} configuration file. Routes are generated from a                                                                                    
   \texttt{zones.json} specification that partitions Ho Chi Minh City into six                                                                             
   functional zones: \textit{Urban Core}, \textit{Eastern Innovation},                                                                                     
@@ -364,7 +364,7 @@
   $\text{low\_ratio}_r$, and $\text{severe\_segments}_r$ (absolute count).
   A 10-second inter-request delay between consecutive API calls is enforced                                                                               
   to comply with rate-limit constraints. A complete crawl cycle across all                                                                                
-  20 routes completes within the 5-minute polling interval.                                                                                               
+  routes completes within the 5-minute polling interval.                                                                                               
                                                                                                                                                           
   It is important to clarify that VietMap operates as a \textbf{polling-based                                                                             
   source} rather than a push-based event stream. The ingestion service
@@ -375,12 +375,14 @@
   as a true streaming system regardless of source polling frequency                                                                                       
   \cite{kleppmann_ddia}.                                                                                                                                  
                                                                                                                                                           
-  Each message is validated against a \textbf{Pydantic} \cite{pydantic_docs}                                                                              
-  domain model (\texttt{TrafficRoute\-Observation}) before publication.
-  An \texttt{ingest\_ts} header — the Unix epoch millisecond timestamp                                                                                    
-  recorded immediately before the API call — is attached to every Kafka                                                                                   
-  message. This header serves as the reference point for end-to-end                                                                                       
-  latency measurement in all downstream consumers.                                                                                                        
+  Each API response is published to two Kafka topics: the raw VietMap                                                   
+  response bytes are forwarded as-is to \texttt{vietmap-raw}; a                                                         
+  transformed representation with extracted route metrics and computed                                                  
+  congestion ratios is published to \texttt{traffic-route-bronze}.                                                      
+  Both messages carry the same \texttt{ingest\_ts} header --- the Unix                                                  
+  epoch millisecond timestamp recorded immediately before the API call ---                                              
+  which serves as the reference point for end-to-end latency measurement                                                
+  in all downstream consumers.                                                                                                 
                                                                                                                                                           
   % ------------------------------------------------------------
   \subsection{Meteorological Context — Open-Meteo API}                                                                                                    
@@ -472,7 +474,7 @@
         \node[box, fill=blue!8] (vietmap) at (-3.4,2.4) {VietMap\\Directions API};
         \node[box, fill=blue!8] (weather) at (3.4,2.4) {Open-Meteo\\Weather API};
         \node[box, fill=orange!12, minimum width=5.8cm] (producer) at (0,1.1)
-          {Polling and Validation Producers};
+          {Polling Producers};
         \node[box, fill=orange!18, minimum width=5.8cm] (redpanda) at (0,-0.2)
           {Redpanda Message Log};
 
@@ -711,94 +713,25 @@
   \label{subsec:zscore}                                                                                                                                   
   % ------------------------------------------------------------                                                                                          
                                                                                                                                                           
-  \subsubsection{Mathematical Formulation}                                                                                                                             
-                  
-  Let $r \in \mathcal{R}$ denote a route identifier. Let                                                                                                  
-  $\bar{h}_r^{(t)}$ denote the running mean \texttt{heavy\_ratio}
-  for route $r$ at time $t$, computed by the Welford accumulator                                                                                          
-  (Algorithm~\ref{alg:welford}). Let $\mu_r^{\text{base}}$ and                                                                                            
-  $\sigma_r^{\text{base}}$ denote the \textit{batch baseline}                                                                                             
-  mean and standard deviation of \texttt{heavy\_ratio} for route $r$,                                                                                     
-  computed by the \texttt{baseline\_learning} Prefect task from the                                                                                       
-  Gold layer. The Z-score for route $r$ is defined as:                                                                                                    
-                                                                                                                                                          
-  \begin{equation}                                                                                                                                        
-  \label{eq:zscore}                                                                                                                                       
-  z_r^{(t)} = \frac{\bar{h}_r^{(t)} - \mu_r^{\text{base}}}{\sigma_r^{\text{base}}}
-  \end{equation}                                                                                                                                          
-   
-  A route is classified as anomalous if and only if:                                                                                                      
-                  
-  \begin{equation}                                                                                                                                        
-  \label{eq:zscore_threshold}
-  z_r^{(t)} > \theta_r                                                                                                                                    
-  \end{equation}  
+  \paragraph{Rationale and Role.}
+  Real-time anomaly detection requires a low-latency signal that responds instantly to traffic deviations. Z-score based on a rolling Welford baseline is ideal: it runs in $O(1)$ memory per route and produces per-message scores, capturing immediate spikes before batch models can react \cite{welford1962note, finch2009incremental}.
 
-  where $\theta_r$ is a \textbf{dynamic, per-route threshold} resolved
-  at baseline load time according to the following three-case rule:
+  \paragraph{Input, Configuration, Output.}
+  The Online Service tracks a running mean of \texttt{heavy\_ratio} for each route using Welford's online algorithm, maintaining state $(n, \mu, M_2)$ in PostgreSQL. The batch baseline layer computes the 99th percentile of historical Z-scores ($p_{99,r}$) during the \texttt{baseline\_learning} job. For each incoming observation, the Z-score is:
+
+  \begin{equation}
+  \label{eq:zscore}
+  z_r^{(t)} = \frac{\bar{h}_r^{(t)} - \mu_r^{\text{base}}}{\sigma_r^{\text{base}}}
+  \end{equation}
+
+  where $\bar{h}_r^{(t)}$ is the current Welford mean, and $\mu_r^{\text{base}}, \sigma_r^{\text{base}}$ are the batch baseline statistics. The adaptive threshold is:
 
   \begin{equation}
   \label{eq:threshold_rule}
-  \theta_r =
-  \begin{cases}
-      2.0 & \text{if } p_{99,r} \text{ is unavailable (new route, no history)} \\
-      1.5 & \text{if } p_{99,r} < 1.5 \quad \text{(floor — prevents excessive sensitivity)} \\
-      p_{99,r} & \text{otherwise}
-  \end{cases}
+  \theta_r = \max(1.5, \min(p_{99,r}, 2.0))
   \end{equation}
 
-  where $p_{99,r}$ is the 99th percentile of the historical Z-score
-  distribution for route $r$, computed by the \texttt{baseline\_learning}
-  Prefect task from the Gold layer. The floor of $1.5$ prevents routes
-  with historically low variance from generating continuous false-positive
-  alerts: without it, a route whose heavy\_ratio rarely fluctuates would
-  produce a very small $p_{99,r}$, making even minor deviations appear
-  anomalous. The fallback of $2.0$ applies when the baseline row exists but
-  \texttt{zscore\_p99} is unavailable (for example, sparse history). If no
-  baseline entry exists for the current route/time slot, the Online Service
-  returns \texttt{None} and does not emit a Z-score anomaly. The threshold is
-  \textbf{one-sided}:
-  only positive deviations are flagged, as a lower-than-baseline
-  heavy ratio indicates free-flowing traffic, which does not constitute
-  an anomalous condition. Algorithm~\ref{alg:zscore} formalises the
-  full per-message classification procedure.                                                                                                                                              
-                                                                                                                                                          
-  \begin{algorithm}[H]                                                                                                                                    
-      \small      
-      \caption{$(\,z_r,\; \texttt{is\_anomaly}\,) \gets                                                                                                   
-      \texttt{ZScoreClassify}(r,\; \bar{h}_r^{(t)},\; \mathcal{B})$}                                                                                      
-      \label{alg:zscore}                                                                                                                                  
-      \begin{algorithmic}[1]                                                                                                                              
-          \Require $r$ is the route identifier.                                                                                                           
-          \Require $\bar{h}_r^{(t)}$ is the current window mean heavy\_ratio.                                                                             
-          \Require $\mathcal{B}$ is the baseline map: $r \mapsto                                                                                          
-          (\mu_r^{\text{base}},\; \sigma_r^{\text{base}},\; \theta_r)$.                                                                                   
-          \If{$r \notin \mathcal{B}$ \textbf{or}                                                                                                          
-              $\sigma_r^{\text{base}} = 0$}                                                                                                               
-              \State \Return $(z_r = \texttt{None},\;                                                                                                     
-              \texttt{is\_anomaly} = \texttt{False})$                                                                                                     
-          \EndIf                                                                                                                                          
-          \State $z_r \gets                                                                                                                               
-          (\bar{h}_r^{(t)} - \mu_r^{\text{base}}) \;/\;
-          \sigma_r^{\text{base}}$                                                                                                                         
-          \State $\texttt{is\_anomaly} \gets
-          (z_r > \theta_r)$                                                                                                                               
-          \State \Return $(z_r,\; \texttt{is\_anomaly})$
-      \end{algorithmic}                                                                                                                                   
-  \end{algorithm}                                                                                                                                         
-   
-  The result is stored in the \texttt{online\_route\_features} table
-  under the column \texttt{duration\_\allowbreak zscore} --- a historical naming
-  artefact retained for schema continuity; the stored value is the
-  heavy\_ratio Z-score as defined in Equation~\ref{eq:zscore}.
-
-  The majority of routes remain within $|z| < 2$, whilst two
-  routes (\textit{Urban Core~$\to$~Northern Industrial} and
-  \textit{Southern Port~$\to$~Western Peri-urban}) produce
-  pronounced spikes that exceed their dynamic route thresholds during the
-  06:00 and 16:00--17:00 peak-hour windows --- periods consistent with
-  Ho Chi Minh City's morning and evening commute patterns
-  (Figure~\ref{fig:zscore_timeseries}).
+  The floor of 1.5 prevents excessive sensitivity on low-variance routes; the ceiling of 2.0 covers new routes lacking history. Classification is one-sided: only $z_r^{(t)} > \theta_r$ signals an anomaly (positive deviations indicate congestion; negative indicates free flow, which is not anomalous). The Z-score is stored in PostgreSQL's \texttt{online\_route\_features} table as \texttt{duration\_zscore} (schema legacy name retained for continuity) and exposed via the Serving Layer's WebSocket API.
 
   \begin{figure}[htbp]
       \centering
@@ -806,184 +739,27 @@
       \caption{Per-route Z-score over a 24-hour observation window
       (Grafana). Each line represents one directed inter-zone route.
       Spikes above the dashed threshold $\theta_r$ trigger the Z-score
-      anomaly signal; the reference line shown at $\theta_r = 2.0$
-      corresponds to the fallback default applied when the baseline row
-      lacks a route-specific \texttt{zscore\_p99} value.}
+      anomaly signal.}
       \label{fig:zscore_timeseries}
   \end{figure}
 
   % ------------------------------------------------------------
   \subsection{Signal 2 — Isolation Forest Batch Detector}                                                                                                 
   \label{subsec:iforest}
-  % ------------------------------------------------------------                                                                                          
-   
-  \subsubsection{Model Selection Rationale}
+  % ------------------------------------------------------------
 
-  Isolation Forest was selected over alternative unsupervised detectors ---
-  Local Outlier Factor (LOF), One-Class SVM (OCSVM), and autoencoder-based
-  methods --- on four grounds specific to this deployment context.
-  First, its training and inference complexity is linear in the number of
-  samples ($\mathcal{O}(n \cdot t)$ for $t$ trees), making retraining
-  feasible within the 6-hour Prefect schedule on homelab hardware without
-  dedicated GPU.
-  Second, isolation-based methods are robust to irrelevant features and
-  do not require strong distributional assumptions (e.g.\ Gaussianity),
-  unlike OCSVM whose decision boundary is sensitive to kernel choice and
-  feature scaling \cite{isolation_survey_2025}.
-  Third, the \texttt{contamination} hyperparameter provides a principled
-  lever to encode the prior anomaly rate, which UrbanPulse estimates
-  independently from the Z-score baseline ($\approx 2\%$); this prior
-  was confirmed by Optuna TPE optimisation and set to $0.01$.
-  Fourth, a recent survey of isolation-based anomaly detection methods
-  \cite{isolation_survey_2025} confirms that Isolation Forest consistently
-  achieves high scalability and noise robustness across multivariate
-  time-series benchmarks, properties that directly match the Gold-layer
-  feature space used here ($d = 7$, $n \approx 1{,}600$ records per route).
+  \paragraph{Rationale and Role.}
+  The dual-signal framework requires a second, independent detector to reconcile high-recall Z-score signals with high-precision multivariate outlier detection. Isolation Forest \cite{liu2008isolation} is well-suited for this role: it operates on a 7-dimensional feature space (congestion ratios + cyclical time encodings) without requiring labelled data or strong distributional assumptions, and its linear complexity in sample count enables 6-hourly retraining on homelab hardware \cite{isolation_survey_2025}.
 
-  \subsubsection{Mathematical Formulation}
-
-  The \textbf{Isolation Forest} algorithm \cite{liu2008isolation} is an
-  unsupervised ensemble method that detects anomalies by measuring how
-  easily an observation can be \textit{isolated} from the rest of the                                                                                     
-  dataset using random recursive partitioning. Anomalous observations,
-  being rare and distinct, require fewer partitions to isolate and thus                                                                                   
-  receive shorter average path lengths across the ensemble of trees.                                                                                      
-                                                                                                                                                          
-  Let $\mathbf{x} \in \mathbb{R}^d$ denote the feature vector for a                                                                                       
-  single route-hour observation, where $d = 7$. The feature vector is:                                                                                    
+  \paragraph{Input, Configuration, Output.}
+  The feature vector per route-hour observation comprises three traffic metrics (avg heavy ratio, avg moderate ratio, max severe segments) and four cyclical time encodings (sine-cosine pairs for hour-of-day and day-of-week to ensure temporal circularity). An Isolation Forest model is trained every 6 hours on the Gold-layer corpus ($N \approx 1{,}600$ records per route) using Optuna Bayesian search to maximize the anomaly score gap.
                                                                                                                                                           
   \begin{equation}
-  \label{eq:feature_vector}                                                                                                                               
-  \mathbf{x} = \bigl(\,
-  h_{\text{avg}},\;                                                                                                                                       
-  m_{\text{avg}},\;                                                                                                                                       
-  s_{\text{max}},\;                                                                                                                                       
-  \sin\!\left(\tfrac{2\pi \cdot \text{hr}}{24}\right),\;                                                                                                  
-  \cos\!\left(\tfrac{2\pi \cdot \text{hr}}{24}\right),\;                                                                                                  
-  \sin\!\left(\tfrac{2\pi \cdot \text{dow}}{7}\right),\;                                                                                                  
-  \cos\!\left(\tfrac{2\pi \cdot \text{dow}}{7}\right)                                                                                                     
-  \bigr)                                                                                                                                                  
-  \end{equation}  
-                                                                                                                                                          
-  where $h_{\text{avg}}$ is \texttt{avg\_heavy\_\allowbreak ratio},                                                                                                   
-  $m_{\text{avg}}$ is \texttt{avg\_moderate\_ratio},
-  $s_{\text{max}}$ is \texttt{max\_severe\_segments},                                                                                                     
-  \texttt{hr} $\in \{0, \ldots, 23\}$ is the hour of day (UTC),
-  and \texttt{dow} $\in \{0, \ldots, 6\}$ is the day of week                                                                                              
-  (Sunday = 0).
-                                                                                                                                                          
-  The \textbf{cyclical encoding} of \texttt{hr} and \texttt{dow}
-  as sine-cosine pairs projects circular
-  time dimensions onto the unit circle, ensuring that 23:00 and 00:00
-  are geometrically adjacent in feature space, and that Sunday and
-  Monday are adjacent across the week boundary. Encoding time as a
-  raw integer would impose a false ordinal distance (e.g., hour 23
-  would be maximally distant from hour 0), causing the model to
-  mislearn the periodicity of urban traffic patterns.
-
-  Concretely, for hour-of-day $\text{hr} \in \{0, \ldots, 23\}$ and
-  day-of-week $\text{dow} \in \{0, \ldots, 6\}$, the four derived
-  features are:
-
-  \begin{equation}
-  \label{eq:cyclical}
-  \begin{aligned}
-    h_{\sin} &= \sin\!\left(\frac{2\pi \cdot \text{hr}}{24}\right), \quad
-    h_{\cos}  = \cos\!\left(\frac{2\pi \cdot \text{hr}}{24}\right) \\
-    d_{\sin} &= \sin\!\left(\frac{2\pi \cdot \text{dow}}{7}\right), \quad
-    d_{\cos}  = \cos\!\left(\frac{2\pi \cdot \text{dow}}{7}\right)
-  \end{aligned}
+  \label{eq:feature_vector}
+  \mathbf{x} = (h_{\text{avg}}, m_{\text{avg}}, s_{\text{max}}, \sin(2\pi \cdot \text{hr}/24), \cos(2\pi \cdot \text{hr}/24), \sin(2\pi \cdot \text{dow}/7), \cos(2\pi \cdot \text{dow}/7))
   \end{equation}
 
-  As a concrete example, hour 23 maps to
-  $(h_{\sin}, h_{\cos}) = (-0.259, 0.966)$ and hour 0 maps to
-  $(0, 1)$ --- a Euclidean distance of only $0.261$, compared to
-  the raw-integer distance of $23$. Table~\ref{tab:cyclical_example}
-  illustrates the contrast for selected hours.
-
-  \begin{table}[h]
-  \centering
-  \caption{Cyclical vs.\ raw-integer encoding for selected hours.}
-  \label{tab:cyclical_example}
-  \small
-  \begin{tabular}{cccccc}
-  \hline
-  \textbf{Hour} & \textbf{Raw} & $h_{\sin}$ & $h_{\cos}$ &
-  \textbf{Dist to hr=0 (raw)} & \textbf{Dist to hr=0 (cyclical)} \\
-  \hline
-  0  & 0  &  0.000 &  1.000 & 0  & 0.000 \\
-  6  & 6  &  1.000 &  0.000 & 6  & 1.414 \\
-  12 & 12 &  0.000 & $-$1.000 & 12 & 2.000 \\
-  18 & 18 & $-$1.000 &  0.000 & 18 & 1.414 \\
-  23 & 23 & $-$0.259 &  0.966 & 23 & 0.261 \\
-  \hline
-  \end{tabular}
-  \end{table}
-
-  Given a training corpus $\mathcal{X} = \{\mathbf{x}_1, \ldots,
-  \mathbf{x}_N\}$ drawn from the Gold layer, the Isolation Forest
-  produces a continuous anomaly score $s(\mathbf{x}) \in \mathbb{R}$
-  via \texttt{decision\_function}. An observation is labelled
-  anomalous if and only if $s(\mathbf{x}) < 0$: negative scores
-  indicate that the observation lies in a sparse region of feature
-  space and is isolated by shorter-than-average path lengths across
-  the ensemble. Algorithm~\ref{alg:iforest} describes the full
-  training and scoring pipeline as implemented in the serving layer.
-
-  \begin{algorithm}[H]
-      \small
-      \caption{$(s_r,\; \hat{y}_r) \gets
-      \texttt{IForestScore}(\mathbf{x}_r,\; f_{\theta})$}
-      \label{alg:iforest}
-      \begin{algorithmic}[1]
-          \Require $\mathcal{X}$ is the Gold-layer training corpus.
-          \Require $f_{\theta}$ is a trained \texttt{IsolationForest}
-          with contamination $= 0.01$, $T = 450$ trees,
-          \texttt{max\_samples} $= 0.76$, \texttt{max\_features} $= 0.73$.
-          \Comment{Training phase (every 6 h)}
-          \State $f_{\theta} \gets \texttt{IsolationForest.fit}(\mathcal{X})$
-          \State \textbf{log} $f_{\theta}$ parameters and metrics to
-          \textsc{MLflow}; promote to \texttt{@champion} alias.
-          \Comment{Scoring phase (every 15 s, background task)}
-          \State $\mathbf{X}_{\text{now}} \gets$ latest snapshot of
-          \texttt{online\_route\_features}
-          \State $\mathbf{X}_{\text{feat}} \gets
-          \texttt{BuildFeatureVector}(\mathbf{X}_{\text{now}})$
-          per Equation~\ref{eq:feature_vector}
-          \State $\mathbf{s} \gets f_{\theta}.\texttt{decision\_function}
-          (\mathbf{X}_{\text{feat}})$
-          \Comment{Returns $s_r \in \mathbb{R}$; $s_r < 0$ is anomalous}
-          \State $\hat{y}_r \gets (s_r < 0)$
-          \Comment{$\hat{y}_r = 1$ (anomaly), $\hat{y}_r = 0$ (normal)}
-          \State \Return $(s_r,\; \hat{y}_r)$ for each $r \in \mathcal{R}$
-      \end{algorithmic}
-  \end{algorithm}                                                                                                                                         
-                                                                                                                                                          
-  The four IsolationForest hyperparameters
-  (\texttt{contamination}, \texttt{n\_estimators},
-  \texttt{max\_samples}, \texttt{max\_features})
-  are selected via \textbf{Optuna} Bayesian optimisation
-  \cite{optuna_paper} using the Tree-structured Parzen Estimator
-  (TPE) sampler. For each of the 20 routes, 50 independent trials
-  are evaluated; the per-route best parameters are aggregated by
-  median to obtain a single global configuration.
-
-  The objective function maximises the \emph{anomaly score gap}:
-  \begin{equation}
-    \mathcal{G}(\theta) =
-      \overline{s}_{\text{normal}}(\theta) -
-      \overline{s}_{\text{anomaly}}(\theta),
-    \label{eq:score_gap}
-  \end{equation}
-  where $\overline{s}_{\text{normal}}$ and
-  $\overline{s}_{\text{anomaly}}$ are the mean
-  \texttt{decision\_function} outputs for the normal and anomalous
-  subsets respectively, as determined by the candidate
-  \texttt{contamination} threshold. Because both subsets are defined
-  entirely within the ratio feature space
-  $\mathcal{X} = (\rho_h, \rho_m, n_s, \sin/\cos(\text{hour}),
-  \sin/\cos(\text{dow}))$, the objective is fully self-contained and
-  requires no external labels.
+  The cyclical encodings (sine-cosine pairs) ensure temporal circularity: hour 23 and hour 0 are geometrically adjacent, preventing false ordinal distances that would mislead the model about traffic periodicity.
 
   Table~\ref{tab:iforest_params} reports the resulting configuration.
   The \texttt{contamination} value of $0.01$ is consistent with an
@@ -1032,41 +808,13 @@
       \label{fig:optuna_validation}
   \end{figure}
 
-  Scikit-learn uses \texttt{contamination} to set the internal score
-  offset $\theta^*$ such that exactly
-  $\lfloor \texttt{contamination} \times N \rfloor$ training samples
-  satisfy $s(\mathbf{x}) < 0$; a lower value therefore raises the
-  effective decision threshold, flagging only the most extreme
-  outliers and biasing the detector towards precision over recall.
-  This trade-off is deliberate: the dual-signal fusion
-  (Section~\ref{subsec:fusion}) already handles recall via the
-  Z-score path, so the IForest component is tuned for
-  high-confidence, low-false-positive output.
-
-  The trained model is serialised with \texttt{joblib} and registered
-  in \textbf{MLflow} \cite{mlflow_paper} under the model name
-  \texttt{traffic-anomaly-iforest} with the \texttt{@champion}                                                                                            
-  promotion alias. The serving layer loads the artifact via                                                                                               
-  \texttt{mlflow.artifacts.download\_artifacts} rather than                                                                                               
-  \texttt{mlflow.sklearn.load\_model}, avoiding the implicit                                                                                              
-  \texttt{pandas} dependency introduced by the latter                                                                                                     
-  \cite{mlflow_docs}. The loaded model is cached in-process                                                                                               
-  with a one-hour TTL and refreshed transparently without                                                                                                 
-  restarting the serving container.                                                                                                                       
-                                                                                                                                                          
-  IsolationForest scores are persisted every 15 seconds to a
-  dedicated \texttt{route\_iforest\_\allowbreak scores} PostgreSQL table by
-  a dedicated background task (\texttt{\_iforest\_scorer\_loop}) that
-  runs independently of any client connection. This explicit
-  persistence is necessary because IsolationForest is not
-  computed per-message — without storage, IForest classifications
-  would be ephemeral per request and unavailable for historical
-  queries and RAG indexing.
-
-  After a full retraining cycle, one run per directed route is registered
-  in MLflow, recording hyperparameters, training data time range, and
-  evaluation metrics before being promoted to the \texttt{@champion} alias
-  (Figure~\ref{fig:mlflow_experiments}).
+  A lower \texttt{contamination} value raises the decision threshold,
+  flagging only extreme outliers and biasing the detector towards
+  precision; since dual-signal fusion (Section~\ref{subsec:fusion})
+  handles recall via Z-score, IForest is tuned for
+  high-confidence predictions. Every 6 hours, the model is retrained,
+  registered in MLflow with the \texttt{@champion} alias, and loaded
+  by the serving layer with a one-hour cache TTL.
 
   \begin{figure}[htbp]
       \centering
@@ -1078,24 +826,6 @@
       \label{fig:mlflow_experiments}
   \end{figure}
 
-  For a representative route (\textit{Southern Coastal~$\to$~Western
-  Peri-urban}), the \texttt{iforest\_\allowbreak anomaly\_\allowbreak rate} of $0.01$ confirms
-  that the contamination prior is honoured exactly by the decision threshold.
-  The \texttt{model\_agreement} of $0.96$ indicates that the Z-score and
-  IForest signals agree on 96\% of observations, with divergence concentrated
-  in the edge cases each signal is designed to capture
-  (Figure~\ref{fig:mlflow_metrics}).
-
-  \begin{figure}[htbp]
-      \centering
-      \includegraphics[width=\textwidth]{mlflow-route-metrics}
-      \caption{MLflow model metrics for route
-      \textit{Southern Coastal~$\to$~Western Peri-urban}.
-      Key indicators: \texttt{iforest\_\allowbreak anomaly\_\allowbreak rate}~$= 0.01$
-      (matches contamination prior), \texttt{model\_agreement}~$= 0.96$,
-      and \texttt{total\_samples}~$= 1{,}517$.}
-      \label{fig:mlflow_metrics}
-  \end{figure}
 
   % ------------------------------------------------------------
   \subsection{Dual-Signal Fusion}
@@ -1144,129 +874,67 @@
   \label{sec:rag}                                                                                                                                         
   % ============================================================
                                                                                                                                                           
-  Raw anomaly classifications, whilst accurate, provide operators                                                                                         
-  with no causal explanation. UrbanPulse addresses this limitation
-  through a \textbf{Retrieval-Augmented Generation} (RAG) pipeline                                                                                        
-  \cite{lewis2020rag} that retrieves semantically relevant historical                                                                                     
-  context from a vector store and injects it into the prompt of a                                                                                         
-  locally hosted large language model (LLM) to produce human-readable                                                                                     
-  root cause analyses. This approach is preferred over fine-tuning
-  because it allows the knowledge base to be updated incrementally                                                                                        
-  without retraining the model \cite{lewis2020rag}.                                                                                                       
-                                                                                                                                                          
-  % ------------------------------------------------------------                                                                                          
-  \subsection{Vector Store Architecture}
-  \label{subsec:vector_store}                                                                                                                             
-  % ------------------------------------------------------------
-                                                                                                                                                          
-  \textbf{ChromaDB} \cite{chromadb_docs} maintains three                                                                                                  
-  purpose-separated collections, each indexed using the
-  \textbf{nomic-embed-text} embedding model \cite{nomic_embed}                                                                                            
-  ($d = 768$-dimensional dense vectors):
-                                                                                                                                                          
-  \begin{table}[h]
-  \centering                                                                                                                                              
-  \caption{ChromaDB collections and their update schedules}
-  \label{tab:chroma_collections}                                                                                                                          
-  \resizebox{\textwidth}{!}{%
-  \begin{tabular}{llll}
-  \hline                                                                                                                                                  
-  \textbf{Collection} & \textbf{Contents} & \textbf{Source} &
-  \textbf{Cadence} \\                                                                                                                                     
-  \hline
-  \texttt{anomaly\_events}   & 7-day anomaly windows   & PostgreSQL JOIN & 1 hour \\                                                                      
-  \texttt{traffic\_patterns} & Gold (route, dow, hr) aggregates                                                                                           
-                                $\approx$3360 docs & Iceberg Gold & 6 hours \\                                                                            
-  \texttt{external\_context} & 7-day HCMC hourly weather
-                                $\approx$192 docs  & \texttt{gold.weather\_hourly} (Iceberg) & 1 hour \\                                                                             
-  \hline                                                                                                                                                  
-  \end{tabular}
-  }%
-  \end{table}                                                                                                                                             
-   
-  The RAG indexer uses \textbf{upsert} semantics throughout, ensuring                                                                                     
-  that repeated executions are idempotent. The \texttt{traffic\_patterns}
-  full Gold scan is intentionally decoupled from the hourly flow and                                                                                      
-  scheduled only within the 6-hour \texttt{retrain} flow, as it                                                                                           
-  involves scanning the entire Gold table ($\sim$3,360 documents)                                                                                         
-  and is computationally disproportionate for hourly execution.                                                                                           
-                                                                                                                                                          
-  % ------------------------------------------------------------                                                                                          
-  \subsection{Retrieval Strategy and Prompt Construction}                                                                                                 
-  \label{subsec:rag_indexing}
-  % ------------------------------------------------------------                                                                                          
-   
-  \subsubsection{Retrieval Procedure}                                                                                                                             
-                  
-  Let $q$ denote a user query string and $r$ a route identifier.                                                                                          
-  Let $\mathcal{C} = \{C_1, C_2, C_3\}$ denote the three ChromaDB
-  collections. The retrieval function $\texttt{Retrieve}$ returns                                                                                         
-  a ranked list of text chunks:                                                                                                                           
-                                                                                                                                                          
-  \begin{equation}                                                                                                                                        
-  \label{eq:retrieval}
-  \texttt{chunks} = \texttt{Retrieve}(q,\; r,\; \text{hr},\;
-  \text{dow},\; \mathcal{C},\; \mathbf{n})                                                                                                                
-  \end{equation}                                                                                                                                          
-                                                                                                                                                          
-  where $\mathbf{n} = (n_{\text{anomaly}}, n_{\text{pattern}},
-  n_{\text{external}}) = (4, 3, 2)$ are the per-collection
-  retrieval budgets used by the \texttt{/rca} endpoint, and
-  $\text{hr}, \text{dow}$ are the current                                                                                           
-  hour and day-of-week. Algorithm~\ref{alg:rag} formalises the                                                                                            
-  full retrieval, fallback, and prompt construction procedure.                                                                                            
-                                                                                                                                                          
-  \begin{algorithm}[H]                                                                                                                                    
-      \small                                                                                                                                              
-      \caption{$\texttt{response} \gets
-      \texttt{RAGInference}(q,\; r,\; \text{hr},\; \text{dow})$}
-      \label{alg:rag}                                                                                                                                     
-      \begin{algorithmic}[1]
-          \Require $q$ is the user query; $r$ is the route identifier                                                                                     
-          (may be \texttt{None}).                                                                                                                         
-          \Require $\mathcal{C}$ is the ChromaDB client with collections                                                                                  
-          $C_1, C_2, C_3$.                                                                                                                                
-          \Require $\Pi$ is the geo-aware HCMC system prompt.                                                                                             
-          \State $\texttt{chunks} \gets []$                                                                                                               
-          \If{$r \neq \texttt{None}$}
-              \State $\texttt{chunks} \gets                                                                                                               
-              \texttt{RetrieveForRoute}(r,\; \text{hr},\; \text{dow},\;
-              \mathbf{n},\; \mathcal{C})$                                                                                                                 
-          \EndIf  
-          \If{$|\texttt{chunks}| = 0$}                                                                                                                    
-              \Comment{Graceful fallback to free-text retrieval}
-              \State $\texttt{chunks} \gets                                                                                                               
-              \texttt{RetrieveForQuery}(q,\; n{=}5,\; \mathcal{C})$
-          \EndIf                                                                                                                                          
-          \State $\texttt{context} \gets
-          \texttt{FormatChunks}(\texttt{chunks})$                                                                                                         
-          \State $\texttt{prompt} \gets
-          [\texttt{context},\; \texttt{lang\_instruction},\; q]$                                                                                          
-          \State $\texttt{log\_id} \gets                                                                                                                  
-          \texttt{LogInteraction}(\texttt{rag\_interaction\_log},\;
-          r,\; q,\; \texttt{chunks})$                                                                                                                     
-          \State $\texttt{response} \gets                                                                                                                 
-          \texttt{StreamLLM}(\Pi,\; \texttt{prompt},\;                                                                                                    
-          T{=}0.4,\; \texttt{num\_predict}{=}300)$                                                                                                         
-          \State $\texttt{PersistResponse}(\texttt{log\_id},\;                                                                                            
-          \texttt{response})$                                                                                                                             
-          \State \Return $\texttt{response}$                                                                                                              
-      \end{algorithmic}                                                                                                                                   
-  \end{algorithm} 
+    The anomaly detectors in Section~\ref{sec:anomaly} output reliable
+    numerical signals (Z-score and Isolation Forest labels), but those
+    outputs alone are not sufficient for operational decision-making.
+    Traffic operators need an explanation of \textit{why} congestion is
+    occurring, not only whether an anomaly exists. UrbanPulse therefore
+    applies \textbf{Retrieval-Augmented Generation (RAG)} \cite{lewis2020rag}
+    as an interpretation layer that converts dual-signal alerts into
+    root-cause narratives grounded in historical traffic behaviour and
+    current weather context.
 
-  The system prompt $\Pi$ is constructed by \texttt{geo\_knowledge.py},                                                                                   
-  which injects HCMC-specific geographic knowledge — named arterial
-  roads (Xa lộ Hà Nội, Quốc lộ 13, Võ Văn Kiệt), zone descriptions,                                                                                       
-  and landmark references — directing the model to reason about                                                                                           
-  specific HCMC infrastructure rather than generic traffic patterns.                                                                                      
-                                                                                                                                                          
-  LLM responses are streamed token-by-token to the client via                                                                                             
-  \textbf{Server-Sent Events} (SSE) \cite{sse_spec}, providing
-  a sub-second time-to-first-token experience regardless of total                                                                                         
-  response length. The Qwen2.5:3b model \cite{qwen25_report} is                                                                                           
-  served locally via \textbf{Ollama} \cite{ollama_docs} with GPU                                                                                          
-  acceleration, eliminating external API dependency and associated                                                                                        
-  data privacy concerns.                                                                                                                                  
+    % ------------------------------------------------------------
+    \subsection{Role in the System (Why)}
+    \label{subsec:vector_store}
+    % ------------------------------------------------------------
+
+    The role of RAG in UrbanPulse is strictly application-facing:
+    \textbf{transforming raw anomaly alerts into actionable knowledge}.
+    When an event is flagged, the system should answer a practical
+    question for city operators: \textit{why is this route congested now?}
+    In many cases, the explanation is compositional (for example, an
+    unusual congestion spike coinciding with adverse weather during a
+    peak-hour corridor). RAG is used to synthesise this multi-source
+    context into concise natural language that can be consumed directly in
+    dashboard workflows.
+
+    % ------------------------------------------------------------
+    \subsection{Implementation Pipeline (Input -- Configuration -- Output)}
+    \label{subsec:rag_indexing}
+    % ------------------------------------------------------------
+
+    UrbanPulse implements RAG as a black-box inference pipeline with three
+    operational stages:
+
+    \begin{enumerate}
+      \item \textbf{Input (Retrieval):} RAG is triggered for
+      high-confidence events where both detection signals agree
+      (\texttt{both\_anomaly}). The serving layer retrieves traffic
+      context from ChromaDB (recent anomaly events and historical route
+      patterns) and, in parallel, fetches current meteorological context
+      from Open-Meteo.
+
+      \item \textbf{Configuration (Model and Prompting):} Generation is
+      executed by a local \textbf{Qwen2.5:3b} model served via
+      \textbf{Ollama} \cite{qwen25_report,ollama_docs}. The local-LLM
+      deployment is a deliberate infrastructure decision motivated by
+      three constraints: municipal data privacy, predictable operating
+      cost (no per-token external billing), and offline-capable
+      deployment on city-controlled infrastructure. Retrieved traffic
+      evidence and live weather variables are injected into a fixed prompt
+      template together with numerical anomaly indicators
+      (e.g., Z-score magnitude, congestion ratios, and route metadata).
+
+      \item \textbf{Output (Generation):} The LLM returns a concise
+      root-cause explanation in natural language, streamed via
+      \textbf{Server-Sent Events} (SSE) \cite{sse_spec} and rendered
+      directly in the operator interface (Grafana/UI) alongside the alert.
+    \end{enumerate}
+
+    This implementation is intentionally concise: from anomaly trigger to
+    human-readable explanation in a single retrieval-augmentation-generation
+    flow, without additional iterative reasoning loops in the serving path.
                                                                                                                                                           
   % ------------------------------------------------------------
   \subsection{Feedback Loop and Fine-Tuning Data Collection}                                                                                              
@@ -1295,51 +963,17 @@
   \textit{reproducibility}, and \textit{observability}. This section                                                                                      
   defines the specific metrics and measurement boundaries that                                                                                            
   Chapter~4 will report.                                                                                                                                  
-                                                                                                                                                         
-  % ------------------------------------------------------------                                                                                          
-  \subsection{Experimental Protocol}
-  \label{subsec:experimental_protocol}
-  % ------------------------------------------------------------                                                                                          
 
-  The empirical evaluation follows a fixed protocol to ensure that
-  Chapter~4 reports repeatable and comparable results. Traffic telemetry
-  is collected continuously over a bounded observation window and retained
-  at Bronze, Silver, Gold, and online-feature granularity. The exact data
-  collection period, number of route observations, and number of generated
-  anomaly labels are reported alongside the results.
+  \paragraph{Experimental Protocol.}
+  The empirical evaluation follows a fixed protocol to ensure repeatable and comparable results. Traffic telemetry is collected continuously over a bounded observation window and retained at Bronze, Silver, Gold, and online-feature granularity. All experiments are executed on a single, fixed deployment environment; the hardware profile (CPU, memory, GPU, storage) and software stack (Docker, Python, Redpanda, PostgreSQL, MinIO, Iceberg/Nessie, MLflow, ChromaDB, Ollama) are recorded before each evaluation run.
 
-  All experiments are executed on a single, fixed deployment environment.
-  The hardware profile (CPU model, memory capacity, GPU availability, and
-  storage type) and software stack (Docker version, Python runtime,
-  Redpanda, PostgreSQL, MinIO, Iceberg/Nessie, MLflow, ChromaDB, and
-  Ollama model version) are recorded before each evaluation run. No
-  configuration changes are made between baseline and UrbanPulse
-  measurements except for the component being compared.
+  The workload profile consists of three measurement modes: (i) normal-load run using production polling and all routes, (ii) stress run replaying messages at $2\times$ throughput to assess stability, and (iii) inference run issuing repeated requests to measure latency under steady-state conditions. Baseline comparison is performed against a batch-only variant where anomaly labels become available only after periodic aggregation. For each metric, measurements are computed from persisted logs or monitoring systems using $p_{50}$, $p_{95}$, and max statistics.
 
-  The workload profile consists of three measurement modes. First, the
-  normal-load run uses the production polling interval and all 20 directed
-  inter-zone routes. Second, the stress run replays or duplicates the
-  message stream at approximately $2\times$ normal throughput to assess
-  queueing behaviour and processing stability. Third, the inference run
-  issues repeated requests to the prediction and RAG endpoints to measure
-  response latency and time-to-first-token under steady-state serving
-  conditions.
-
-  Baseline comparison is performed against a batch-only variant in which
-  anomaly labels become available only after the periodic micro-batch
-  aggregation completes. This baseline isolates the contribution of the
-  online feature path and dual-signal fusion strategy. For each KPI,
-  measurements are computed from persisted logs or monitoring metrics
-  rather than manual timing. Reported latency values use $p_{50}$,
-  $p_{95}$, and maximum statistics, while alert precision is estimated
-  through manual review of the alert log against observed congestion
-  evidence from the traffic dashboard.
-
-  % ------------------------------------------------------------                                                                                          
+  % ============================================================
   \subsection{Temporal Integrity}
   \label{subsec:eval_temporal}
-  % ------------------------------------------------------------                                                                                          
-   
+  % ============================================================
+
   All Bronze Parquet files are partitioned by event timestamp.                                                                                            
   End-to-end ingestion lag $L_{\text{e2e}}$ is defined as:
                                                                                                                                                           
@@ -1376,17 +1010,16 @@
   model version and data snapshot.                                                                                                                                          
                                                                                                                                                           
   % ------------------------------------------------------------                                                                                          
-  \subsection{Key Performance Indicators}                       
-  \label{subsec:kpis}                                                                                                                                     
+\subsection{Performance Metrics}
+  \label{subsec:performance_metrics}
   % ------------------------------------------------------------
-                                                                
-  Table~\ref{tab:kpis} summarises the KPIs to be reported in
-  Chapter~4.                                                                                                                                              
+                
+  The following metrics summarise the system's ability to satisfy the operational pillars:
             
-  \begin{table}[h]                                                                                                                                        
-  \centering      
-  \caption{Key performance indicators and measurement boundaries}
-  \label{tab:kpis}                                               
+  \begin{table}[h]
+  \centering
+  \caption{Performance metrics: temporal integrity, reproducibility, and system performance}
+  \label{tab:performance_metrics}
   \resizebox{\textwidth}{!}{%
   \begin{tabular}{llll}
   \hline               

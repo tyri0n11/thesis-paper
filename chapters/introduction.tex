@@ -1,6 +1,6 @@
 \section{Problem Statement}
 
-Urban monitoring systems in modern smart cities are increasingly adopting data-driven architectures;
+Urban monitoring systems in modern smart cities are increasingly adopting data-driven architectures.
 
 In the context of the UrbanPulse system, traffic data is ingested from the VietMap API—capturing travel duration and congestion ratios—and processed through a \textbf{hybrid Medallion Lakehouse architecture} combining streaming inference paths and micro-batch analytical layers. Despite this structured approach, interpreting anomalies in a streaming environment introduces several challenges:
 
@@ -10,6 +10,8 @@ In the context of the UrbanPulse system, traffic data is ingested from the VietM
 \item \textbf{Model Staleness}: Machine learning models stored in the \textbf{MinIO-based model registry} are typically retrained on a schedule. This introduces a "staleness" factor, where the model may fail to adapt to sudden distribution shifts caused by unpredicted road incidents or temporary construction.
 \item \textbf{High-Dimensional Latency Constraints}: Ensuring low-latency propagation from the \textbf{Redpanda broker} to the end-user dashboard via \textbf{Server-Sent Events (SSE)} requires a highly optimized serving layer that must reconcile high-frequency ingestion without introducing significant lag.
 \end{itemize}
+
+In practice, both the online and offline processing paths consume the same event stream published to the Redpanda broker, which acts as the system's Single Source of Truth. The online path computes streaming baselines using Welford's online algorithm (memory-efficient, $O(1)$) to produce immediate Z-score signals, while the offline path materialises the same events into the Lakehouse (MinIO + Apache Iceberg) for batch feature engineering and periodic model retraining. This architecture preserves stream-to-batch consistency while allowing ML models to be trained on the authoritative historical dataset.
 
 Therefore, the core problem addressed in this thesis is:
 \begin{quote}
@@ -23,8 +25,8 @@ This thesis focuses on the design and implementation of the "UrbanPulse" platfor
 \begin{enumerate}
 \item \textbf{Data Ingestion and Sources}
 \begin{itemize}
-\item Real-time traffic flow data is sourced exclusively from \textbf{VietMap APIs}, capturing travel duration, congestion ratios, and severity levels for a predefined set of key urban routes.
-\item The data collection interval is configured at 5-minute increments to balance API constraints with real-time requirements.
+\item Real-time traffic flow data is sourced from \textbf{VietMap APIs} (20 routes) and supplemented by weather data from the \textbf{Open-Meteo API} for environmental context.
+\item All observations are published to the Redpanda broker, which serves as the system's Single Source of Truth; both the online Welford-based stream processors and offline lakehouse pipelines consume from this stream to maintain consistency.
 \end{itemize}
 \item \textbf{Technical and Architectural Framework}
 \begin{itemize}
