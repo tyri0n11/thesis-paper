@@ -728,10 +728,10 @@
 
   \begin{equation}
   \label{eq:threshold_rule}
-  \theta_r = \max(1.5, \min(p_{99,r}, 2.0))
+  \theta_r = \max\!\left(1.5,\; p_{99,r}\right), \qquad p_{99,r} \;\overset{\text{def}}{=}\; \begin{cases} \hat{p}_{99,r} & \text{if history available} \\ 2.0 & \text{otherwise} \end{cases}
   \end{equation}
 
-  The floor of 1.5 prevents excessive sensitivity on low-variance routes; the ceiling of 2.0 covers new routes lacking history. Classification is one-sided: only $z_r^{(t)} > \theta_r$ signals an anomaly (positive deviations indicate congestion; negative indicates free flow, which is not anomalous). The Z-score is stored in PostgreSQL's \texttt{online\_route\_features} table as \texttt{duration\_zscore} (schema legacy name retained for continuity) and exposed via the Serving Layer's WebSocket API.
+  The floor of 1.5 prevents excessive sensitivity on low-variance routes; routes without sufficient history use a conservative fallback of 2.0. Because $p_{99,r}$ is learned from each route's own Z-score distribution, high-variance routes naturally receive a higher threshold, reducing false positives without imposing an artificial ceiling. Classification is one-sided: only $z_r^{(t)} > \theta_r$ signals an anomaly (positive deviations indicate congestion; negative indicates free flow, which is not anomalous). The Z-score is stored in PostgreSQL's \texttt{online\_route\_features} table as \texttt{duration\_zscore} (schema legacy name retained for continuity) and exposed via the Serving Layer's WebSocket API.
 
   \begin{figure}[htbp]
       \centering

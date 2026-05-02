@@ -418,10 +418,6 @@ INPUT ./images/ai-chat.png
 INPUT ./images/ai-chat.png
 INPUT ./images/ai-chat.png
 INPUT ./images/ai-chat.png
-INPUT ./images/ai-chat-english.png
-INPUT ./images/ai-chat-english.png
-INPUT ./images/ai-chat-english.png
-INPUT ./images/ai-chat-english.png
 INPUT ./images/dashboard-heatmap-zscore.png
 INPUT ./images/dashboard-heatmap-zscore.png
 INPUT ./images/dashboard-heatmap-zscore.png
@@ -430,6 +426,10 @@ INPUT ./images/dashboard-heatmap-both.png
 INPUT ./images/dashboard-heatmap-both.png
 INPUT ./images/dashboard-heatmap-both.png
 INPUT ./images/dashboard-heatmap-both.png
+INPUT ./images/ai-heatmap-vi.png
+INPUT ./images/ai-heatmap-vi.png
+INPUT ./images/ai-heatmap-vi.png
+INPUT ./images/ai-heatmap-vi.png
 INPUT ./images/ai-heatmap-analysis.png
 INPUT ./images/ai-heatmap-analysis.png
 INPUT ./images/ai-heatmap-analysis.png

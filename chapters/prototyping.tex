@@ -230,14 +230,15 @@ timestamp. This versioning provides two operational guarantees:
         in the MLflow run. This is the same time-travel mechanism used in
         the evaluation framework (Section~\ref{sec:evaluation}).
 
-  \item \textbf{Stream-batch consistency:} The Online Service's Z-score
-        baseline is loaded from \texttt{gold.traffic\_baseline} every
-        6~hours via PyIceberg. Because the batch pipeline commits to
-        Iceberg atomically (all rows of a micro-batch in a single
-        snapshot), the Online Service always reads a \textit{complete},
-        consistent view of the Gold table --- never a partial write mid-aggregation.
-        This eliminates the \textit{phantom read} problem that arises when
-        streaming systems read from mutable database tables.
+  \item \textbf{Stream-batch consistency:} Because the batch pipeline
+        commits to Iceberg atomically (all rows of a micro-batch in a
+        single snapshot), any downstream reader always observes a
+        \textit{complete}, consistent view of the Gold table --- never a
+        partial write mid-aggregation. This eliminates the
+        \textit{phantom read} problem that arises when streaming systems
+        read from mutable database tables. The concrete consumer of this
+        guarantee is the baseline-loading mechanism described in
+        Section~\ref{sec:impl-batch}.
 \end{enumerate}
 
 % ============================================================
